@@ -24,6 +24,65 @@ Base de conocimiento técnica del **SIFEN** (Sistema Integrado de Facturación E
 
 Documentación producida por la **Dirección Nacional de Ingresos Tributarios (DNIT)** de Paraguay.
 
-## Uso
+### 🎯 Objetivo
 
-Este repositorio está diseñado para ser utilizado como contexto en sistemas RAG (Retrieval-Augmented Generation) o como base de conocimiento directa para modelos de IA que asistan en integraciones con el SIFEN.
+Este repositorio está diseñado para ser utilizado como contexto en sistemas RAG (Retrieval-Augmented Generation) o como base de conocimiento directa para modelos de IA que asistan en integraciones con el SIFEN. La idea es reducir errores y ambigüedades al integrar con SIFEN, permitiendo que tanto desarrolladores como asistentes de IA trabajen con información consistente, validada y lista para usar.
+
+## 🤖 Uso con asistentes de IA (Cursor, Copilot, Claude)
+
+Este repositorio está optimizado para ser utilizado como referencia por asistentes de programación basados en IA.
+
+Para obtener mejores resultados, se recomienda integrarlo directamente en el entorno de desarrollo.
+
+---
+
+### 📦 Opción 1: Clonar dentro de tu proyecto (recomendado)
+
+La forma más efectiva es incluir este repositorio dentro de tu proyecto:
+
+```bash
+git clone https://github.com/abiliomp/ekuat-ia docs/sifen-ai
+```
+
+O como submódulo:
+
+```bash
+git submodule add https://github.com/abiliomp/ekuat-ia docs/sifen-ai
+```
+
+Esto permite que herramientas como Cursor indexen automáticamente la documentación y la utilicen como contexto durante la generación de código.
+
+---
+
+### 🧠 Opción 2: Configurar reglas en Cursor
+
+Si utilizas Cursor, puedes guiar el comportamiento de la IA creando el archivo:
+
+```
+.cursor/rules/sifen.md
+```
+
+Con el siguiente contenido:
+
+```md
+When working with SIFEN (Paraguay electronic invoicing):
+
+- Use the documentation in /docs/sifen-ai as the primary source of truth
+- Prefer existing XML and JSON examples over generating new structures
+- Follow SIFEN specifications strictly (avoid inventing fields)
+- Use guides and examples from this repository for end-to-end flows
+```
+
+---
+
+### 💬 Opción 3: Prompt inicial (alternativa simple)
+
+También puedes indicar manualmente a la IA:
+
+```
+Use the SIFEN documentation located in /docs/sifen-ai as the main reference.
+```
+
+
+
+
