@@ -1,180 +1,144 @@
+> **Fuente:** Manual Técnico SIFEN v150, secciones 6, 6.1, 6.2, 6.2.1, 6.3–6.6
+
+> **Nota:** Este documento refleja el MT v150 con cambios del historial de versiones marcados.
+
 # Flujo General del Ciclo de Vida de un Documento Electrónico
 
-> **Fuente:** Manual Técnico SIFEN v150, secciones 5, 6 y 8
-
-## Resumen del Ciclo Completo
-
-El ciclo de vida de un Documento Electrónico (DE) abarca desde su generación hasta su consulta y posibles eventos posteriores.
+Descripción del modelo operativo completo: desde la generación del DE hasta la obtención del DTE aprobado y su consulta por el receptor.
 
 ---
 
-## Fase 1: Generación del Documento Electrónico
+## 1. Visión General del Modelo Operativo
 
-1. El sistema de facturación del emisor genera el archivo XML del DE conforme a los Schemas XSD definidos en el Manual Técnico.
-2. Se genera el **CDC** (Código de Control, 44 dígitos) que identifica unívocamente al documento.
-3. Se genera el **código de seguridad** (dCodSeg, 9 dígitos aleatorios) para proteger la consulta pública.
-4. Se genera el **código QR** (campo J002/dCarQR) utilizando el CSC otorgado por la SET.
+El SIFEN opera en dos momentos principales:
 
-### Estructura del CDC
+### Primer momento — Operación comercial con DE
+1. El facturador electrónico realiza la operación comercial.
+2. Genera el Documento Electrónico (DE) en formato XML.
+3. **Firma digitalmente** el DE con su certificado digital.
+4. **[MODIFICADO]** Entrega el DE al receptor (como regla general, **antes** de la transmisión al SIFEN):
+   - Si el receptor es facturador electrónico: envía el XML firmado.
+   - Si el receptor **no** es facturador electrónico: **[MODIFICADO]** envía o disponibiliza el KuDE en formato físico o digital.
 
-El CDC se forma con los siguientes componentes:
-- RUC del emisor (8 dígitos)
-- Tipo de documento C002 (2 dígitos)
-- Establecimiento C005 (3 dígitos)
-- Punto de expedición C006 (3 dígitos)
-- Número de timbrado C004 (8 dígitos)
-- Fecha de emisión D002 (8 dígitos: AAAAMMDD)
-- Tipo de emisor A005 (1 dígito)
-- Código de seguridad B004 (9 dígitos)
-- Dígito verificador (módulo 11, 1 dígito)
-
-**Representación gráfica del CDC (grupos de 4):**
-```
-0144 4444 0170 0100 1001 4528 2201 7012 5158 7326 0988
-```
+### Segundo momento — Transmisión de los DE a la SET
+5. El emisor envía el DE firmado digitalmente al SIFEN dentro del plazo establecido.
+6. El SIFEN ejecuta las validaciones (de conexión, técnicas y de negocio).
+7. Si el DE supera todas las validaciones, se aprueba como **DTE** y se almacena en SIFEN.
+8. El receptor verifica la existencia del DTE en el SIFEN.
 
 ---
 
-## Fase 2: Firma Digital
-
-1. El emisor firma digitalmente el DE utilizando su certificado digital emitido por un PSC habilitado.
-2. La firma aplica al grupo de campos A001 (DE firmado) identificado por el atributo `Id` del CDC.
-3. Se utiliza el estándar XML Digital Signature (Enveloped).
-4. Algoritmos: RSA-SHA256, canonización C14N.
-5. La fecha y hora de firma (campo A004/dFecFirma) debe ser **anterior** a la fecha de transmisión al SIFEN.
-
----
-
-## Fase 3: Entrega al Receptor
-
-1. El emisor genera el **KuDE** (representación gráfica) del DE.
-2. El KuDE se entrega al receptor en formato físico o digital.
-3. El KuDE contiene el CDC impreso en grupos de 4 caracteres y el código QR.
-4. La entrega puede realizarse antes o después de la transmisión al SIFEN.
-
-> **Importante:** Cuando el DE se modifica de forma que altera el CDC, el emisor debe inutilizar el número previo y emitir uno nuevo, enviando el nuevo comprobante al receptor.
-
----
-
-## Fase 4: Transmisión al SIFEN
-
-### Plazo de transmisión
-| Condición | Plazo |
-|-----------|-------|
-| Transmisión normal | Hasta **72 horas** desde la fecha/hora de firma digital |
-| Fecha de emisión (D002) adelantada | Hasta 120 horas (5 días) antes de la transmisión |
-| Fecha de emisión (D002) atrasada | Hasta 720 horas (30 días) antes de la transmisión |
-
-### Métodos de transmisión
-
-#### Transmisión individual (síncrona)
-- WS: `siRecepDE`
-- Proceso: El SIFEN responde en la misma conexión.
-- Resultado: Aprobado, Aprobado con observación, o Rechazado.
-
-#### Transmisión por lotes (asíncrona)
-- WS: `siRecepLoteDE`
-- Capacidad: hasta 50 DE del mismo tipo por lote.
-- Proceso: SIFEN devuelve un número de lote; el resultado se consulta posteriormente con `siResultLoteDE`.
-- Formato del lote: archivo XML comprimido en Base64 (ZIP).
-
----
-
-## Fase 5: Validación por el SIFEN
-
-El SIFEN ejecuta las siguientes validaciones en orden:
-
-1. **Validaciones de conexión/autenticación:** TLS 1.2, certificado digital del emisor.
-2. **Validaciones técnicas del XML:** Conformidad con el Schema XSD, namespace, encoding.
-3. **Validaciones de firma digital:** Integridad, LCR, cadena de confianza.
-4. **Validaciones de negocio:** Reglas del Manual Técnico (timbrado vigente, CDC correcto, campos obligatorios, cálculos de IVA, etc.).
-
----
-
-## Fase 6: Aprobación como DTE
-
-Según el resultado de la validación:
-
-| Estado | Descripción |
-|--------|-------------|
-| **Aprobado** | El DE cumple todas las validaciones. Se convierte en DTE. |
-| **Aprobado con observación** | El DE fue aprobado pero tiene observaciones (puede incluir transmisión extemporánea). |
-| **Rechazado** | El DE no cumple las validaciones. Se devuelve el código de error. |
-
-Cuando es aprobado:
-- El DTE queda registrado en la base de datos del SIFEN.
-- Se genera el número de transacción (dProtAut, 10 dígitos).
-- El DTE puede ser consultado por el emisor o receptor.
-
----
-
-## Fase 7: Verificación por el Receptor
-
-El receptor verifica la existencia del DTE:
-- **Por WS:** `siConsDE` usando el CDC.
-- **Por portal:** `https://ekuatia.set.gov.py/consultas/` ingresando el CDC.
-- **Por QR:** Leyendo el código QR del KuDE.
-
-El receptor debe confirmar:
-1. Que el DE fue transmitido y aprobado como DTE.
-2. Que la información del KuDE coincide con el DTE en el SIFEN.
-
----
-
-## Fase 8: Eventos Post-Aprobación
-
-### Eventos del Emisor
-| Evento | Plazo | WS |
-|--------|-------|----|
-| Cancelación de FE | Hasta **48 horas** desde la aprobación | siRecepEvento |
-| Cancelación de NCE/NDE/NRE/AFE | Hasta **168 horas** (7 días) desde la aprobación | siRecepEvento |
-| Inutilización de número | Hasta el día 15 del mes siguiente al hecho | siRecepEvento |
-
-### Eventos del Receptor
-| Evento | Plazo | WS |
-|--------|-------|----|
-| Notificación de recepción | Hasta **45 días** desde la fecha de emisión | siRecepEvento / Portal |
-| Conformidad | Hasta **45 días** desde la fecha de emisión | siRecepEvento / Portal |
-| Disconformidad | Hasta **45 días** desde la fecha de emisión | siRecepEvento / Portal |
-| Desconocimiento | Hasta **45 días** desde la fecha de emisión | siRecepEvento / Portal |
-
-### Eventos Automáticos del SIFEN
-- Vinculación de NCE/NDE a una FE (automático al aprobar la NCE/NDE).
-- Vinculación de NRE a una FE (automático al aprobar la NRE).
-- Asociaciones por interoperabilidad con Marangatu y Tesaka.
-
----
-
-## Diagrama de Flujo Resumido
+## 2. Pasos Detallados del Flujo
 
 ```
-[Emisor genera XML] → [Firma digital] → [Genera KuDE] → [Entrega KuDE al receptor]
-         ↓
-[Transmite DE al SIFEN (máx. 72h desde firma)]
-         ↓
-[SIFEN valida: técnicas + firma + negocio]
-         ↓
-    [¿Válido?]
-      /     \
-   Sí        No
-   ↓          ↓
-[Aprobado]  [Rechazado → emisor corrige]
-[DTE en BD]
-   ↓
-[Receptor consulta DTE en SIFEN]
-   ↓
-[Eventos opcionales: conformidad, cancelación, etc.]
+[1] GENERACIÓN DEL DE
+     │
+     ├─► Generar CDC (44 dígitos)
+     ├─► Generar Código de Seguridad (9 dígitos aleatorios)
+     └─► Estructurar XML según Schema XML 18 (DE_v150.xsd)
+
+[2] FIRMA DIGITAL
+     │
+     ├─► Firmar DE con certificado X.509 v3 del RUC emisor
+     ├─► Firma abarca el grupo A001 (ID = CDC)
+     └─► Estándar: XML Enveloped, RSA 2048, SHA-256
+
+[3] ENTREGA AL RECEPTOR
+     │  ← La entrega al receptor puede ser previa o simultánea
+     │    a la transmisión al SIFEN
+     ├─► Si receptor es FE: enviar XML firmado
+     └─► Si receptor NO es FE: enviar KuDE (físico o digital)
+
+[4] TRANSMISIÓN AL SIFEN (dentro del plazo establecido)
+     │
+     ├─► WS siRecepDE (1 DE, síncrono) — Schema XML 2
+     └─► WS siRecepLoteDE (hasta 50 DE, asíncrono) — Schema XML 5
+
+[5] VALIDACIÓN POR SIFEN
+     │
+     ├─► Validaciones de conexión (TLS, certificado)
+     ├─► Validaciones técnicas (estructura XML, schema)
+     └─► Validaciones de negocio (reglas del capítulo 12)
+
+[6] RESULTADO DE LA VALIDACIÓN
+     │
+     ├─► APROBADO → DTE almacenado en SIFEN
+     │     └─► Protocolo de aprobación: Schema XML 4 (ProtProcesDE_v150.xsd)
+     │
+     └─► RECHAZADO → DE no ingresa al SIFEN
+           ├─► Si los cambios NO alteran el CDC: reutilizar CDC y reenviar
+           └─► Si los cambios SÍ alteran el CDC: inutilizar número y emitir nuevo DE
+
+[7] VERIFICACIÓN POR EL RECEPTOR
+     │
+     ├─► WS siConsDE (por CDC) — Schema XML 9
+     ├─► Portal web SIFEN con código QR del KuDE
+     └─► Ingreso manual del CDC en el portal
 ```
 
 ---
 
-## Plazos de Conservación
+## 3. Modalidades de Validación
 
-- DTE aprobados: conservar por **5 años**.
-- FE con NCE/NDE asociadas: conservar por **5 años**.
-- DTE cancelados: conservar por **5 años**.
+### 3.1 Validación Posterior (Regla General)
+- El emisor entrega el DE al receptor y **luego** lo transmite al SIFEN.
+- Permite generar el KuDE **antes** de obtener la aprobación.
+- Plazo de transmisión: hasta **72 horas** desde la firma digital.
+- El receptor se obliga a consultar a posteriori en el SIFEN.
 
-## Herramienta de Prevalidación
+### 3.2 Validación Previa (Opcional — por decisión del emisor)
+- **[MODIFICADO]** El emisor transmite el DE al SIFEN **antes** de entregarlo al receptor, o de manera previa a dicha entrega.
+- **[MODIFICADO]** El SIFEN realiza las validaciones y se obtiene el protocolo de aprobación del DTE de manera previa o posterior a la entrega del documento al receptor.
+- Elimina la incertidumbre para el receptor sobre la validez del documento.
 
-La DNIT disponibiliza un prevalidador en tiempo de desarrollo:
-`https://ekuatia.set.gov.py/prevalidador/`
+---
+
+## 4. Tabla de Plazos SIFEN
+
+**[MODIFICADO]** Conforme a las bases y condiciones del Modelo SIFEN y el Decreto N° 7.795/2017, se han establecido los siguientes plazos:
+
+| Caso | Plazo | Observación |
+|------|-------|-------------|
+| **Transmisión normal de los DE** | Hasta **72 horas** (regla general) | **[MODIFICADO]** La transmisión es normal cuando: (1) la diferencia entre fecha/hora de firma y de transmisión no supera 72 h, Y ADEMÁS cumple una de: (a) la diferencia entre la fecha/hora de emisión anterior y la de transmisión al SIFEN no supera 120 horas (5 días), o (b) la diferencia entre la fecha/hora de emisión posterior y la de transmisión al SIFEN no supera 120 horas (5 días). |
+| **[MODIFICADO] Transmisión extemporánea de los DE** | Según situación de extemporaneidad | **[MODIFICADO]** Se considera transmisión extemporánea el envío de DE en situación contraria a la Transmisión normal. Se les aplicarán las sanciones que correspondan. |
+| **[NUEVO en v150] Rechazo de los DE por transmisión extemporánea** | **720 horas (30 días)** | **[NUEVO en v150]** Se rechaza cuando: la diferencia entre la fecha de transmisión y la fecha de emisión del DE sea **mayor** a 720 horas (30 días), O cuando la diferencia entre la fecha de emisión y la fecha de transmisión sea **mayor** a 120 horas (5 días). |
+| **[NUEVO en v150] Trámite administrativo para normalizar DE rechazados por extemporaneidad** | Mayor a **720 horas (30 días)** | **[NUEVO en v150]** Para obtener la aprobación extemporánea de DE rechazados, los facturadores electrónicos deben iniciar un trámite administrativo, sin perjuicio de las sanciones que correspondan. |
+| **[MODIFICADO] Evento de cancelación de una FE** | Hasta **48 horas (2 días)** | **[MODIFICADO]** El DTE debe existir en el SIFEN. El cómputo del plazo inicia desde la aprobación del DE por parte de la SET (fecha y hora SIFEN). |
+| **[NUEVO en v150] Eventos de cancelación de DTE distintos a FE** | Hasta **168 horas (7 días)** | **[NUEVO en v150]** El DTE (distinto a FE) debe existir en el SIFEN. El cómputo del plazo inicia desde la aprobación del DE por la SET (fecha y hora SIFEN). |
+| **Inutilización de la numeración de un DE** | Hasta **360 horas (15 días)** | El plazo comienza a correr a partir del siguiente mes del consumo de la numeración del timbrado. |
+| **[NUEVO en v150] Eventos del Receptor: Notificación de Recepción DE/DTE, Conformidad, Disconformidad, Desconocimiento DE/DTE** | Hasta **1080 horas (45 días)** | **[NUEVO en v150]** El plazo se computa desde la fecha de emisión del DE/DTE. |
+| **[NUEVO en v150] Corrección — Evento del Receptor: Notificación de Recepción DE/DTE, Conformidad, Disconformidad, Desconocimiento DE/DTE** | Hasta **360 horas (15 días)** | **[NUEVO en v150]** El plazo se computa desde la fecha de registro del primer evento sobre un DTE (Conformidad, Disconformidad o Desconocimiento). |
+
+> **Obs:** El cómputo de los plazos fue establecido en **horas corridas**.
+
+---
+
+## 5. Rechazo y Reenvío del DE
+
+**[MODIFICADO]** En caso de que el DE no supere las validaciones:
+
+- **Si los ajustes NO alteran el CDC**: Se puede reutilizar el mismo CDC del DE rechazado (esto permite que, luego de aprobado, el DTE pueda ser consultado mediante el QR generado en el KuDE entregado al receptor durante la operación comercial). El emisor debe reenviar hasta lograr la aprobación, cuantas veces sea necesario.
+- **Si los ajustes SÍ alteran el CDC**: El emisor debe inutilizar el número de comprobante previamente generado y emitir un nuevo DE (con nuevo CDC). Esto implica también el envío del nuevo DE al receptor.
+
+Lo anterior es sin perjuicio del **[MODIFICADO]** incumplimiento de los términos y condiciones en la transmisión de los DE y la consecuente aplicación del régimen sancionatorio por la entrega extemporánea.
+
+---
+
+## 6. Verificación de la Existencia del DTE por el Receptor
+
+**[MODIFICADO]** En el modelo de aprobación posterior, el receptor de los DE, con el objeto de ejercer sus derechos tributarios (como respaldo documental de sus Declaraciones Juradas), se obliga a verificar la existencia y coincidencia de la Representación Gráfica del DTE (KuDE) con el DTE almacenado en el SIFEN.
+
+La verificación puede realizarse:
+- Por servicio web de consulta CDC (WS siConsDE).
+- Mediante consulta en la página web del SIFEN a partir del código QR del KuDE.
+- Por el llenado manual del CDC en el portal.
+
+El receptor debe verificar específicamente:
+- **[MODIFICADO]** Que el DE fue transmitido y obtuvo la aprobación como DTE.
+- **[MODIFICADO]** Que la información presente en el KuDE coincide plenamente con la información del DTE consultado.
+
+---
+
+## 7. Tiempo de Respuesta del SIFEN
+
+**[MODIFICADO]** Para la SET, el tiempo de respuesta de validación de un DTE está establecido como máximo en **1 (un) minuto**, con el objetivo de llegar, en el futuro, a un tiempo de procesamiento menor a **2 (dos) segundos** por DTE.

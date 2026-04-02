@@ -3,59 +3,60 @@
 Campo `iTiDE` (C002): identifica el tipo de Documento Electrónico. Es parte del grupo de datos del timbrado y forma parte del CDC (Código de Control).
 
 > **Fuente:** Manual Técnico SIFEN v150, sección 10.4 (campo C002)
+> **Nota:** Contenido tachado (~~así~~) indica especificaciones eliminadas en v150. [MODIFICADO] indica cambios. [NUEVO] indica adiciones.
 
-## Tabla de tipos de documento
+## Definición del campo
 
-| Código | Abreviatura | Nombre completo | Descripción |
-|--------|------------|-----------------|-------------|
-| 1 | FE | Factura Electrónica | Documento que respalda la compra y venta de bienes y servicios en el mercado interno. Operaciones B2B, B2C y B2G. |
-| 2 | FEE | Factura Electrónica de Exportación | Factura para operaciones de comercio exterior (exportaciones). Futuro en v150. |
-| 3 | FEI | Factura Electrónica de Importación | Factura para operaciones de importación. Futuro en v150. |
-| 4 | AFE | Autofactura Electrónica | Emitida por el comprador cuando el vendedor es un no contribuyente o extranjero. El RUC del receptor debe coincidir con el RUC del emisor. |
-| 5 | NCE | Nota de Crédito Electrónica | Documento para devoluciones, descuentos, bonificaciones y ajustes de precio vinculados a una FE. |
-| 6 | NDE | Nota de Débito Electrónica | Documento para recupero de costos, gastos y ajustes de precio vinculados a una FE. |
-| 7 | NRE | Nota de Remisión Electrónica | Documento que ampara el traslado de mercaderías. No tiene campos de operación comercial (D010). |
-| 8 | CRE | Comprobante de Retención Electrónico | Futuro en v150. |
-| 11 | FCE | Factura de Contingencia Electrónica | Utilizada cuando el sistema de facturación normal no está disponible (modo contingencia). |
+| Atributo    | Valor |
+|-------------|-------|
+| ID          | C002  |
+| Nombre XML  | iTiDE |
+| Tipo        | N (numérico) |
+| Longitud    | 1–2  |
+| Ocurrencia  | 1-1 (obligatorio) |
+| Nodo padre  | C001  |
 
-## Observaciones por tipo
+El campo complementario `dDesTiDE` (C003) contiene la descripción textual del tipo, y debe coincidir exactamente con el código informado en C002.
 
-### FE (1) — Factura Electrónica
-- Requiere grupo D010 (operación comercial)
-- Requiere campo D011 (tipo de transacción)
-- Requiere campo D013 (tipo de impuesto)
-- Requiere grupo E010 (campos específicos de FE)
-- Requiere grupo E600 (condición de la operación)
+---
 
-### AFE (4) — Autofactura Electrónica
-- Naturaleza del receptor debe ser Contribuyente (D201=1)
-- El tipo de operación debe ser B2C (D202=2)
-- El RUC del receptor debe ser igual al RUC del emisor
-- Vendedor puede ser no contribuyente o extranjero (campo E301)
+## Tabla de Tipos de Documento
 
-### NCE (5) y NDE (6) — Notas de Crédito/Débito
-- Deben estar vinculadas a una FE existente en SIFEN (campo H001 y siguientes)
-- Tienen plazo de cancelación de 168 horas desde la aprobación
-- Generan evento automático de ajuste en la FE asociada
+| Código | Abreviatura | Nombre completo | Descripción / uso principal | Observación |
+|--------|-------------|-----------------|----------------------------|-------------|
+| [MODIFICADO] 1 | FE | Factura Electrónica | Respalda compraventa de bienes y servicios. Aplica para operaciones B2B, B2C, B2G y [NUEVO] B2F. Admite condición contado y crédito. | Grupo E010 obligatorio. [MODIFICADO] iTipTra es obligatorio. |
+| [MODIFICADO] 2 | FEE | Factura Electrónica de Exportación | Para exportaciones de bienes y servicios al exterior. | [MODIFICADO] **(Futuro)** — no implementar como disponible en producción. Campos E100–E199. |
+| [MODIFICADO] 3 | FEI | Factura Electrónica de Importación | Para importaciones de bienes y servicios. | [MODIFICADO] **(Futuro)** — no implementar como disponible en producción. Campos E200–E299. |
+| 4 | AFE | Autofactura Electrónica | Emitida por el comprador en nombre del vendedor no contribuyente. Siempre condición contado. RUC receptor = RUC emisor. | [MODIFICADO] Campos E300–E399 completamente redefinidos en v150. |
+| 5 | NCE | Nota de Crédito Electrónica | Reduce el valor de una FE aprobada (devoluciones, descuentos, bonificaciones). | Documento asociado obligatorio (H001). |
+| 6 | NDE | Nota de Débito Electrónica | Aumenta el valor de una FE aprobada (intereses, diferencias de precio). | Documento asociado obligatorio (H001). |
+| [MODIFICADO] 7 | NRE | Nota de Remisión Electrónica | Ampara el traslado físico de mercaderías. No lleva grupo de operación comercial (D010). | [MODIFICADO] En v150 cuenta con campos propios E500–E599 y grupo de transporte E900 obligatorio. |
+| [MODIFICADO] 8 | CRE | Comprobante de Retención Electrónico | Respalda retenciones practicadas por agentes de retención. | [MODIFICADO] **(Futuro)** — no implementar como disponible en producción. |
 
-### NRE (7) — Nota de Remisión
-- No debe incluir el grupo D010 (operación comercial)
-- El campo B006 (información de interés del fisco) es obligatorio con el mensaje del Art. 3 Inc. 7 de la RG 41/2014
-- La dirección del receptor (D213) es obligatoria
+### Tipos eliminados en v150
 
-## Relación con el CDC
+Los tipos FEE (2), FEI (3) y CRE (8) existían en versiones anteriores del MT con definición propia, pero en v150 están marcados explícitamente como **(Futuro)**. Deben considerarse **no operativos** en producción actual.
 
-El tipo de documento es el cuarto componente del CDC (posiciones 11-12 de los 44 caracteres).
+---
 
-## Descripciones textuales (campo C003 / dDesTiDE)
+## Impacto del C002 en la estructura del DE
 
-| Código | Descripción textual (dDesTiDE) |
-|--------|-------------------------------|
-| 1 | "Factura electrónica" |
-| 2 | "Factura electrónica de exportación" |
-| 3 | "Factura electrónica de importación" |
-| 4 | "Autofactura electrónica" |
-| 5 | "Nota de crédito electrónica" |
-| 6 | "Nota de débito electrónica" |
-| 7 | "Nota de remisión electrónica" |
-| 8 | "Comprobante de retención electrónico" |
+| C002 | Grupo obligatorio | Grupo prohibido / no aplica |
+|------|-------------------|------------------------------|
+| 1 (FE)  | E010 (gCamFE), D010 (operación comercial) | E300, E400, E500 |
+| 4 (AFE) | E300 (gCamAFE), E600 (condición operación), H001 (doc. asociado) | E010, E400, E500 |
+| 5 (NCE) | E400 (gCamNCDE), H001 (doc. asociado) | E010, E300, E500, E600 |
+| 6 (NDE) | E400 (gCamNCDE), H001 (doc. asociado) | E010, E300, E500, E600 |
+| 7 (NRE) | E500 (gCamNRE), E900 (transporte) | E010, E300, E400, E600, D010 |
+
+---
+
+## Denominación en el KuDE
+
+Según la sección 13.3, cada tipo de DE tiene su denominación en la representación gráfica:
+
+- **C002=1:** "KuDE de Factura Electrónica"
+- **C002=4:** "KuDE de Autofactura Electrónica"
+- **C002=5:** "KuDE de Nota de Crédito Electrónica"
+- **C002=6:** "KuDE de Nota de Débito Electrónica"
+- **C002=7:** "KuDE de Nota de Remisión Electrónica"

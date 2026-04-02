@@ -1,147 +1,141 @@
+> **Fuente:** Manual Técnico SIFEN v150, secciones 4.1, 6.3, 6.4, 6.6 y 7.5
+
+> **Nota:** Este documento refleja el MT v150 con cambios del historial de versiones marcados.
+
 # Actores del Sistema SIFEN
 
-> **Fuente:** Manual Técnico SIFEN v150, secciones 1-6 y 16
-
-## Visión General
-
-El SIFEN involucra a múltiples actores que interactúan entre sí para la generación, transmisión, validación y consulta de Documentos Electrónicos.
+Descripción de los actores que intervienen en el Sistema Integrado de Facturación Electrónica Nacional.
 
 ---
 
-## 1. SET / DNIT (Administración Tributaria)
+## 1. SET / DNIT — Administración Tributaria
 
-**Nombre completo:** Subsecretaría de Estado de Tributación (SET) / Dirección Nacional de Ingresos Tributarios (DNIT)
+### Rol
+La Subsecretaría de Estado de Tributación (SET) es el actor central del SIFEN. Actúa como Administración Tributaria (AT) y es responsable de la operación, reglamentación y fiscalización del sistema.
 
-**Rol:** Autoridad tributaria central del sistema.
+### Responsabilidades
+- Reglamentar los requisitos técnicos, condiciones y procedimientos del SIFEN mediante el Manual Técnico y las Resoluciones correspondientes.
+- Recepcionar los Documentos Electrónicos (DE) enviados por los facturadores electrónicos.
+- Ejecutar las validaciones (de conexión, técnicas y de negocio) sobre cada DE.
+- Otorgar la aprobación de uso del DTE cuando el DE supera todas las validaciones.
+- Almacenar los DTE aprobados y proveer los servicios de consulta pública y por Web Service.
+- Gestionar el Registro Único del Contribuyente (RUC) a través de Marangatu.
+- Otorgar el timbrado electrónico a los facturadores autorizados.
+- Emitir y distribuir el Código de Seguridad del Contribuyente (CSC) para la generación del código QR.
+- Proveer la solución gratuita **Ekuatia'i** para contribuyentes de bajo volumen.
+- **[MODIFICADO]** Establecer un tiempo máximo de respuesta de validación de 1 (un) minuto, con objetivo de reducirlo en el futuro a menos de 2 (dos) segundos por DTE.
 
-**Responsabilidades:**
-- Administrar y operar el SIFEN.
-- Aprobar o rechazar los Documentos Electrónicos transmitidos.
-- Emitir y administrar los timbrados de los facturadores electrónicos.
-- Publicar y mantener los Schemas XSD y el Manual Técnico.
-- Otorgar el Código Secreto del Contribuyente (CSC) para la generación del QR.
-- Disponibilizar los Web Services para la transmisión de DE y consultas.
-- Mantener el portal e-Kuatia para consultas públicas.
-- Registrar eventos automáticos (asociaciones, anulaciones).
-- Impugnar DTE cuando se compruebe falta de veracidad (evento futuro).
+### Subsistemas que opera
+1. **[MODIFICADO] Subsistema de Aprobación (Validación)**: orientado en especial a grandes y medianos contribuyentes. Opera con modelo de validación posterior (hasta 72 h) o previa (en tiempo real antes de la entrega al receptor).
+2. **[MODIFICADO] Subsistema Solución Gratuita Ekuatia'i**: orientado a contribuyentes con baja emisión de documentos. Transacciones en tiempo real. Contempla firma digital por la SET o por el contribuyente, según el segmento.
 
-**URLs relevantes:**
-- Portal público: `https://ekuatia.set.gov.py/consultas/`
-- Portal test: `https://ekuatia.set.gov.py/consultas-test/`
-- Prevalidador: `https://ekuatia.set.gov.py/prevalidador/`
-- Documentación técnica: `https://www.dnit.gov.py/web/e-kuatia/documentacion-tecnica`
+### Marco legal de la SET
+- Ley N° 125/1991 — Nuevo Régimen Tributario
+- Decreto N° 7.795/2017 — Crea el SIFEN
+- **[MODIFICADO]** Resolución General Reglamentaria N° 05/2018 — Reglamenta el SIFEN
+- **[MODIFICADO]** Resolución General Reglamentaria Futura — Para la etapa de voluntariedad
 
 ---
 
 ## 2. Facturador Electrónico (Emisor)
 
-**Definición:** Contribuyente autorizado por la Administración Tributaria para emitir y recibir DTE. Adquiere simultáneamente la naturaleza de emisor y receptor.
+### Rol
+Contribuyente de IVA autorizado por la AT para emitir y recibir Documentos Tributarios Electrónicos. Puede adherirse voluntariamente o ser seleccionado de manera obligatoria por la SET.
 
-**Tipos de facturadores:**
-- **Subsistema de Aprobación:** Contribuyentes grandes y medianos que desarrollan su propio sistema de facturación.
-- **Solución Gratuita Ekuatia'i:** Pequeños contribuyentes que utilizan la solución provista por la SET.
+### Responsabilidades
+- Adaptar sus sistemas de facturación conforme a los requisitos técnicos del MT.
+- Generar el Documento Electrónico (DE) en formato XML según los esquemas XSD del SIFEN.
+- Firmar digitalmente cada DE con el certificado digital correspondiente a su RUC **antes** de entregarlo al receptor.
+- **[MODIFICADO]** Entregar el DE al receptor como regla general de manera previa a la transmisión al SIFEN, enviando el XML o el KuDE según corresponda.
+  - Si el receptor no es facturador electrónico, debe enviar o disponibilizar el KuDE (en formato físico o digital).
+- Transmitir los DE firmados al SIFEN dentro de los plazos establecidos (regla general: hasta 72 horas desde la firma digital).
+- Reutilizar el CDC del DE rechazado cuando los ajustes necesarios no alteren su construcción.
+- Inutilizar el número de comprobante cuando los cambios alteren el CDC.
+- Gestionar y registrar los eventos sobre los DTE (cancelación, inutilización, etc.) dentro de los plazos correspondientes.
+- Mantener la relación directa con la SET, sin intermediación obligatoria.
 
-**Responsabilidades:**
-- Generar los Documentos Electrónicos (DE) conforme al formato XML definido.
-- Firmar digitalmente cada DE con su certificado digital.
-- Transmitir los DE al SIFEN dentro del plazo de 72 horas desde la firma.
-- Generar el CDC único para cada DE.
-- Generar y entregar el KuDE al receptor.
-- Registrar eventos (cancelaciones, inutilizaciones).
-- Conservar los DTE por 5 años.
-- Verificar el estado de los DTE transmitidos.
+### Medios de entrega del DE al receptor
+- **[MODIFICADO]** Archivo adjunto transmitido por correo electrónico o aplicaciones.
+- Descarga por el receptor en página web expuesta por el emisor.
+- **[MODIFICADO]** Archivo adjunto transmitido por aplicativo de mensajería electrónica de datos.
 
-**Obligaciones técnicas:**
-- Poseer conexión a Internet de banda ancha.
-- Desarrollar software cliente compatible con los WS del SIFEN.
-- Obtener certificado digital de un PSC habilitado.
-- Sincronizar el horario con los servidores NTP de la SET.
+### Certificado digital requerido
+El emisor debe poseer un certificado digital emitido por un PSC habilitado por el MIC, estándar X.509 v3, tipo F1 o F2:
+- Para **firma de mensajes de datos**: **[MODIFICADO]** el certificado debe contener el RUC del contribuyente emisor y la clave para función de firma digital.
+- Para **establecimiento de conexiones y autenticaciones mutuas**: **[MODIFICADO]** el certificado debe contener el RUC del contribuyente emisor, con la extensión Extended Key Usage con el permiso `clientAuth`.
 
 ---
 
 ## 3. Receptor
 
-**Definición:** Persona física o jurídica a quien se emite un Documento Electrónico.
+### Rol
+Destinatario del Documento Tributario Electrónico. Puede ser:
+- Un facturador electrónico (recibe el DE en XML).
+- Un contribuyente de IVA o renta que no es facturador electrónico (recibe el KuDE).
+- Un consumidor final (recibe el KuDE).
 
-**Tipos:**
-- **Receptor contribuyente** (D201=1): Tiene RUC. Puede ser facturador electrónico o no.
-- **Receptor no contribuyente** (D201=2): Persona física o jurídica sin RUC (consumidor final).
+### Responsabilidades
+- **[MODIFICADO]** En el modelo de aprobación posterior: verificar a posteriori, en los servicios de consulta del SIFEN, que el DTE (luego de aprobado el DE) se encuentre conforme a la operación comercial realizada. En específico debe verificar:
+  - **[MODIFICADO]** Que el DE fue transmitido y obtuvo la aprobación como DTE.
+  - **[MODIFICADO]** Que la información presente en el KuDE coincide plenamente con la información del DTE consultado.
+- **[NUEVO en v150]** Consultar y/o comprobar la existencia del DTE en el SIFEN, utilizando campos del KuDE como criterios de consulta (CDC, código QR).
+- Registrar eventos de receptor (Notificación de Recepción, Conformidad, Disconformidad, Desconocimiento) dentro de los plazos establecidos.
 
-**Derechos y obligaciones:**
-- Verificar la existencia del DTE en el SIFEN (obligación para ejercer derechos tributarios).
-- Puede verificar mediante: consulta por CDC, lectura del QR, o portal e-Kuatia.
-- Registrar eventos de receptor: Notificación de recepción, Conformidad, Disconformidad, Desconocimiento.
-- Plazo máximo para registrar eventos: 45 días desde la fecha de emisión.
-
-**Verificación obligatoria:**
-El receptor debe confirmar:
-1. Que el DE fue transmitido y obtuvo aprobación como DTE.
-2. Que la información del KuDE coincide con el DTE consultado en SIFEN.
+### Medios de verificación disponibles
+- Servicio web de consulta CDC (WS siConsDE).
+- Página web del portal SIFEN mediante código QR del KuDE.
+- Ingreso manual del CDC en el portal.
 
 ---
 
 ## 4. Proveedores de Servicios de Certificación (PSC)
 
-**Definición:** Entidades habilitadas por el Ministerio de Industria y Comercio (MIC) para emitir certificados digitales en Paraguay.
+### Rol
+Entidades autorizadas por el Ministerio de Industria y Comercio (MIC) para emitir certificados digitales válidos en Paraguay.
 
-**Base legal:** Ley N° 4017 de Firma Digital.
+### Responsabilidades
+- Emitir certificados digitales X.509 v3 (tipo F1 por software o F2 por hardware) a personas físicas y jurídicas.
+- Mantener y publicar la Lista de Certificados Revocados (LCR).
+- Responder a consultas de validación de certificados en tiempo real.
 
-**Funciones:**
-- Emitir certificados digitales Tipo F1 (por software) y Tipo F2 (por hardware).
-- Emitir certificados para persona física y persona jurídica.
-- Mantener la Lista de Certificados Revocados (LCR).
-- Operar como parte de la cadena de confianza del SIFEN.
+### Interoperabilidad con SIFEN
+El SIFEN consulta automáticamente la LCR de los PSC al momento de validar cada DE. No es necesario que el contribuyente adjunte la LCR al firmar el documento.
 
-**Requisitos del certificado para SIFEN:**
-- Persona jurídica: El RUC del contribuyente debe estar en el campo Subject/SerialNumber (OID: 2.5.4.5).
-- Persona física: El RUC debe estar en SubjectAlternativeName/SerialNumber (OID: 2.5.4.5).
-- Formato del RUC: `RUCXXXXXXXXX-X` (sin espacios, con guion antes del DV).
-- Para autenticación TLS: Debe incluir la extensión Extended Key Usage con permiso `clientAuth`.
-
-**Directorio de PSC:** `https://www.acraiz.gov.py/html/Certif_1PrestaServ.html`
+Referencia: https://www.acraiz.gov.py/html/Certif_1PrestaServ.html
 
 ---
 
-## 5. Proveedores de Certificación (Terceros/Integradores)
+## 5. Proveedores Tecnológicos (Opcionales)
 
-**Definición:** Empresas que brindan servicios de integración y certificación para facturadores electrónicos que optan por tercerizar su sistema de FE.
+### Rol
+Prestadores de servicios tecnológicos que pueden asistir a los contribuyentes facturadores electrónicos en la implementación y operación de sus sistemas.
 
-**Rol en el modelo:**
-- Actúan como intermediarios tecnológicos entre el emisor y el SIFEN.
-- Pueden operar el sistema de FE en nombre del contribuyente emisor.
-- La responsabilidad tributaria siempre recae en el facturador electrónico (emisor).
+### Característica clave
+- **La relación con la SET siempre es directa con el contribuyente**, independientemente del uso de proveedores tecnológicos.
+- El modelo operativo de SIFEN entiende la interacción SET–facturador como directa, sin necesidad de intermediación obligatoria.
+- A discreción y decisión del contribuyente, este puede acudir a estos servicios.
 
 ---
 
-## 6. Interacción entre Actores
+## Diagrama de relaciones
 
 ```
-Facturador Electrónico (Emisor)
-        |
-        | 1. Genera DE (XML)
-        | 2. Firma digitalmente (PSC)
-        | 3. Entrega KuDE al receptor
-        | 4. Transmite DE al SIFEN (WS)
-        v
-      SIFEN (SET/DNIT)
-        |
-        | 5. Valida DE
-        | 6. Aprueba → DTE
-        | 7. Registra en base de datos
-        |
-        v
-     Receptor
-        |
-        | 8. Recibe KuDE
-        | 9. Verifica DTE en SIFEN
-        | 10. Registra eventos (opcional)
+                  ┌──────────────────┐
+                  │   SET / DNIT     │
+                  │ (AT - SIFEN)     │
+                  └────────┬─────────┘
+                           │ WS SIFEN
+                           │ (HTTPS/TLS 1.2)
+          ┌────────────────┼────────────────┐
+          │                │                │
+   ┌──────┴──────┐  ┌──────┴──────┐  ┌─────┴──────┐
+   │  Facturador │  │  Marangatu  │  │    PSC     │
+   │ Electrónico │  │  (RUC/Timb) │  │ (Certif.)  │
+   │  (Emisor)   │  └─────────────┘  └────────────┘
+   └──────┬──────┘
+          │ DE (XML) o KuDE
+          ▼
+   ┌─────────────┐
+   │  Receptor   │
+   └─────────────┘
 ```
-
-## 7. Tipos de Operación por Actor
-
-| Código D202 | Tipo | Descripción |
-|-------------|------|-------------|
-| 1 | B2B | Empresa a Empresa |
-| 2 | B2C | Empresa a Consumidor Final |
-| 3 | B2G | Empresa a Gobierno |
-| 4 | B2F | Empresa a Extranjero |

@@ -1,213 +1,112 @@
+> **Fuente:** Manual Técnico SIFEN v150, sección 5 y campo C002 (sección 10.4)
+
+> **Nota:** Este documento refleja el MT v150 con cambios del historial de versiones marcados.
+
 # Documentos Tributarios Electrónicos (DTE)
 
-> **Fuente:** Manual Técnico SIFEN v150, sección 10.4, campo C002
-
-## Definiciones Fundamentales
-
-- **DE (Documento Electrónico):** Documento emitido y firmado digitalmente por el emisor, que aún no ha sido aprobado por la Administración Tributaria y no ha ingresado al SIFEN.
-- **DTE (Documento Tributario Electrónico):** Documento electrónico con aprobación de uso por parte de la Administración Tributaria, ingresado al SIFEN.
+Descripción de los tipos de documentos electrónicos previstos por SIFEN y sus códigos de identificación.
 
 ---
 
-## Tipos de Documentos Electrónicos (Campo C002)
+## 1. Definición
 
-| Código | Sigla | Nombre | Estado |
-|--------|-------|--------|--------|
-| 1 | FE | Factura Electrónica | Vigente |
-| 2 | FEE | Factura Electrónica de Exportación | Futuro |
-| 3 | LCE | Liquidación de Crédito Electrónica | Futuro |
-| 4 | AFE | Autofactura Electrónica | Vigente |
-| 5 | NCE | Nota de Crédito Electrónica | Vigente |
-| 6 | NDE | Nota de Débito Electrónica | Vigente |
-| 7 | NRE | Nota de Remisión Electrónica | Vigente |
-| 8 | CRE | Comprobante de Retención Electrónico | Futuro |
-| 11 | FCE | Factura de Contingencia Electrónica | Contingencia |
+Un **Documento Tributario Electrónico (DTE)** es el Documento Electrónico (DE) que ha sido:
+1. Generado y firmado digitalmente por un facturador electrónico autorizado.
+2. Transmitido al SIFEN.
+3. Validado formalmente por la Administración Tributaria (SET).
+4. Aprobado con efectos tributarios.
+
+Adquiere la misma validez jurídica, fuerza probatoria e incidencia tributaria que los comprobantes físicos o convencionales autorizados por la SET (Art. 33, Ley N° 4.868/2013).
 
 ---
 
-## Descripción de Cada Tipo
+## 2. Tipos de Documentos Previstos
 
-### 1. Factura Electrónica (FE) — Código 1
+El campo **C002 (iTiDE)** identifica el tipo de documento electrónico en el XML. Los valores válidos son:
 
-**Descripción:** Documento que respalda la compra y venta de bienes y servicios entre contribuyentes o hacia consumidores finales.
+| Código C002 | Tipo | Estado | Descripción |
+|-------------|------|--------|-------------|
+| 1 | **Factura Electrónica (FE)** | Activo | Comprobante de venta de bienes y/o servicios. |
+| 2 | **[MODIFICADO] Factura Electrónica de Exportación (FEE)** | Futuro | ~~Comprobante de exportaciones.~~ Actualmente desactivado — a futuro. |
+| 3 | **[MODIFICADO] Factura Electrónica de Importación (FEI)** | Futuro | ~~Comprobante de importaciones.~~ Actualmente desactivado — a futuro. |
+| 4 | **[MODIFICADO] Autofactura Electrónica (AFE)** | Activo | Comprobante emitido por el comprador cuando el vendedor no puede emitir factura. |
+| 5 | **Nota de Crédito Electrónica (NCE)** | Activo | Documento complementario que reduce el valor de una FE emitida. |
+| 6 | **Nota de Débito Electrónica (NDE)** | Activo | Documento complementario que incrementa el valor de una FE emitida. |
+| 7 | **[MODIFICADO] Nota de Remisión Electrónica (NRE)** | Activo | Documento que ampara el traslado físico de mercaderías. |
+| 8 | **[MODIFICADO] Comprobante de Retención Electrónico** | Futuro | Comprobante de retención de impuestos. A futuro. |
 
-**Campo XML:** `gCamFE` (E010-E099)
-**Indicador de presencia:** E011 (presencial, electrónica, telemarketing, domicilio, bancaria, cíclica)
-**Condición de operación:** Contado (E601=1) o Crédito (E601=2)
-**Compras públicas:** E020-E029 cuando D202=3 (B2G)
-
-**Tipos de transacción (D011) permitidos:**
-- 1 = Venta de mercadería
-- 2 = Prestación de servicios
-- 3 = Mixto
-- 4 = Venta de activo fijo
-- 5 = Venta de divisas
-- 6 = Compra de divisas
-- 7 = Promoción o entrega de muestras
-- 8 = Donación
-- 9 = Anticipo
-- 10 = Compra de productos
-- 11 = Compra de servicios
-- 12 = Venta de crédito fiscal
-- 13 = Muestras médicas (Art. 3 RG 24/2014)
-
-**Eventos disponibles:**
-- Cancelación (hasta 48 hs desde aprobación)
-- Vinculación automática de NCE/NDE
-- Vinculación automática de NRE
-- Nominación (NT-014)
+> **[MODIFICADO]** Los tipos 2, 3 y 8 están marcados como **Futuro** en el MT v150. Su implementación está pendiente de definición técnica y normativa.
 
 ---
 
-### 2. Factura Electrónica de Exportación (FEE) — Código 2
+## 3. Documentos Activos en esta Versión
 
-**Estado:** Futuro (en desarrollo)
-**Campo XML:** `gCamFEE` (E100-E199)
+Conforme al capítulo 5 del MT v150, los documentos tributarios electrónicos **activos** en la presente versión son:
 
-**Observación:** Hasta tanto se defina el documento FEE con timbrado propio, las operaciones de exportación se registran en la Factura Electrónica (C002=1) usando el campo B006 (dInfoFisc) para informar los datos requeridos por el Art. 20 numeral 15 del Decreto N° 10797/2013 (NT-007).
+### 3.1 Comprobantes de Ventas Electrónicos
 
----
+#### Factura Electrónica (FE) — C002 = 1
+- Respalda la compra y venta de bienes y/o servicios.
+- Tipos de transacción aplicables (D011): venta de mercadería, prestación de servicios, mixto, venta de activo fijo, venta/compra de divisas, donación, anticipo, compra de productos/servicios, **[NUEVO en v150]** venta de crédito fiscal, **[NUEVO en v150]** muestras médicas.
+- Requiere datos completos del receptor.
 
-### 3. Liquidación de Crédito Electrónica (LCE) — Código 3
+#### Autofactura Electrónica (AFE) — C002 = 4 **[NUEVO en v150]**
+- Emitida por el **comprador** cuando el vendedor no puede emitir factura (ej.: compras a personas físicas no contribuyentes).
+- **[MODIFICADO]** Campos específicos en el grupo E4 (E300–E399).
 
-**Estado:** Futuro
-**Campo XML:** Grupo específico por definir
+### 3.2 Documentos Complementarios Electrónicos
 
----
+#### Nota de Crédito Electrónica (NCE) — C002 = 5
+- Reduce el valor de una o más facturas electrónicas ya aprobadas.
+- Debe referenciar el DTE original en el grupo H (Documentos Asociados).
+- Campos específicos en el grupo E5 (E400–E499).
 
-### 4. Autofactura Electrónica (AFE) — Código 4
+#### Nota de Débito Electrónica (NDE) — C002 = 6
+- Incrementa el valor de una o más facturas electrónicas ya aprobadas.
+- Debe referenciar el DTE original en el grupo H (Documentos Asociados).
+- Campos específicos en el grupo E5 (E400–E499).
 
-**Descripción:** Documento emitido por el comprador/adquiriente cuando realiza operaciones con no contribuyentes o extranjeros que no emiten facturas.
+### 3.3 Nota de Remisión Electrónica
 
-**Campo XML:** `gCamAE` (E300-E399)
-**Moneda:** Obligatoriamente PYG (D015=PYG, según NT-012)
-**Vendedor:** No contribuyente (E301=1) o Extranjero (E301=2)
-
-**Datos del vendedor requeridos:**
-- Tipo de documento de identidad (E304)
-- Número de documento (E306)
-- Nombre y apellido (E307)
-- Dirección (E308)
-- Ciudad/Departamento (E309-E315)
-- Lugar de la transacción (E316-E322)
-
-**Condición de operación:** Contado (E601=1) o Crédito (E601=2)
-
-**Eventos disponibles:**
-- Cancelación (hasta 168 hs desde aprobación)
-
----
-
-### 5. Nota de Crédito Electrónica (NCE) — Código 5
-
-**Descripción:** Documento emitido para ajustar, disminuir o anular el valor de una Factura Electrónica previamente aprobada.
-
-**Campo XML:** `gCamNCDE` (E400-E499)
-**Requisito:** Debe estar vinculada a una FE aprobada en el SIFEN (campo H001-H049, documento asociado).
-
-**Motivos de emisión (E401):**
-- 1 = Devolución y Ajuste de precios
-- 2 = Devolución
-- 3 = Descuento
-- 4 = Bonificación
-- 5 = Crédito incobrable
-- 6 = Recupero de costo
-- 7 = Recupero de gasto
-- 8 = Ajuste de precio
-
-**Efecto en SIFEN:**
-- Genera automáticamente un evento de "Devolución y Ajuste de precios" sobre la FE referenciada.
-- El receptor de la FE asociada no tendrá derecho al crédito del IVA en forma total o parcial.
-
-**Eventos disponibles:**
-- Cancelación (hasta 168 hs desde aprobación)
+#### Nota de Remisión Electrónica (NRE) — C002 = 7
+- **[MODIFICADO]** Respalda el traslado físico de mercaderías entre locales del emisor o hacia el receptor comprador.
+- No requiere datos de operación comercial (D010 no se informa si C002 = 7).
+- **[NUEVO en v150]** Cuando C002 = 7, es **obligatorio** informar el mensaje del Art. 3 Inc. 7 de la Resolución General N° 41/2014 en el campo B006 (dInfoFisc), que debe imprimirse en el KuDE.
+- Campos específicos en el grupo E6 (E500–E599).
+- Campos de transporte en el grupo E10 (E900–E999).
 
 ---
 
-### 6. Nota de Débito Electrónica (NDE) — Código 6
+## 4. Documentos Eliminados o No Implementados
 
-**Descripción:** Documento emitido para ajustar, aumentar o corregir el valor de una Factura Electrónica previamente aprobada.
+### Factura Electrónica de Exportación (FEE) — C002 = 2
+~~Comprobante de ventas de exportación.~~
+> ⚠️ **ELIMINADO / FUTURO:** Este tipo de documento fue removido de la implementación activa en la versión actual del MT. Los grupos de campos E2 (E100–E199) asociados a este tipo fueron eliminados.
 
-**Campo XML:** `gCamNCDE` (E400-E499) — mismo grupo que NCE
-**Requisito:** Debe estar vinculada a una FE aprobada en el SIFEN.
+### Factura Electrónica de Importación (FEI) — C002 = 3
+~~Comprobante de importaciones.~~
+> ⚠️ **ELIMINADO / FUTURO:** Este tipo de documento fue removido de la implementación activa en la versión actual del MT. Los grupos de campos E3 (E200–E299) asociados a este tipo fueron eliminados.
 
-**Motivos de emisión (E401):** Mismos que NCE (códigos 1-8).
-
-**Efecto en SIFEN:**
-- Genera automáticamente un evento de "Devolución y Ajuste de precios" sobre la FE referenciada.
-
-**Eventos disponibles:**
-- Cancelación (hasta 168 hs desde aprobación)
+> **Nota del MT v150:** No se respetó el esquema de control de versiones a color en la eliminación de contenido relacionado a ISC, y a los tipos de documentos: Factura electrónica de exportación, Factura electrónica de importación y Comprobante de retenciones electrónico.
 
 ---
 
-### 7. Nota de Remisión Electrónica (NRE) — Código 7
+## 5. Denominación de los KuDE por Tipo de Documento
 
-**Descripción:** Documento que ampara el traslado de mercaderías. No tiene condición de operación (no lleva IVA).
+Cada tipo de documento electrónico tiene una denominación específica para su representación gráfica (KuDE):
 
-**Campo XML:** `gCamNRE` (E500-E599)
-**Particularidad:** No requiere grupo gOpeCom (D010). El campo dInfoFisc (B006) es obligatorio según Art. 3 Inc. 7 de la RG N° 41/2014.
-
-**Motivos de emisión (E501):**
-- 1 = Traslado por venta
-- 2 = Traslado por consignación
-- 3 = Exportación
-- 4 = Traslado por compra
-- 5 = Importación
-- 6 = Traslado por devolución
-- 7 = Traslado entre locales de la empresa
-- 8 = Traslado de bienes por transformación
-- 9 = Traslado de bienes por reparación
-- 10 = Traslado por emisor móvil
-- 11 = Exhibición o demostración
-- 12 = Participación en ferias
-- 13 = Traslado de encomienda
-- 14 = Decomiso
-- 99 = Otro
-
-**Responsable de la emisión (E503):**
-- 1 = Emisor de la factura
-- 2 = Poseedor de la factura y bienes
-- 3 = Empresa transportista
-- 4 = Despachante de Aduanas
-- 5 = Agente de transporte o intermediario
-
-**Campos de transporte requeridos:**
-- Grupo E900-E999 (transporte): local de salida, local de entrega, vehículo, transportista.
-
-**Eventos disponibles:**
-- Cancelación (hasta 168 hs desde aprobación)
-- Vinculación automática a FE
-- Actualización de datos del transporte (GET)
+| Tipo DE | Denominación KuDE |
+|---------|-------------------|
+| FE (C002=1) | KuDE de Factura Electrónica |
+| ~~FEE (C002=2)~~ | ~~KuDE de Factura de Exportación Electrónica~~ |
+| ~~FEI (C002=3)~~ | ~~KuDE de Factura de Importación Electrónica~~ |
+| AFE (C002=4) | KuDE de Autofactura Electrónica |
+| NDE (C002=6) | KuDE de Nota de Débito Electrónica |
+| NCE (C002=5) | KuDE de Nota de Crédito Electrónica |
+| NRE (C002=7) | KuDE de Nota de Remisión Electrónica |
 
 ---
 
-### 8. Comprobante de Retención Electrónico (CRE) — Código 8
+## 6. Gradualidad e Implementación Futura
 
-**Estado:** Futuro
-
----
-
-### 11. Factura de Contingencia Electrónica (FCE) — Código 11
-
-**Descripción:** Documento emitido en modo contingencia cuando no hay conectividad con el SIFEN.
-**Estado:** Contingencia (pendiente de implementación completa)
-
----
-
-## Campos Comunes a Todos los Tipos
-
-Independientemente del tipo de documento, todos los DE incluyen:
-
-| Grupo | Campos | Descripción |
-|-------|--------|-------------|
-| AA | AA001-AA002 | Identificación del formato XML |
-| A | A001-A005 | Campos firmados (CDC, fecha firma, sistema) |
-| B | B001-B006 | Operación DE (tipo emisión, código seguridad, info) |
-| C | C001-C010 | Datos del timbrado |
-| D | D001-D299 | Datos generales, emisor y receptor |
-| F | F001-F099 | Subtotales y totales |
-| G | G001-G099 | Campos complementarios comerciales |
-| H | H001-H049 | Documento asociado |
-| I | I001-I049 | Firma digital del DTE |
-| J | J001-J049 | Campos fuera de la firma (QR, info adicional) |
+Conforme al Decreto N° 7.795/2017 y sus reglamentaciones, la AT puede implementar de manera gradual la utilización de otros DE que, por su naturaleza, requieran un tratamiento similar de operación electrónica. Estos se introducirán en versiones posteriores del MT.
