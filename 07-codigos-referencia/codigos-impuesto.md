@@ -1,81 +1,66 @@
-# Códigos de Impuesto (D013 / iTImp, E731 / iAfecIVA)
+> **Fuente:** Manual Técnico SIFEN v150, sección 10.4 (campos D013, E731) y sección 15 (TABLA 6, TABLA 7, TABLA 8)
+> **Nota:** Contenido tachado (~~así~~) indica especificaciones eliminadas en v150. [MODIFICADO] indica cambios. [NUEVO] indica adiciones en v150.
 
-Campos de impuesto en el DE:
-- `iTImp` (D013): tipo de impuesto afectado en la operación
-- `iAfecIVA` (E731): forma de afectación tributaria del IVA por ítem
-- `dTasaIVA` (E734): tasa del IVA aplicada al ítem
+# Códigos de Impuesto
 
-> **Fuente:** Manual Técnico SIFEN v150, sección 10.4 (campos D013, E731, E734) y sección 15 (TABLA 6, TABLA 7, TABLA 8)
+## Campo D013 – iTImp (Tipo de impuesto afectado)
 
----
+El campo `iTImp` (D013) es [MODIFICADO] "Tipo de impuesto afectado", obligatorio para la Factura Electrónica y la Autofactura Electrónica (cuando aplique). Pertenece al grupo D1.
 
-## Tipo de Impuesto Afectado (D013 / iTImp)
+El campo `D014` (`dDesTImp`) contiene la descripción del tipo de impuesto; su valor debe corresponder al código de D013. [MODIFICADO] Su longitud fue ajustada a 3–11 caracteres.
 
-Indica qué impuesto afecta a la operación documentada. Obligatorio para FE (C002=1) y AFE (C002=4).
+| Código | Descripción | Estado en v150 |
+|--------|-------------|----------------|
+| 1 | IVA | Vigente |
+| 2 | ISC | [NUEVO] |
+| 3 | Renta | [NUEVO] |
+| 4 | Ninguno | [NUEVO] |
+| 5 | IVA – Renta | [NUEVO] |
 
-| Código | Descripción (dDesTImp) | Observación |
-|--------|------------------------|-------------|
-| 1 | IVA | Impuesto al Valor Agregado |
-| 2 | ISC | Impuesto Selectivo al Consumo |
-| 3 | Renta | Impuesto a la Renta |
-| 4 | Ninguno | Sin afectación de impuesto |
-| 5 | IVA – Renta | Afectado simultáneamente por IVA y Renta |
-
-**Regla:** Si D013 = 2 (ISC) y C002 = 4 o 7: no se informa el grupo E730 (campos de IVA por ítem).
+> **Nota importante:** La validación ~~28~~ (D013 obligatorio para C002=1 o 4) fue **eliminada** en v150. La descripción sigue siendo validada mediante la regla 26 (D014).
 
 ---
 
-## Forma de Afectación Tributaria del IVA (E731 / iAfecIVA)
+## Campo E731 – iAfecIVA (Forma de afectación tributaria del IVA por ítem)
 
-Indica cómo afecta el IVA a cada ítem de la operación. Se informa en el grupo E730, por cada ítem.
+El campo `iAfecIVA` (E731) pertenece al grupo E8.2 (Campos que describen el IVA de la operación por ítem, E730-E739).
 
-| Código | Descripción (dDesAfecIVA) | Tasa aplicable |
-|--------|--------------------------|----------------|
+**Aplicabilidad:** [MODIFICADO] Obligatorio si D013=1, 3, 4 o 5 y C002 ≠ 4 o 7. No informar si D013=2 y C002=4 o 7.
+
+El campo `E732` (`dDesAfecIVA`) contiene la descripción de la afectación; debe corresponder al código E731.
+
+### TABLA 6 – Códigos de afectación tributaria del IVA
+
+| Código | Descripción | Tasa válida (E734) |
+|--------|-------------|-------------------|
 | 1 | Gravado IVA | 5% o 10% |
-| 2 | Exonerado (Art. 83 - Ley 125/91) | 0% |
+| 2 | Exonerado (Art. 83 – Ley 125/91) | 0% |
 | 3 | Exento | 0% |
-| 4 | Gravado parcial (Grav-Exento) | Porción gravada al 5% o 10% |
+| 4 | Gravado parcial (Grav-Exento) | 5% o 10% |
 
-**Nota sobre TABLA 6 - Códigos de afectación:**
+**Reglas de cálculo de base gravada (E735):**
+- Si E731 = 1 o 4: `[EA008 * (E733/100)] / 1,10` si tasa es 10%; `[EA008 * (E733/100)] / 1,05` si tasa es 5%
+- Si E731 = 2 o 3: E735 = 0; E736 = 0
+
+---
+
+## TABLA 7 – Categorías del ISC
+
+El campo `iTipISC` (código del grupo E8.3) — actualmente futuro — utilizará estas categorías:
 
 | Código | Descripción |
 |--------|-------------|
-| 1 | Gravado IVA |
-| 2 | Exonerado (Art. 83 - 125) |
-| 3 | Exento |
-| 4 | Gravado parcial |
+| 1 | Sección I — Cigarrillos, Tabacos, Esencias y Otros derivados del Tabaco |
+| 2 | Sección II — Bebidas con y sin alcohol |
+| 3 | Sección III — Alcoholes y Derivados del alcohol |
+| 4 | Sección IV — Combustibles |
+| 5 | Sección V — Artículos considerados de lujo |
 
 ---
 
-## Tasa del IVA (E734 / dTasaIVA)
+## TABLA 8 – Tasas del ISC
 
-| Valor | Aplica cuando |
-|-------|--------------|
-| 0 | E731 = 2 (Exonerado) o E731 = 3 (Exento) |
-| 5 | E731 = 1 (Gravado) o E731 = 4 (Gravado parcial) — tasa reducida |
-| 10 | E731 = 1 (Gravado) o E731 = 4 (Gravado parcial) — tasa general |
-
-**Indicador de IVA (iAfecIVA):** La proporción gravada se informa en el campo E733 (dPropIVA) como porcentaje entero (ejemplo: 100, 50, 30, 0).
-
----
-
-## Categorías del ISC — TABLA 7
-
-Cuando D013 = 2 (ISC), se aplica una categoría de ISC por ítem.
-
-| Código | Descripción |
-|--------|-------------|
-| 1 | Sección I - Cigarrillos, Tabacos, Esencias y Otros derivados del Tabaco |
-| 2 | Sección II - Bebidas con y sin alcohol |
-| 3 | Sección III - Alcoholes y Derivados del alcohol |
-| 4 | Sección IV - Combustibles |
-| 5 | Sección V - Artículos considerados de lujo |
-
----
-
-## Tasas del ISC — TABLA 8
-
-Tasas según Decretos N° 4344/04, N° 5158/10, N° 4693/15, N° 4694/15.
+Tasas del ISC según Decretos N° 4344/04, N° 5158/10, N° 4693/15, N° 4694/15:
 
 | Código | Porcentaje |
 |--------|-----------|
@@ -94,13 +79,24 @@ Tasas según Decretos N° 4344/04, N° 5158/10, N° 4693/15, N° 4694/15.
 
 ---
 
-## Campos de liquidación de IVA en totales (grupo F)
+## TABLA 9 – Tipos de Vehículos
 
-| Campo | ID | Descripción |
-|-------|----|-------------|
-| Subtotal exentas | F002 | Total ítems exentos de IVA |
-| Subtotal al 5% | F004 | Total ítems gravados al 5% |
-| Subtotal al 10% | F005 | Total ítems gravados al 10% |
-| IVA al 5% | F014 | Monto de IVA calculado al 5% |
-| IVA al 10% | F015 | Monto de IVA calculado al 10% |
-| Total IVA | F016 | Suma total de IVA de la operación |
+~~TABLA 9 – TIPOS DE VEHÍCULOS~~
+
+~~Se incluirá un link de descarga con la codificación a fin de agilizar su implementación.~~
+
+> Esta tabla fue **eliminada** del Manual Técnico en v150.
+
+---
+
+## Resumen de campos de IVA por ítem (E730-E739)
+
+| ID | Campo | Descripción | Longitud | Observaciones |
+|----|-------|-------------|----------|---------------|
+| E730 | gCamIVA | Grupo IVA por ítem | G | [MODIFICADO] Obligatorio según D013 y C002 |
+| E731 | iAfecIVA | Forma de afectación tributaria | N 1 | Ver TABLA 6 |
+| E732 | dDesAfecIVA | Descripción de afectación | A | [MODIFICADO] Referente a E731 |
+| E733 | dPropIVA | Proporción gravada del IVA (%) | N [MODIFICADO] 1-3p(0-8) | Ejemplo: 100, 50, 30, 0 |
+| E734 | dTasaIVA | Tasa del IVA (% entero) | N 1-2 | 0 si E731=2 o 3; 5 o 10 si E731=1 o 4 |
+| E735 | dBasGravIVA | Base gravada del IVA | N [MODIFICADO] 1-15p(0-8) | |
+| E736 | dLiqIVAItem | Liquidación del IVA por ítem | N [MODIFICADO] 1-15p(0-8) | E735 * (E734/100) |

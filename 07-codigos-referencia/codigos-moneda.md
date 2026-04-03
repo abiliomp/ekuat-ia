@@ -1,52 +1,56 @@
-# Códigos de Moneda (D015 / cMoneOpe)
+> **Fuente:** Manual Técnico SIFEN v150, sección 10.4 — Campo D015 (cMoneOpe)
+> **Nota:** Contenido tachado (~~así~~) indica especificaciones eliminadas en v150. [MODIFICADO] indica cambios. [NUEVO] indica adiciones en v150.
 
-Campo `cMoneOpe` (D015): código de la moneda de la operación. Sigue el estándar internacional **ISO 4217**. Se requiere la misma moneda para todos los ítems del DE.
+# Códigos de Moneda (D015 – cMoneOpe)
 
-> **Fuente:** Manual Técnico SIFEN v150, sección 10.4 (campo D015) y sección 15 (Tabla de monedas ISO 4217)
+El campo `cMoneOpe` (D015) contiene el código de la moneda de la operación. Sigue el estándar internacional **ISO 4217** (tres letras mayúsculas). Es un campo alfanumérico de longitud 3, obligatorio.
 
-## Moneda por defecto
+**Regla:** Se requiere la misma moneda para todos los ítems del DE.
 
-**PYG** (Guaraní paraguayo) es la moneda por defecto para operaciones domésticas. Cuando la moneda es PYG:
-- No se debe informar el campo D017 (condición del tipo de cambio)
-- No se debe informar el campo D018 (tipo de cambio de la operación)
-- No se debe informar el campo E725 (tipo de cambio por ítem)
+El campo `D016` (`dDesMoneOpe`) contiene la descripción de la moneda; su valor debe corresponder exactamente al código informado en D015.
 
-## Tabla de monedas utilizadas en SIFEN
+## Reglas de tipo de cambio
 
-| Código ISO 4217 | Moneda | País / Área |
-|----------------|--------|------------|
+| Condición | Regla |
+|-----------|-------|
+| D015 ≠ PYG | Obligatorio informar la condición del tipo de cambio (D017) |
+| D015 = PYG | No se informa D017 ni D018 |
+| D017 = 1 (Global) | Obligatorio informar D018 (tipo de cambio global) |
+| [NUEVO] D017 = 2 (Por ítem) | No se informa D018 |
+| [NUEVO] D015 = PYG | No se informa D018 |
+
+## Monedas utilizadas en SIFEN (ISO 4217)
+
+SIFEN acepta cualquier código de moneda válido conforme al estándar ISO 4217. A continuación se listan las monedas de mayor uso en Paraguay:
+
+| Código ISO 4217 | Moneda | País / Región |
+|----------------|--------|---------------|
 | PYG | Guaraní paraguayo | Paraguay |
-| USD | Dólar americano | Estados Unidos |
-| EUR | Euro | Zona Euro |
+| USD | Dólar estadounidense | Estados Unidos |
+| EUR | Euro | Unión Europea |
 | BRL | Real brasileño | Brasil |
 | ARS | Peso argentino | Argentina |
+| UYU | Peso uruguayo | Uruguay |
 | BOB | Boliviano | Bolivia |
 | CLP | Peso chileno | Chile |
 | COP | Peso colombiano | Colombia |
 | PEN | Sol peruano | Perú |
-| UYU | Peso uruguayo | Uruguay |
 | GBP | Libra esterlina | Reino Unido |
 | JPY | Yen japonés | Japón |
-| CNY | Yuan chino (Renminbi) | China |
+| CNY | Yuan renminbi | China |
+| CAD | Dólar canadiense | Canadá |
+| CHF | Franco suizo | Suiza |
+| MXN | Peso mexicano | México |
 
-> La lista completa de códigos de moneda sigue el estándar ISO 4217.
-> Referencia oficial: https://www.currency-iso.org/en/home/tables/table-a1.html
+> La lista completa está definida por el estándar ISO 4217. SIFEN valida que el código informado sea válido según dicho estándar.
 
-## Campos relacionados
+## Campos de moneda en otros grupos del DE
 
-| Campo | ID | Descripción |
-|-------|----|-------------|
-| Moneda de la operación | D015 | Código ISO 4217 de la moneda del DE |
-| Descripción de la moneda | D016 | Texto descriptivo de la moneda (referente a D015) |
-| Condición del tipo de cambio | D017 | 1=Global, 2=Por ítem. Obligatorio si D015 ≠ PYG |
-| Tipo de cambio de la operación | D018 | Obligatorio si D017=1. No informar si D015=PYG |
-| Tipo de cambio por tipo de pago | E611 | Obligatorio si E609 ≠ PYG |
-| Tipo de cambio por ítem | E725 | Obligatorio si D017=2 y D015 ≠ PYG |
+| Campo | ID | Descripción | Notas |
+|-------|----|-------------|-------|
+| `cMoneTiPag` | E609 | Moneda por tipo de pago | Mismo estándar ISO 4217. Obligatorio si E609 ≠ PYG informar E611 (tipo de cambio por pago) |
+| [NUEVO] `cMoneCuo` | E653 | Moneda de las cuotas | [NUEVO] Aplica para operaciones a crédito por cuotas |
 
-## Reglas de validación asociadas
+## Observación sobre decimales
 
-- Si D015 ≠ PYG: es obligatorio informar D017 (condición del tipo de cambio). Código de error: 1207.
-- Si D015 = PYG: no se debe informar D017. Código de error: 1208.
-- Si D017 = 1 (global): es obligatorio informar D018. Código de error: 1209.
-- Si D017 = 2 (por ítem) o D015 = PYG: no se informa D018. Código de error: 1210.
-- La descripción D016 debe coincidir con el código D015. Código de error: 1206.
+[MODIFICADO] Para monedas extranjeras o cualquier cálculo que contenga decimales, las reglas de validación aceptarán redondeos de 50 céntimos (por encima o por debajo).

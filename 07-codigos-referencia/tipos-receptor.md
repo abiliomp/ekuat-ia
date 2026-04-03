@@ -1,42 +1,56 @@
-# Tipos de Receptor (D200-D299)
+> **Fuente:** Manual Técnico SIFEN v150, sección 10.4 — Campos D201–D224 (Grupo D3)
+> **Nota:** Contenido tachado (~~así~~) indica especificaciones eliminadas en v150. [MODIFICADO] indica cambios. [NUEVO] indica adiciones en v150.
 
-Campos del grupo D3 que identifican al receptor del Documento Electrónico.
+# Tipos de Receptor (D200–D299)
 
-> **Fuente:** Manual Técnico SIFEN v150, sección 10.4 (campos D200-D299)
-
----
-
-## Naturaleza del Receptor (D201 / iNatRec)
-
-| Código | Descripción | Observación |
-|--------|-------------|-------------|
-| 1 | Contribuyente | Requiere RUC (D206) y tipo de contribuyente (D205) |
-| 2 | No contribuyente | Requiere tipo y número de documento de identidad (D208, D210) |
+El grupo D3 identifica al receptor del Documento Electrónico. Los campos D201 a D224 conforman la información del receptor.
 
 ---
 
-## Tipo de Operación (D202 / iTiOpe)
+## Campo D201 – iNatRec (Naturaleza del receptor)
 
-Clasifica la operación según los actores involucrados.
+| Código | Descripción | Notas |
+|--------|-------------|-------|
+| 1 | Contribuyente | D205, D206 son obligatorios |
+| 2 | No contribuyente | D208, D210 son obligatorios (salvo D202=4) |
 
-| Código | Acrónimo | Descripción |
-|--------|----------|-------------|
-| 1 | B2B | Business to Business — operación entre empresas |
-| 2 | B2C | Business to Consumer — operación entre empresa y consumidor final |
-| 3 | B2G | Business to Government — operación entre empresa y entidad gubernamental |
-| 4 | B2F | Business to Foreign — servicios prestados a empresa o persona física del exterior |
+**Regla nueva:** [NUEVO] Si C002=4 (Autofactura), la naturaleza del receptor debe ser Contribuyente (D201=1).
+
+---
+
+## Campo D202 – iTiOpe (Tipo de operación)
+
+| Código | Descripción | Estado en v150 |
+|--------|-------------|----------------|
+| 1 | B2B (Business to Business) | Vigente |
+| 2 | B2C (Business to Consumer) | Vigente |
+| 3 | B2G (Business to Government) | [NUEVO] |
+| 4 | B2F (Business to Foreign — servicios al exterior) | [NUEVO] Solo para servicios a empresas o personas físicas del exterior |
 
 **Reglas de compatibilidad:**
-- Si D201=2 (No contribuyente) y C002 ≠ 4 (no es AFE): el tipo de operación debe ser B2C (D202=2).
-- Si D202=4 (B2F): la naturaleza del receptor debe ser No contribuyente (D201=2).
-- Si C002=4 (AFE): el tipo de operación debe ser B2C (D202=2).
-- Si D202=3 (B2G): es obligatorio informar el grupo E020 (informaciones de compras públicas).
+
+| Condición | Regla |
+|-----------|-------|
+| D201=2 (No contribuyente) y C002 ≠ 4 | [MODIFICADO] El tipo de operación debe ser B2C (D202=2) |
+| [NUEVO] D202=4 (B2F) | La naturaleza del receptor debe ser No Contribuyente (D201=2) |
+| [NUEVO] C002=4 (Autofactura) | El tipo de operación debe ser B2C (D202=2) |
+| D202=3 (B2G) | El grupo de Compras Públicas (E020) es obligatorio |
+| [NUEVO] D202=4 (B2F) | D203 ≠ PRY (país del receptor debe ser diferente a Paraguay) |
+| D202 ≠ 4 | D203 = PRY (país del receptor debe ser Paraguay) |
 
 ---
 
-## Tipo de Contribuyente Receptor (D205 / iTiContRec)
+## Campo D203 – cPaisRec (Código de país del receptor)
 
-Obligatorio si D201=1 (Contribuyente). No informar si D201=2.
+Código ISO 3166-1 alpha-3. Obligatorio. Ver archivo [codigos-pais.md](codigos-pais.md).
+
+- El campo `D204` (`dDesPaisRec`) contiene la descripción del país (4–30 caracteres).
+
+---
+
+## Campo D205 – iTiContRec (Tipo de contribuyente receptor)
+
+Obligatorio si D201=1. No informar si D201=2.
 
 | Código | Descripción |
 |--------|-------------|
@@ -45,61 +59,74 @@ Obligatorio si D201=1 (Contribuyente). No informar si D201=2.
 
 ---
 
-## Tipo de Documento de Identidad del Receptor (D208 / iTipIDRec)
+## Campo D206 – dRucRec (RUC del receptor)
 
-Obligatorio si D201=2 (No contribuyente) y D202 ≠ 4 (no es B2F). No informar si D201=1 o D202=4.
+Obligatorio si D201=1 (contribuyente). No informar si D201=2.
+[MODIFICADO] Longitud ajustada a 3–8 caracteres.
 
-| Código | Descripción (dDTipIDRec) |
-|--------|--------------------------|
-| 1 | Cédula paraguaya |
-| 2 | Pasaporte |
-| 3 | Cédula extranjera |
-| 4 | Carnet de residencia |
-| 5 | Innominado |
-| 6 | Tarjeta Diplomática de exoneración fiscal |
-| 9 | Otro (informar descripción en D209) |
+- `D207` (`dDVRec`): Dígito verificador del RUC del receptor. [NUEVO] Obligatorio si existe D206. Calculado mediante algoritmo módulo 11.
+- **Validaciones nuevas:**
+  - [NUEVO] Si C002=4 (Autofactura), el RUC del receptor debe ser igual al RUC del emisor (D206 = D101).
+  - Si D201=2 (no contribuyente), D206 no debe informarse.
+  - Si D205=2 (persona jurídica), el RUC debe tener estado distinto a CANCELADO, CANCELADO DEFINITIVO o SUSPENSIÓN TEMPORAL.
+  - Si D202=1 o 3 (B2B o B2G), el RUC del receptor debe tener estado activo.
+
+---
+
+## Campo D208 – iTipIDRec (Tipo de documento de identidad del receptor)
+
+[NUEVO] Obligatorio si D201=2 y D202≠4. No informar si D201=1 o D202=4.
+
+El campo `D209a` (`dDesDocIDRec`) [MODIFICADO] contiene la descripción del tipo de documento (9–41 caracteres).
+
+| Código | Descripción | Estado en v150 |
+|--------|-------------|----------------|
+| 1 | Cédula paraguaya | Vigente |
+| 2 | Pasaporte | Vigente |
+| 3 | Cédula extranjera | Vigente |
+| 4 | Carnet de residencia | Vigente |
+| 5 | Innominado | [NUEVO] Solo permitido si D202=2 (B2C) |
+| 6 | Tarjeta Diplomática de exoneración fiscal | [NUEVO] |
+| 9 | Otro | [NUEVO] Informar descripción en D209a |
 
 **Restricciones del tipo Innominado (D208=5):**
-- Solo permitido en operaciones B2C (D202=2).
-- Si el tipo de transacción es diferente a Muestras médicas (D011 ≠ 13), el total de la operación debe ser menor a Gs. 60.000.000 para poder usar el tipo Innominado.
-- Cuando es innominado, el campo D210 (número de documento) se completa con "0" y D211 (nombre) con "Sin Nombre".
+- [NUEVO] No puede ser innominado cuando D202 ≠ 2 (B2C).
+- [NUEVO] No puede ser innominado cuando F023 ≥ 60.000.000 Gs o F014 ≥ 60.000.000 Gs, salvo que D011=13 (Muestras médicas).
+
+~~Validación 60 (D209 — descripción obligatoria si existe D208)~~ fue **eliminada** en v150. La validación 64 (D209a — descripción no coincidente) sigue vigente.
 
 ---
 
-## Campos de identificación del receptor
+## Campo D210 – dNumIDRec (Número de documento de identidad del receptor)
 
-| Campo | ID | Descripción | Obligatorio cuando |
-|-------|----|-------------|-------------------|
-| Naturaleza del receptor | D201 | Contribuyente o No contribuyente | Siempre |
-| Tipo de operación | D202 | B2B, B2C, B2G, B2F | Siempre |
-| País del receptor | D203 | Código ISO 3166-1 alpha-3 | Siempre |
-| Descripción del país | D204 | Texto del país | Siempre |
-| Tipo de contribuyente | D205 | Persona Física / Jurídica | D201=1 |
-| RUC del receptor | D206 | RUC sin dígito verificador | D201=1 |
-| DV del RUC | D207 | Dígito verificador del RUC | Existe D206 |
-| Tipo de documento de identidad | D208 | Código del tipo de documento | D201=2 y D202≠4 |
-| Descripción del tipo de documento | D209 | Texto del tipo de documento | Existe D208 |
-| Número de documento de identidad | D210 | Número del documento | D201=2 y D202≠4 |
-| Nombre o razón social | D211 | Nombre del receptor | Siempre |
-| Nombre de fantasía | D212 | Nombre comercial | Opcional |
-| Dirección | D213 | Dirección del receptor | C002=7 o D202=4 |
-| Teléfono | D214 | Con prefijo de ciudad si D203=PRY | Opcional |
-| Celular | D215 | Número de celular | Opcional |
-| Correo electrónico | D216 | Email del receptor | Opcional |
-| Código del cliente | D217 | Código interno del emisor | Opcional |
+[NUEVO] Obligatorio si D201=2 y D202≠4. No informar si D201=1 o D202=4.
+
+- En caso de DE innominado, el campo queda en blanco o con valor indicativo.
+- [NUEVO] Validación D210a: Si D201=1 o D202=4, el número de documento **no debe informarse**.
 
 ---
 
-## Validaciones clave (sección 12.4)
+## Campos nuevos de dirección del receptor (D213–D224)
 
-| N° Val | ID | Mensaje | Código |
-|--------|----|---------|--------|
-| 45 | D201 | Naturaleza del Receptor inválida para el tipo documento | 1315 |
-| 46 | D202 | El tipo de operación no compatible con la naturaleza del receptor | 1300 |
-| 47 | D202a | El tipo de operación no compatible con el tipo documento electrónico | 1316 |
-| 48 | D203 | Código de país del receptor inválido para el tipo de operación | 1320 |
-| 52 | D206 | Es obligatorio informar el RUC del receptor contribuyente | 1304 |
-| 57 | D206e | RUC del Receptor inválido para la Autofactura | 1317 |
-| 59 | D208 | Es obligatorio informar el tipo de documento de identidad del receptor | 1310 |
-| 61 | D208b | Tipo de documento innominado incorrecto para el tipo de operación | 1319 |
-| 62 | D208c | Tipo de documento innominado incorrecto para el total de la operación | 1321 |
+[NUEVO] El campo `D213` (dirección del receptor, 1–255 caracteres) es **obligatorio cuando C002=7** (Nota de Remisión) **o cuando D202=4** (B2F).
+
+| Campo | ID | Descripción | Estado |
+|-------|----|-------------|--------|
+| Dirección | D213 | Dirección del receptor | [NUEVO] Obligatorio para C002=7 o D202=4 |
+| Número de casa | D218 | Número de casa del receptor | [NUEVO] Obligatorio si existe D213 |
+| Departamento | D219 | Código del departamento del receptor | [NUEVO] Obligatorio si D213 y D202≠4 |
+| Desc. departamento | D220 | Descripción del departamento | [NUEVO] Debe corresponder a D219 |
+| Distrito | D221 | Código del distrito del receptor | [NUEVO] |
+| Desc. distrito | D222 | Descripción del distrito | [NUEVO] Debe corresponder a D221 |
+| Ciudad | D223 | Código de la ciudad del receptor | [NUEVO] Obligatorio si D213 y D202≠4 |
+| Desc. ciudad | D224 | Descripción de la ciudad | [NUEVO] Debe corresponder a D223 |
+
+**Validación D223a:** [NUEVO] Debe haber relación entre el departamento (D219), el distrito (D221) y la ciudad (D223).
+
+---
+
+## Campos del responsable del DE (D2.2) — [NUEVO]
+
+| Campo | ID | Descripción |
+|-------|----|-------------|
+| Tipo de documento de identidad del responsable | D141 (`iTipIDRespDE`) | [NUEVO] |

@@ -1,16 +1,20 @@
-# Códigos de Unidad de Medida (E709 / cUniMed)
+> **Fuente:** Manual Técnico SIFEN v150, sección 15 — TABLA 5 (Codificación de Unidades de Medida)
+> **Nota:** Contenido tachado (~~así~~) indica especificaciones eliminadas en v150. [MODIFICADO] indica cambios. [NUEVO] indica adiciones en v150.
 
-Campo `cUniMed` (E709): código de la unidad de medida del ítem. El campo `dDesUniMed` (E710) contiene la descripción textual (representación) de la unidad.
+# Códigos de Unidad de Medida (E709 – cUniMed)
 
-Cuando el tipo de operación es B2G (D202=3), se deben utilizar los datos del WS de la DNCP para la unidad de medida.
+El campo `cUniMed` (E709) contiene el código numérico de la unidad de medida del ítem. El campo `dDesUniMed` (E710) contiene la representación textual (abreviatura) de la unidad.
 
-> **Fuente:** Manual Técnico SIFEN v150, sección 15 (TABLA 5 – Codificación de Unidades de Medida)
+La validación 131 verifica que la descripción de la unidad de medida (E710) corresponda al código informado en E709.
 
-## TABLA 5 – Unidades de Medida
+> Cuando el tipo de operación es B2G (D202=3), se deben utilizar los datos provistos por el WS de la DNCP para la unidad de medida (campos E704, E705).
 
-| Código (cUniMed) | Representación (dDesUniMed) | Descripción |
-|-----------------|----------------------------|-------------|
+## TABLA 5 – Codificación de Unidades de Medida
+
+| Código | Representación | Descripción |
+|--------|---------------|-------------|
 | 77 | UNI | Unidad |
+| 79 | kg/m² | Kilogramos por metro cuadrado |
 | 83 | kg | Kilogramos |
 | 86 | g | Gramos |
 | 87 | m | Metros |
@@ -38,24 +42,8 @@ Cuando el tipo de operación es B2G (D202=3), se deben utilizar los datos del WS
 | 625 | Km | Kilómetros |
 | 660 | ml | Metro lineal |
 | 666 | Se | Segundo |
-| 79 | kg/m² | Kilogramos por metro cuadrado |
 | 869 | ha | Hectáreas |
 | 885 | GL | Unidad Medida Global |
 | 891 | pm | Por Milaje |
 | 2329 | UI | Unidad Internacional |
 | 2366 | CPM | Costo por Mil |
-
-## Uso en el DE
-
-Los campos de unidad de medida se encuentran en el grupo E8 (ítems de la operación):
-
-| Campo | ID | Descripción |
-|-------|----|-------------|
-| Código de unidad de medida | E709 / cUniMed | Código numérico de la TABLA 5 |
-| Descripción de unidad de medida | E710 / dDesUniMed | Representación textual (ej: "UNI", "kg", "LT") |
-
-## Observaciones
-
-- El campo E709 (cUniMed) usa el atributo "ID" del XSD de unidades.
-- El campo E710 (dDesUniMed) usa el atributo "Código" del XSD de unidades.
-- Cuando D202=3 (B2G - compras públicas): utilizar los datos del WS del link de la DNCP.

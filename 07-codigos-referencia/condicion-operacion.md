@@ -1,124 +1,93 @@
+> **Fuente:** Manual Técnico SIFEN v150, sección 10.4 — Campos E601 (iCondOpe), E606 (iTiPago), E641 (iCondCred) y grupos E7, E7.1, E7.2
+> **Nota:** Contenido tachado (~~así~~) indica especificaciones eliminadas en v150. [MODIFICADO] indica cambios. [NUEVO] indica adiciones en v150.
+
 # Condición de Operación y Formas de Pago
 
-Campos que describen cómo se realiza el pago de la operación documentada.
+## Campo E601 – iCondOpe (Condición de la operación)
 
-> **Fuente:** Manual Técnico SIFEN v150, sección 10.4 (campos E601, E641, E606, grupos E7, E7.1, E7.2)
+[MODIFICADO] Obligatorio si C002 = 1 (Factura Electrónica) o C002 = 4 (Autofactura Electrónica). No se informa para otros tipos de documento.
 
----
+El campo `E602` (`dDCondOpe`) contiene la descripción de la condición; longitud 7 caracteres, obligatorio.
 
-## Condición de la Operación (E601 / iCondOpe)
-
-Indica si la operación es al contado o a crédito. Obligatorio para FE (C002=1) y AFE (C002=4).
-
-| Código | Descripción (dDCondOpe) |
-|--------|------------------------|
-| 1 | Contado |
-| 2 | Crédito |
-
-**Regla:** Si E601=1 (Contado), es obligatorio informar el grupo E605 (forma de pago).
+| Código | Descripción | Texto del campo E602 | Notas |
+|--------|-------------|----------------------|-------|
+| 1 | Contado | `"Contado"` | [NUEVO] Autofactura siempre contado (C002=4 → E601=1) |
+| 2 | Crédito | `"Crédito"` | |
 
 ---
 
-## Condición de la Operación a Crédito (E641 / iCondCred)
+## Campo E606 – iTiPago (Tipo de pago)
 
-Se informa solo cuando E601=2 (Crédito). Describe la modalidad del crédito.
+Pertenece al grupo E7.1 ([MODIFICADO] Campos que describen la forma de pago al contado o del monto de la entrega inicial, E605–E619).
 
-| Código | Descripción (dDCondCred) |
-|--------|--------------------------|
-| 1 | Plazo |
-| 2 | Cuota |
+**Aplicabilidad:** Obligatorio cuando E601=1 (contado) o cuando E601=2 con monto de entrega inicial (E645).
 
-- Si E641=1 (Plazo): informar el campo E643 (dPlazoCre), ej: "30 días", "12 meses".
-- Si E641=2 (Cuota): informar el campo E644 (dCuotas) con la cantidad de cuotas, ej: 12, 24, 36.
+El campo `E607` (`dDesTiPag`) contiene la descripción del tipo de pago (4–30 caracteres). [MODIFICADO] Si E606=99, es obligatorio informar el tipo de pago en texto libre.
 
----
+| Código | Descripción | Estado en v150 |
+|--------|-------------|----------------|
+| 1 | Efectivo | Vigente |
+| 2 | Cheque | Vigente |
+| 3 | Tarjeta de crédito | Vigente |
+| 4 | Tarjeta de débito | Vigente |
+| 5 | Transferencia | Vigente |
+| 6 | Giro | Vigente |
+| 7 | Billetera electrónica | Vigente |
+| 8 | Tarjeta empresarial | Vigente |
+| 9 | Vale | Vigente |
+| 10 | Retención | [MODIFICADO] |
+| 11 | Pago por anticipo | [MODIFICADO] |
+| 12 | Valor fiscal | Vigente |
+| 13 | Valor comercial | Vigente |
+| 14 | Compensación | Vigente |
+| 15 | Permuta | Vigente |
+| 16 | Pago bancario | [NUEVO] Informar solo si E011=5 (Operación bancaria) |
+| 17 | Pago Móvil | [NUEVO] |
+| 18 | Donación | [NUEVO] |
+| 19 | Promoción | [NUEVO] |
+| 20 | Consumo Interno | [NUEVO] |
+| 21 | Pago Electrónico | [NUEVO] |
+| 99 | Otro | [NUEVO] Obligatorio informar texto en E607 |
 
-## Tipos de Pago (E606 / iTiPago)
-
-Se informan dentro del grupo E605 (forma de pago al contado o entrega inicial). Puede haber múltiples tipos de pago (hasta 999 ocurrencias).
-
-| Código | Descripción (dDesTiPag) | Observación |
-|--------|------------------------|-------------|
-| 1 | Efectivo | |
-| 2 | Cheque | Activa grupo E630 (datos del cheque) |
-| 3 | Tarjeta de crédito | Activa grupo E620 (datos de tarjeta) |
-| 4 | Tarjeta de débito | Activa grupo E620 (datos de tarjeta) |
-| 5 | Transferencia | |
-| 6 | Giro | |
-| 7 | Billetera electrónica | |
-| 8 | Tarjeta empresarial | |
-| 9 | Vale | |
-| 10 | Retención | |
-| 11 | Pago por anticipo | |
-| 12 | Valor fiscal | |
-| 13 | Valor comercial | |
-| 14 | Compensación | |
-| 15 | Permuta | |
-| 16 | Pago bancario | Solo informar si E011=5 (Operación bancaria) |
-| 17 | Pago Móvil | |
-| 18 | Donación | |
-| 19 | Promoción | |
-| 20 | Consumo Interno | |
-| 21 | Pago Electrónico | |
-| 99 | Otro | Informar descripción en dDesTiPag |
+**Regla especial:** Si E606=16 (Pago bancario), el indicador de presencia (E011) debe ser igual a 5 (Operación bancaria). Esta validación aplica solo a Factura Electrónica.
 
 ---
 
-## Datos de Pago con Tarjeta (E621 / iDenTarj)
+## Campo E609 – cMoneTiPag (Moneda por tipo de pago)
 
-Se informa cuando E606 = 3 (Tarjeta de crédito) o E606 = 4 (Tarjeta de débito). Grupo E620.
-
-| Código | Descripción (dDesDenTarj) |
-|--------|--------------------------|
-| 1 | Visa |
-| 2 | Mastercard |
-| 3 | American Express |
-| 4 | Maestro |
-| 5 | Panal |
-| 6 | Cabal |
-| 99 | Otro |
-
-**Campos adicionales del grupo E620:**
-- E623: Razón social de la procesadora
-- E624: RUC de la procesadora
-- E626: Forma de procesamiento (1=POS, 2=Pago Electrónico, 9=Otro)
-- E627: Código de autorización de la operación
-- E628: Nombre del titular de la tarjeta
-- E629: Cuatro últimos dígitos de la tarjeta
+Código ISO 4217 de la moneda para cada forma de pago. Obligatorio si E609 ≠ PYG, informar el tipo de cambio E611.
 
 ---
 
-## Datos de Pago con Cheque (Grupo E630)
+## Campo E641 – iCondCred (Condición de la operación a crédito)
 
-Se informa cuando E606 = 2 (Cheque).
+Pertenece al grupo E7.2 (Campos que describen la operación a crédito, E640–E649). Obligatorio si E601=2 (crédito).
 
-| Campo | ID | Descripción |
-|-------|----|-------------|
-| Número de cheque | E631 | 8 dígitos, completar con ceros a la izquierda |
-| Banco emisor | E632 | Nombre del banco |
+El campo `E642` (`dDCondCred`) contiene la descripción de la condición de crédito.
 
----
-
-## Cuotas (Grupo E650)
-
-Se informa cuando E641=2 (Cuota). Hasta 999 ocurrencias.
-
-| Campo | ID | Descripción |
-|-------|----|-------------|
-| Monto de cada cuota | E651 | Monto de la cuota |
-| Fecha de vencimiento | E652 | Formato AAAA-MM-DD |
-| Moneda de las cuotas | E653 | Código ISO 4217 |
-| Descripción de la moneda | E654 | Referente a E653 |
+| Código | Descripción | Campos obligatorios |
+|--------|-------------|---------------------|
+| 1 | Plazo | E643 (dPlazo — plazo del crédito) |
+| 2 | Cuota | E644 (dCuotas — cantidad de cuotas) |
 
 ---
 
-## Resumen de grupos E7 (condición de operación)
+## Cuotas (E650–E659)
 
-| Grupo | Rango | Descripción | Activo cuando |
-|-------|-------|-------------|---------------|
-| E7 | E600-E699 | Condición de la operación | C002=1 o 4 |
-| E7.1 | E605-E619 | Forma de pago al contado o entrega inicial | E601=1 o existe E645 |
-| E7.1.1 | E620-E629 | Pago con tarjeta de crédito/débito | E606=3 o 4 |
-| E7.1.2 | E630-E639 | Pago con cheque | E606=2 |
-| E7.2 | E640-E649 | Operación a crédito | E601=2 |
-| E7.2.1 | E650-E659 | Cuotas del crédito | E641=2 |
+Cuando E641=2, el grupo E650 describe cada cuota individualmente.
+
+[NUEVO] El campo `cMoneCuo` (E653) contiene el código de moneda de las cuotas (ISO 4217).
+[NUEVO] El campo `dDMoneCuo` (E654) contiene la descripción de la moneda de las cuotas.
+
+---
+
+## Resumen de grupos de condición de operación
+
+| Grupo | Campos | Descripción |
+|-------|--------|-------------|
+| E600 | E601–E602 | Condición de la operación (contado/crédito) |
+| E605 | E605–E619 | [MODIFICADO] Forma de pago al contado o monto de entrega inicial |
+| E620 | E620–E629 | [MODIFICADO] Pago con tarjeta de crédito/débito |
+| E630 | E630–E639 | Pago con cheque |
+| E640 | E640–E649 | Operación a crédito |
+| E650 | E650–E659 | Cuotas |

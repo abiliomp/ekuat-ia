@@ -1,62 +1,69 @@
-# Tipos de Documento Electrónico (C002 / iTiDE)
+> **Fuente:** Manual Técnico SIFEN v150, sección 10.4 — Campo C002 (iTiDE)
+> **Nota:** Contenido tachado (~~así~~) indica especificaciones eliminadas en v150. [MODIFICADO] indica cambios respecto a versión anterior. [NUEVO] indica adiciones en v150.
 
-Campo `iTiDE` (C002): identifica el tipo de Documento Electrónico. Es parte del grupo de datos del timbrado y forma parte del CDC (Código de Control).
+# Tipos de Documento Electrónico (C002 – iTiDE)
 
-> **Fuente:** Manual Técnico SIFEN v150, sección 10.4 (campo C002)
-> **Nota:** Contenido tachado (~~así~~) indica especificaciones eliminadas en v150. [MODIFICADO] indica cambios. [NUEVO] indica adiciones.
+El campo `C002` (`iTiDE`) identifica el tipo de Documento Electrónico incluido en el timbrado. Es un campo numérico de 1-2 dígitos, obligatorio, ubicado dentro del grupo de **Datos del Timbrado** (C001).
 
-## Definición del campo
+El campo `C003` (`dDesTiDE`) contiene la descripción en texto del tipo de documento electrónico, cuyo valor debe corresponder exactamente al código informado en C002.
 
-| Atributo    | Valor |
-|-------------|-------|
-| ID          | C002  |
-| Nombre XML  | iTiDE |
-| Tipo        | N (numérico) |
-| Longitud    | 1–2  |
-| Ocurrencia  | 1-1 (obligatorio) |
-| Nodo padre  | C001  |
+## Tabla de códigos (iTiDE)
 
-El campo complementario `dDesTiDE` (C003) contiene la descripción textual del tipo, y debe coincidir exactamente con el código informado en C002.
+| Código | Descripción | Texto del campo C003 | Estado en v150 |
+|--------|-------------|----------------------|----------------|
+| 1 | Factura Electrónica (FE) | `"Factura electrónica"` | [MODIFICADO] Activo |
+| 2 | Factura Electrónica de Exportación (FEE) | `"Factura electrónica de exportación"` | [MODIFICADO] Futuro |
+| 3 | Factura Electrónica de Importación (FEI) | `"Factura electrónica de importación"` | [MODIFICADO] Futuro |
+| 4 | Autofactura Electrónica (AFE) | `"Autofactura electrónica"` | Activo |
+| 5 | Nota de Crédito Electrónica (NCE) | `"Nota de crédito electrónica"` | Activo |
+| 6 | Nota de Débito Electrónica (NDE) | `"Nota de débito electrónica"` | Activo |
+| 7 | Nota de Remisión Electrónica (NRE) | `"Nota de remisión electrónica"` | [MODIFICADO] Activo |
+| 8 | Comprobante de Retención Electrónico (CRE) | `"Comprobante de retención electrónico"` | [MODIFICADO] Futuro |
 
----
+## Grupos de campos específicos activados por tipo de documento
 
-## Tabla de Tipos de Documento
+| C002 | Grupo XML activo | Estado |
+|------|-----------------|--------|
+| 1 | E010–E099 — Factura Electrónica (FE) | Activo |
+| ~~2~~ | ~~E100–E199 — Factura Electrónica de Exportación (FEE)~~ | ~~Eliminado~~ |
+| ~~3~~ | ~~E200–E299 — Factura Electrónica de Importación (FEI)~~ | ~~Eliminado~~ |
+| 4 | [NUEVO] E300–E399 — Autofactura Electrónica (AFE) | Activo |
+| 5 o 6 | E400–E499 — Nota de Crédito/Débito Electrónica | Activo |
+| 7 | [NUEVO] E500–E599 — Nota de Remisión Electrónica (NRE) | Activo |
 
-| Código | Abreviatura | Nombre completo | Descripción / uso principal | Observación |
-|--------|-------------|-----------------|----------------------------|-------------|
-| [MODIFICADO] 1 | FE | Factura Electrónica | Respalda compraventa de bienes y servicios. Aplica para operaciones B2B, B2C, B2G y [NUEVO] B2F. Admite condición contado y crédito. | Grupo E010 obligatorio. [MODIFICADO] iTipTra es obligatorio. |
-| [MODIFICADO] 2 | FEE | Factura Electrónica de Exportación | Para exportaciones de bienes y servicios al exterior. | [MODIFICADO] **(Futuro)** — no implementar como disponible en producción. Campos E100–E199. |
-| [MODIFICADO] 3 | FEI | Factura Electrónica de Importación | Para importaciones de bienes y servicios. | [MODIFICADO] **(Futuro)** — no implementar como disponible en producción. Campos E200–E299. |
-| 4 | AFE | Autofactura Electrónica | Emitida por el comprador en nombre del vendedor no contribuyente. Siempre condición contado. RUC receptor = RUC emisor. | [MODIFICADO] Campos E300–E399 completamente redefinidos en v150. |
-| 5 | NCE | Nota de Crédito Electrónica | Reduce el valor de una FE aprobada (devoluciones, descuentos, bonificaciones). | Documento asociado obligatorio (H001). |
-| 6 | NDE | Nota de Débito Electrónica | Aumenta el valor de una FE aprobada (intereses, diferencias de precio). | Documento asociado obligatorio (H001). |
-| [MODIFICADO] 7 | NRE | Nota de Remisión Electrónica | Ampara el traslado físico de mercaderías. No lleva grupo de operación comercial (D010). | [MODIFICADO] En v150 cuenta con campos propios E500–E599 y grupo de transporte E900 obligatorio. |
-| [MODIFICADO] 8 | CRE | Comprobante de Retención Electrónico | Respalda retenciones practicadas por agentes de retención. | [MODIFICADO] **(Futuro)** — no implementar como disponible en producción. |
+## Reglas principales por tipo de documento
 
-### Tipos eliminados en v150
+| Regla | Condición |
+|-------|-----------|
+| Grupo D010 (operación comercial) **obligatorio** | C002 ≠ 7 |
+| Grupo D010 **no se informa** | C002 = 7 |
+| Campo D011 (tipo de transacción) **obligatorio** | C002 = 1 o 4 |
+| [MODIFICADO] Grupo E600 (condición de operación) **obligatorio** | C002 = 1 o 4 |
+| [MODIFICADO] Grupo E600 (condición de operación) **no se informa** | C002 ≠ 1 y C002 ≠ 4 |
+| Grupo E700 (ítems) **obligatorio** | C002 ≠ 7 |
+| Grupo E730 (IVA) **obligatorio** | D013=1,3,4 o 5 y C002 ≠ 4 o 7 |
+| [NUEVO] Campo D213 (dirección receptor) **obligatorio** | C002 = 7 o D202 = 4 |
+| [NUEVO] Mensaje en KuDE (B006) **obligatorio** | C002 = 7 (Art. 3 Inc. 7, Res.) |
+| [NUEVO] Condición de operación: siempre contado | C002 = 4 → E601 = 1 |
+| [NUEVO] Tipo de operación: siempre B2C | C002 = 4 → D202 = 2 |
+| [NUEVO] Receptor = emisor en Autofactura | C002 = 4 → D206 = D101 |
 
-Los tipos FEE (2), FEI (3) y CRE (8) existían en versiones anteriores del MT con definición propia, pero en v150 están marcados explícitamente como **(Futuro)**. Deben considerarse **no operativos** en producción actual.
+## Denominaciones de los KuDE
 
----
+| C002 | Denominación del KuDE |
+|------|-----------------------|
+| 1 | KuDE de Factura Electrónica |
+| 2 | KuDE de Factura de Exportación Electrónica |
+| ~~3~~ | ~~KuDE de Factura de Importación Electrónica~~ |
+| 4 | KuDE de Autofactura Electrónica |
+| 5 | KuDE de Nota de Crédito Electrónica |
+| 6 | KuDE de Nota de Débito Electrónica |
+| 7 | KuDE de Nota de Remisión Electrónica |
 
-## Impacto del C002 en la estructura del DE
+## Cambios relevantes en v150
 
-| C002 | Grupo obligatorio | Grupo prohibido / no aplica |
-|------|-------------------|------------------------------|
-| 1 (FE)  | E010 (gCamFE), D010 (operación comercial) | E300, E400, E500 |
-| 4 (AFE) | E300 (gCamAFE), E600 (condición operación), H001 (doc. asociado) | E010, E400, E500 |
-| 5 (NCE) | E400 (gCamNCDE), H001 (doc. asociado) | E010, E300, E500, E600 |
-| 6 (NDE) | E400 (gCamNCDE), H001 (doc. asociado) | E010, E300, E500, E600 |
-| 7 (NRE) | E500 (gCamNRE), E900 (transporte) | E010, E300, E400, E600, D010 |
-
----
-
-## Denominación en el KuDE
-
-Según la sección 13.3, cada tipo de DE tiene su denominación en la representación gráfica:
-
-- **C002=1:** "KuDE de Factura Electrónica"
-- **C002=4:** "KuDE de Autofactura Electrónica"
-- **C002=5:** "KuDE de Nota de Crédito Electrónica"
-- **C002=6:** "KuDE de Nota de Débito Electrónica"
-- **C002=7:** "KuDE de Nota de Remisión Electrónica"
+- Los grupos ~~E2 (FEE)~~ y ~~E3 (FEI)~~ fueron **eliminados** de la estructura del DE.
+- El grupo E4 (AFE, E300–E399) fue incorporado como campo [NUEVO].
+- El grupo E6 (NRE, E500–E599) fue incorporado como campo [NUEVO].
+- La **Fecha de Fin de Vigencia** del timbrado (C009) fue **eliminada** del encabezado del KuDE.
+- El CRE (código 8) sigue siendo futuro.
