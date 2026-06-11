@@ -1,6 +1,14 @@
 # Endpoints de los Web Services SIFEN
 
 > **Fuente:** Manual Técnico SIFEN v150, sección 7.10
+>
+> **⚠️ VERIFICACIÓN EMPÍRICA (11/06/2026):** las rutas publicadas en versiones del MT
+> (`recepcion.wsdl`, `recepcion-lote.wsdl`, `recepcion-evento.wsdl`, `resultado-lote.wsdl`)
+> **NO existen** en `sifen-test.set.gov.py` — devuelven HTTP 200 con cuerpo vacío. Las rutas
+> que realmente sirven los WSDL son las históricas (`recibe.wsdl`, `recibe-lote.wsdl`,
+> `evento.wsdl`, `consulta-lote.wsdl`), verificadas vía mTLS con certificado real.
+> La ruta de siConsArchivoRUC también devuelve cuerpo vacío en el ambiente de pruebas
+> (servicio posiblemente no desplegado allí). Las tablas siguientes reflejan lo verificado.
 
 ## Descripción
 
@@ -12,15 +20,15 @@ El SIFEN expone sus servicios a través de Web Services SOAP 1.2. Existen dos am
 
 Base URL: `https://sifen-test.set.gov.py`
 
-| Web Service | URL Completa | Tipo |
+| Web Service | URL Completa (verificada 06/2026) | Tipo |
 |-------------|--------------|------|
-| siRecepDE | `https://sifen-test.set.gov.py/de/ws/sync/recepcion.wsdl` | Síncrono |
-| siRecepLoteDE | `https://sifen-test.set.gov.py/de/ws/async/recepcion-lote.wsdl` | Asíncrono |
-| siResultLoteDE | `https://sifen-test.set.gov.py/de/ws/async/resultado-lote.wsdl` | Asíncrono |
+| siRecepDE | `https://sifen-test.set.gov.py/de/ws/sync/recibe.wsdl` | Síncrono |
+| siRecepLoteDE | `https://sifen-test.set.gov.py/de/ws/async/recibe-lote.wsdl` | Asíncrono |
+| siResultLoteDE | `https://sifen-test.set.gov.py/de/ws/consultas/consulta-lote.wsdl` | Asíncrono |
 | siConsDE | `https://sifen-test.set.gov.py/de/ws/consultas/consulta.wsdl` | Síncrono |
 | siConsRUC | `https://sifen-test.set.gov.py/de/ws/consultas/consulta-ruc.wsdl` | Síncrono |
-| siConsArchivoRUC | `https://sifen-test.set.gov.py/de/ws/consultas/consulta-archivo-ruc.wsdl` | Síncrono (NT-011) |
-| siRecepEvento | `https://sifen-test.set.gov.py/de/ws/eventos/recepcion-evento.wsdl` | Síncrono |
+| siConsArchivoRUC | `https://sifen-test.set.gov.py/de/ws/consultas/consulta-archivo-ruc.wsdl` | Síncrono (NT-011) — ⚠️ devuelve vacío en test |
+| siRecepEvento | `https://sifen-test.set.gov.py/de/ws/eventos/evento.wsdl` | Síncrono |
 
 ---
 
@@ -28,15 +36,34 @@ Base URL: `https://sifen-test.set.gov.py`
 
 Base URL: `https://sifen.set.gov.py`
 
+> Nota: las rutas de producción se asumen análogas a las verificadas en pruebas
+> (mismo árbol `/de/ws/...`). Confirmar contra producción antes del switch definitivo.
+
 | Web Service | URL Completa | Tipo |
 |-------------|--------------|------|
-| siRecepDE | `https://sifen.set.gov.py/de/ws/sync/recepcion.wsdl` | Síncrono |
-| siRecepLoteDE | `https://sifen.set.gov.py/de/ws/async/recepcion-lote.wsdl` | Asíncrono |
-| siResultLoteDE | `https://sifen.set.gov.py/de/ws/async/resultado-lote.wsdl` | Asíncrono |
+| siRecepDE | `https://sifen.set.gov.py/de/ws/sync/recibe.wsdl` | Síncrono |
+| siRecepLoteDE | `https://sifen.set.gov.py/de/ws/async/recibe-lote.wsdl` | Asíncrono |
+| siResultLoteDE | `https://sifen.set.gov.py/de/ws/consultas/consulta-lote.wsdl` | Asíncrono |
 | siConsDE | `https://sifen.set.gov.py/de/ws/consultas/consulta.wsdl` | Síncrono |
 | siConsRUC | `https://sifen.set.gov.py/de/ws/consultas/consulta-ruc.wsdl` | Síncrono |
 | siConsArchivoRUC | `https://sifen.set.gov.py/de/ws/consultas/consulta-archivo-ruc.wsdl` | Síncrono (NT-011) |
-| siRecepEvento | `https://sifen.set.gov.py/de/ws/eventos/recepcion-evento.wsdl` | Síncrono |
+| siRecepEvento | `https://sifen.set.gov.py/de/ws/eventos/evento.wsdl` | Síncrono |
+
+---
+
+## Datos verificados de los WSDL reales (sifen-test, 06/2026)
+
+| WS | Operación SOAP real | Detalle de tipos relevante |
+|----|---------------------|----------------------------|
+| siRecepDE | `rEnviDe(rEnvioDe)` | `rEnviDe { dId; xDE }` con `xDE` = **anyXML** (el rDE va embebido como XML) |
+| siRecepLoteDE | `rEnvioLote(rEnvioLote)` | `rEnvioLote { dId; xDE }` con `xDE` = **base64Binary** (la capa SOAP de PHP codifica automáticamente: pasar el ZIP binario crudo) |
+| siResultLoteDE | `rEnviConsLoteDe(rEnviConsLoteDe)` | — |
+| siConsDE | `rEnviConsDe(rEnviConsDeRequest)` | — |
+
+**Comportamiento operativo observado:** el ambiente de pruebas limita la tasa de solicitudes;
+descargas repetidas de WSDL en poco tiempo producen respuestas vacías, errores intermitentes
+y finalmente ausencia total de respuesta (bloqueo temporal). Usar caché de WSDL
+(`Config::$wsdlCacheEnabled` en PKuatia) y espaciar los reintentos.
 
 ---
 
