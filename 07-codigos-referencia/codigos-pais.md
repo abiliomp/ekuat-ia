@@ -6,7 +6,9 @@
 SIFEN utiliza el estándar internacional **ISO 3166-1 alpha-3** (tres letras mayúsculas) para identificar países.
 
 **Referencia oficial:** https://es.wikipedia.org/wiki/ISO_3166-1#Códigos_ISO_3166-1
-**Archivo XSD:** Disponible en el portal de ekuatia SET.
+**Archivo XSD:** `https://ekuatia.set.gov.py/sifen/xsd/Paises_v100.xsd` (copia en [`00-fuentes/xsd/Paises_v100.xsd`](../00-fuentes/xsd/Paises_v100.xsd)).
+
+> **Precisión (XSD de producción):** la validación es contra la **lista cerrada de 250 códigos** del tipo `paisType` en `Paises_v100.xsd` (incluye el código especial `NN`), no contra "todo ISO 3166-1".
 
 ## Campos que utilizan códigos de país
 

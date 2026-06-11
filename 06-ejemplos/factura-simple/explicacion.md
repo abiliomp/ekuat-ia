@@ -12,7 +12,9 @@ Este ejemplo representa una **Factura Electrónica (FE, C002=1)** de ambiente de
 - Moneda: PYG (Guaraní)
 - Total: 2.200.000 PYG (IVA incluido: 200.000 PYG)
 
-> **Nota:** Este XML es de ambiente de prueba y no tiene valor fiscal. El campo `<dSisFact>` presente en el original fue eliminado por NT-010 y no debe incluirse en nuevos DE.
+> **Nota:** Este XML es de ambiente de prueba y no tiene valor fiscal. El campo `<dSisFact>` es **obligatorio** según el XSD de producción (`DE_v150.xsd`): la NT-010 eliminó únicamente su **valor 2** ("SIFEN solución gratuita"), no el campo; el único valor aceptado hoy es `1`.
+>
+> **Caveats de validación contra el XSD actual (verificado junio 2026):** (1) los RUC de prueba `00000001`/`00000002` del ejemplo oficial **no pasan** el patrón actual del XSD (`[1-9][0-9]*[0-9A-D]?` — sin ceros a la izquierda); los RUC reales nunca comienzan con 0. (2) El bloque `<Signature>` contiene placeholders (certificado redactado) que no son Base64 válido. Fuera de eso, la estructura valida contra `siRecepDE_v150.xsd`.
 
 ---
 
@@ -71,17 +73,19 @@ El CDC tiene 44 dígitos. Desglose:
 
 ---
 
-### 4. Campos del DE (dDVId, dFecFirma)
+### 4. Campos del DE (dDVId, dFecFirma, dSisFact)
 
 ```xml
 <dDVId>1</dDVId>
 <dFecFirma>2020-05-01T14:01:50</dFecFirma>
+<dSisFact>1</dSisFact>
 ```
 
 | Campo | ID | Valor | Descripción |
 |-------|----|-------|-------------|
 | dDVId | A003 | `1` | Dígito verificador del CDC |
-| dFecFirma | B002 | `2020-05-01T14:01:50` | Fecha y hora de firma digital. Debe ser cercana a la hora actual del servidor SIFEN (±5 min). **Nota:** La fecha de firma (01/05) es anterior a la fecha de emisión del DE (07/05); esto puede ser intencional en el ejemplo de prueba. |
+| dFecFirma | A004 | `2020-05-01T14:01:50` | Fecha y hora de firma digital. Debe ser cercana a la hora actual del servidor SIFEN (±5 min). **Nota:** La fecha de firma (01/05) es anterior a la fecha de emisión del DE (07/05); esto puede ser intencional en el ejemplo de prueba. |
+| dSisFact | A005 | `1` | Sistema de facturación: 1=Sistema del contribuyente (único valor aceptado; el valor 2 "SIFEN solución gratuita" fue eliminado por NT-010). **Obligatorio según el XSD de producción.** |
 
 ---
 
@@ -277,6 +281,7 @@ El ejemplo tiene 2 ítems:
 | dTasaIVA | E734 | `10` | Tasa de IVA: 10% |
 | dBasGravIVA | E735 | `1.000.000` | Base gravada = 1.100.000 × 100/110 = 1.000.000 |
 | dLiqIVAItem | E736 | `100.000` | IVA del ítem = 1.000.000 × 10/100 = 100.000 |
+| dBasExe | E737 | `0` | Base exenta del ítem (NT-013). **Obligatorio según el XSD de producción**, aunque sea 0 cuando E731=1 |
 
 **Ítem 2: TARJETA URGENTE**
 

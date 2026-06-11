@@ -117,14 +117,14 @@ La tabla sigue el formato: `| N° | ID | Mensaje | Código | Tipo | Observación
 | 56 | D206d | El RUC del receptor se encuentra inactivo para el tipo de operación | 1308 | R | Si D202=1 o 3 (B2B o B2G), RUC debe estar activo |
 | 57 | [NUEVO] D206e | RUC del Receptor inválido para el tipo de documento electrónico | [NUEVO] 1317 | R | [NUEVO] Si C002=4, D206 debe ser igual a D101 (receptor = emisor) |
 | 58 | D207 | Dígito Verificador del RUC del receptor incorrecto | 1309 | R | |
-| 59 | D208 | Es obligatorio informar el tipo de documento de identidad del receptor | 1310 | R | [NUEVO] Si D201=2 y D202≠4, D208 es obligatorio |
+| 59 | D208 | Es obligatorio informar el tipo de documento de identidad del receptor | 1310 | R | [NT-023] Si D201=2, D208 es obligatorio (la condición "y D202≠4" fue eliminada; ver también D208g/1335) |
 | 60 | D208a | Tipo de documento de identidad del receptor [MODIFICADO] inválido | 1311 | R | Si D201=1, D208 no debe informarse |
 | 61 | [NUEVO] D208b | Tipo de documento de identidad del receptor incorrecto para el tipo de operación | [NUEVO] 1319 | R | [NUEVO] D208=5 (innominado) no puede ser cuando D202≠2 |
-| 62 | [NUEVO] D208c | Tipo de documento de identidad del receptor incorrecto para el total general de la operación en guaraníes | [NUEVO] 1321 | R | [NUEVO] Si D011≠13, D208≠5 cuando F023≥60.000.000 o F014≥60.000.000 |
+| 62 | [NUEVO] D208c | Tipo de documento de identidad del receptor incorrecto para el total general de la operación en guaraníes | [NUEVO] 1321 | R | [NT-024, vigente desde 01/01/2025] D208≠5 cuando F023≥7.000.000 o F014≥7.000.000 (historial: 60M en el MT original salvo D011=13 → 35M por NT-021 → 7M por NT-024) |
 | 63 | [NUEVO] D208d | El tipo de documento de identidad del receptor no es requerido | [NUEVO] 1322 | R | [NUEVO] Si D201=1 o D202=4, D208 no debe informarse |
 | ~~60~~ | ~~D209~~ | ~~Descripción del tipo de documento de identidad del receptor no informada~~ | ~~1312~~ | ~~R~~ | ~~Eliminada en v150~~ |
 | 64 | D209a | Descripción del tipo de documento de identidad del receptor no corresponde al código | 1313 | R | |
-| 65 | D210 | Es obligatorio informar el número de documento de identidad del receptor | 1314 | R | [NUEVO] Si D201=2 y D202≠4, D210 es obligatorio |
+| 65 | D210 | Es obligatorio informar el número de documento de identidad del receptor | 1314 | R | [NT-023] Si D201=2, D210 es obligatorio (la observación anterior con "D202≠4" fue eliminada por NT-023; ver también D210b/1334) |
 | 66 | [NUEVO] D210a | El número de documento de identidad del receptor no es requerido | [NUEVO] 1323 | R | [NUEVO] Si D201=1 o D202=4, D210 no debe informarse |
 | 67 | [NUEVO] D213 | Dirección del receptor no informado para el tipo de documento electrónico | [NUEVO] 1318 | R | [NUEVO] Si C002=7 o D202=4, D213 es obligatorio |
 | 68 | [NUEVO] D218 | Es obligatorio informar el número de casa del receptor | [NUEVO] 1330 | R | [NUEVO] Si se informa D213, D218 es obligatorio |

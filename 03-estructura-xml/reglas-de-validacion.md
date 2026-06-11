@@ -80,7 +80,7 @@ Las reglas de validación son condiciones que el SIFEN verifica antes de aprobar
 | D207a | dDVRec (D207) | Si D206 está informado: el dígito verificador debe ser correcto (Módulo 11) |
 | D208a | iTipIDRec (D208) | Si D201=2 y D202≠4: obligatorio. Si D201=1: no informar |
 | D208b | iTipIDRec (D208) | NT-023: Se elimina la condición "No informar si D202=4" (puede informarse en exportaciones) |
-| D208c | iTipIDRec (D208) | NT-021: Si monto total ≥ 35.000.000 PYG, no puede ser Innominado (D208≠5), salvo D011=13 |
+| D208c | iTipIDRec (D208) | NT-024 (vigente desde 01/01/2025): Si monto total ≥ 7.000.000 PYG (F023 o F014), no puede ser Innominado (D208≠5). Historial: 60M (MT original, salvo D011=13) → 35M (NT-021) → 7M (NT-024) |
 | D208d | iTipIDRec (D208) | NT-024: A partir del 01/01/2025, límite actualizado a 7.000.000 PYG |
 | D213a | dDirRec (D213) | Si C002=7 o D202=4: obligatorio |
 | D219a | cDepRec (D219) | NT-003: Si D213 informado y D202≠4: obligatorio |
@@ -106,7 +106,7 @@ Las reglas de validación son condiciones que el SIFEN verifica antes de aprobar
 
 | Código | Campo(s) | Regla |
 |--------|----------|-------|
-| E731a | iAfecIVA (E731) | Valor debe pertenecer a {1=Gravado IVA 10%, 2=Gravado IVA 5%, 3=Exento, 4=Gravado parcial} |
+| E731a | iAfecIVA (E731) | Valor debe pertenecer a {1=Gravado IVA, 2=Exonerado, 3=Exento, 4=Gravado parcial}. Literales exactos de E732 según XSD de producción: `Gravado IVA`, `Exonerado (Art. 100 - Ley 6380/2019)`, `Exento`, `Gravado parcial (Grav- Exento)` |
 | E733a | dPropIVA (E733) | Si E731=4: valor debe ser mayor a 0 y menor a 100 (no puede ser 100%) |
 | E735a | dBasGravIVA (E735) | NT-013: Si E731=1 o E731=4: fórmula = [100 * EA008 * E733] / [10000 + (E734 * E733)] |
 | E735b | dBasGravIVA (E735) | Si E731=2 o E731=3: debe ser igual a 0 |
@@ -248,7 +248,7 @@ Las reglas de validación son condiciones que el SIFEN verifica antes de aprobar
 | NT-007 | B006a (exportación) |
 | NT-008 | EA797, F023a (AFE) |
 | NT-009 | E701a, E708a (longitud) |
-| NT-010 | Elimina A005, modifica E505, E980, E992, E993 |
+| NT-010 | Elimina el valor 2 de A005 (dSisFact, el campo sigue obligatorio), modifica E505, E980, E992, E993 |
 | NT-011 | Agrega WS siConsArchivoRUC |
 | NT-012 | D015a (AFE en PYG) |
 | NT-013 | E735a, E737a, F002a, F004a, F005a |
@@ -265,3 +265,4 @@ Las reglas de validación son condiciones que el SIFEN verifica antes de aprobar
 | NT-024 | D208d (límite 7M PYG desde 01/01/2025) |
 | NT-025 | GEC002b (cancelación post-conformidad) |
 | NT-026 | E704, E705, E020 opcionales B2G |
+| NT-027 | Solo formato del evento de nominación FE: GENFE010/GENFE011 (Tarjeta Diplomática pasa de código 5 a 6). No afecta la generación de DE |

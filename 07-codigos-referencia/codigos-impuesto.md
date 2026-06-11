@@ -9,13 +9,17 @@ El campo `iTImp` (D013) es [MODIFICADO] "Tipo de impuesto afectado", obligatorio
 
 El campo `D014` (`dDesTImp`) contiene la descripción del tipo de impuesto; su valor debe corresponder al código de D013. [MODIFICADO] Su longitud fue ajustada a 3–11 caracteres.
 
-| Código | Descripción | Estado en v150 |
-|--------|-------------|----------------|
-| 1 | IVA | Vigente |
-| 2 | ISC | [NUEVO] |
-| 3 | Renta | [NUEVO] |
-| 4 | Ninguno | [NUEVO] |
-| 5 | IVA – Renta | [NUEVO] |
+| Código | Texto exacto del campo D014 (XSD `tdDesTImp`) | Estado en v150 |
+|--------|-----------------------------------------------|----------------|
+| 1 | `IVA` | Vigente |
+| 2 | `ISC` | [NUEVO] |
+| 3 | `Renta` | [NUEVO] |
+| 4 | `Ninguno` | [NUEVO] |
+| 5 | `IVA - Renta` | [NUEVO] |
+
+> **⚠️ Literal exacto (XSD de producción):** el valor del código 5 es `IVA - Renta` con **guion simple ASCII rodeado de espacios** (no guion largo "–"). `tdDesTImp` es una enumeración cerrada en `DE_Types_v150.xsd`: cualquier diferencia de carácter produce rechazo.
+>
+> **Nota del XSD:** el tipo numérico `tiTImp` (D013) acepta 1–5, pero el XSD de producción incluye el comentario *"Cambio temporal, solo se aceptará IVA"* — en la práctica usar D013=1 salvo confirmación oficial en contrario.
 
 > **Nota importante:** La validación ~~28~~ (D013 obligatorio para C002=1 o 4) fue **eliminada** en v150. La descripción sigue siendo validada mediante la regla 26 (D014).
 
@@ -31,12 +35,16 @@ El campo `E732` (`dDesAfecIVA`) contiene la descripción de la afectación; debe
 
 ### TABLA 6 – Códigos de afectación tributaria del IVA
 
-| Código | Descripción | Tasa válida (E734) |
-|--------|-------------|-------------------|
-| 1 | Gravado IVA | 5% o 10% |
-| 2 | Exonerado (Art. 83 – Ley 125/91) | 0% |
-| 3 | Exento | 0% |
-| 4 | Gravado parcial (Grav-Exento) | 5% o 10% |
+| Código | Texto exacto del campo E732 (XSD `tdDesAfecIVA`) | Tasa válida (E734) |
+|--------|--------------------------------------------------|-------------------|
+| 1 | `Gravado IVA` | 5% o 10% |
+| 2 | `Exonerado (Art. 100 - Ley 6380/2019)` | 0% |
+| 3 | `Exento` | 0% |
+| 4 | `Gravado parcial (Grav- Exento)` | 5% o 10% |
+
+> **⚠️ Literales exactos verificados contra el XSD de producción** (`DE_Types_v150.xsd` en `ekuatia.set.gov.py`, junio 2026). `tdDesAfecIVA` es una **enumeración cerrada**: el valor debe coincidir carácter por carácter o SIFEN rechaza con *"El valor ... del elemento: dDesAfecIVA es invalido"*. En particular:
+> - Código 2: el Manual Técnico v150 original decía "Exonerado (Art. 83- Ley 125/91)", pero la **NT-010 (Tabla 6)** lo cambió a `Exonerado (Art. 100 - Ley 6380/2019)` (la Ley 6380/2019, Art. 100, reemplazó al Art. 83 de la Ley 125/91 como base legal de las exoneraciones). El XSD de producción solo acepta el literal nuevo.
+> - Código 4: nótese el **espacio después del guion** en `(Grav- Exento)` — así lo exige el XSD, aunque parezca un error tipográfico.
 
 **Reglas de cálculo de base gravada (E735):**
 - Si E731 = 1 o 4: `[EA008 * (E733/100)] / 1,10` si tasa es 10%; `[EA008 * (E733/100)] / 1,05` si tasa es 5%
@@ -48,13 +56,15 @@ El campo `E732` (`dDesAfecIVA`) contiene la descripción de la afectación; debe
 
 El campo `iTipISC` (código del grupo E8.3) — actualmente futuro — utilizará estas categorías:
 
-| Código | Descripción |
-|--------|-------------|
-| 1 | Sección I — Cigarrillos, Tabacos, Esencias y Otros derivados del Tabaco |
-| 2 | Sección II — Bebidas con y sin alcohol |
-| 3 | Sección III — Alcoholes y Derivados del alcohol |
-| 4 | Sección IV — Combustibles |
-| 5 | Sección V — Artículos considerados de lujo |
+| Código | Descripción | Texto exacto (XSD `tdDesCatISC`) |
+|--------|-------------|----------------------------------|
+| 1 | Sección I — Cigarrillos, Tabacos, Esencias y Otros derivados del Tabaco | `SECCION I-(Cigarrillos,Tabacos,Esencias y Otros derivados del Tabaco)` |
+| 2 | Sección II — Bebidas con y sin alcohol | `SECCION II - (Bebidas con y sin alcohol)` |
+| 3 | Sección III — Alcoholes y Derivados del alcohol | `SECCION III - (Alcoholes y Derivados del alcohol)` |
+| 4 | Sección IV — Combustibles | `SECCION IV - (Combustibles)` |
+| 5 | Sección V — Artículos considerados de lujo | `SECCION V - (Artículos considerados de lujo)` |
+
+> **⚠️ Literales exactos del XSD de producción:** nótese que el código 1 **no lleva espacios** alrededor del guion ni después de las comas (`SECCION I-(Cigarrillos,Tabacos,...)`), mientras que los códigos 2–5 sí llevan espacios alrededor del guion. Son inconsistencias tipográficas del propio XSD oficial que deben reproducirse tal cual.
 
 ---
 

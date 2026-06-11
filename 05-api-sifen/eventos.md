@@ -204,12 +204,14 @@ Permite al **emisor** identificar al comprador de una FE emitida como innominada
 
 | ID | Campo | Tipo | Long. | Descripción |
 |----|-------|------|-------|-------------|
-| GENFE001 | Id | A | 44 | CDC de la FE a nominar |
-| GENFE002 | dFecFirmaEv | F | 19 | Fecha y hora de la nominación |
-| GENFE003 | dIdEv | N | 1-3 | Correlativo del evento |
-| GENFE004-GENFE027 | Datos del comprador | Varios | Varios | Datos completos del receptor real (nombre, RUC/CI, dirección, etc.) |
+| GENFE001 | rGEveNom | G | — | Elemento raíz del evento de nominación |
+| GENFE002 | Id | A | 44 | CDC de la FE a nominar |
+| GENFE003 | mOtEve | A | 5-500 | Motivo del evento (campo abierto) |
+| GENFE004-GENFE027 | Datos del comprador | Varios | Varios | Datos completos del receptor real (naturaleza, RUC/CI, nombre, dirección, etc.) — ver detalle en NT-014 |
 
 > **NT-015:** Las NCE y NDE emitidas contra una FE nominada deben referenciar el CDC correcto de la FE original.
+>
+> **NT-027 (09/03/2026):** En `GENFE010` (iTipIDRec) y `GENFE011` (dDTipIDRec), el código de **"Tarjeta Diplomática de exoneración fiscal" pasa de 5 a 6**, alineándose con la tabla del campo D208 del DE (donde 5=Innominado). Valores vigentes: 1=Cédula paraguaya, 2=Pasaporte, 3=Cédula extranjera, 4=Carnet de residencia, 6=Tarjeta Diplomática de exoneración fiscal, 9=Otro (si es 9, informar el tipo de documento en GENFE011).
 
 ---
 

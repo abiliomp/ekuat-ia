@@ -49,7 +49,7 @@ La NCE debe referenciar la FE a la que aplica:
 | ID | Campo | Tipo | Longitud | Descripción |
 |----|-------|------|----------|-------------|
 | H001 | gDocAso | G | - | Grupo documentos asociados |
-| H002 | iTipDocAso | N | 1 | Tipo: 1=Electrónico, 2=Impreso, 3=Constancia electrónica |
+| H002 | iTipDocAso | N | 1 | Tipo: 1=Electrónico, 2=Impreso, 3=Constancia Electrónica (literal exacto del XSD para H003: `Constancia Electrónica`) |
 | H004 | dCDCAnteDE | A | 44 | CDC del DTE anterior (si H002=1) |
 | H006 | dNumDocAso | A | 1-13 | Número del documento impreso (si H002=2) |
 

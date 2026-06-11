@@ -32,6 +32,7 @@ Las Notas Técnicas (NT) documentan los cambios y correcciones sobre el Manual T
 | [NT-024](./NT-024.md) | 17/12/2024 | Reducción del umbral de identificación de receptor a 7.000.000 PYG | 01/01/2025 | 01/01/2025 |
 | [NT-025](./NT-025.md) | 23/04/2024 | Eliminación de restricción de cancelación cuando receptor confirmó (GEC002c) | 28/04/2025 | 28/04/2025 |
 | [NT-026](./NT-026.md) | 06/06/2025 | Campos DNCP opcionales y eliminación de validaciones B2G obligatorias | 09/06/2025 | 16/06/2025 |
+| [NT-027](./NT-027.md) | 09/03/2026 | Código de Tarjeta Diplomática pasa de 5 a 6 en el evento de Nominación de FE (GENFE010/GENFE011) | 09/03/2026 | 09/03/2026 |
 
 ## Notas
 

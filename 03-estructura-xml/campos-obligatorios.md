@@ -25,7 +25,7 @@
 | A | A002 | Id | Identificador del DE | A001 | A | 44 | Atributo | CDC (Código de Control). Atributo del Tag `<DE>`. Nota: si el RUC contiene letras, se convierte al valor ASCII para el cálculo del DV y CDC. |
 | A | A003 | dDVId | Dígito verificador del identificador del DE | A001 | N | 1 | 1-1 | **[NUEVO en v150]** Según algoritmo módulo 11 |
 | A | A004 | dFecFirma | Fecha de la firma | A001 | F | 19 | 1-1 | **[MODIFICADO]** La fecha y hora de la firma digital debe ser anterior a la fecha y hora de transmisión al SIFEN. El certificado debe estar vigente al momento de la firma. Formato: `AAAA-MM-DDThh:mm:ss`. El plazo límite de transmisión al SIFEN para la aprobación normal es de 72 h contadas a partir de la fecha y hora de la firma digital. |
-| A | **[NUEVO en v150]** A005 | dSisFact | Sistema de facturación | A001 | N | 1 | 1-1 | **[NUEVO en v150]** 1=Sistema de facturación del contribuyente; 2=SIFEN solución gratuita |
+| A | **[NUEVO en v150]** A005 | dSisFact | Sistema de facturación | A001 | N | 1 | 1-1 | **[NUEVO en v150]** 1=Sistema de facturación del contribuyente; ~~2=SIFEN solución gratuita~~ (valor eliminado por NT-010). El XSD de producción solo acepta el valor 1 y el campo es **obligatorio** (va entre `dFecFirma` y `gOpeDE`) |
 
 ---
 
@@ -76,7 +76,7 @@
 | D1 | D011 | iTipTra | Tipo de transacción | D010 | N | 1-2 | 0-1 | Obligatorio si C002 = 1 o 4. Valores: 1=Venta de mercadería; 2=Prestación de servicios; 3=Mixto; 4=Venta de activo fijo; 5=Venta de divisas; 6=Compra de divisas; 7=Promoción o entrega de muestras; 8=Donación; 9=Anticipo; 10=Compra de productos; 11=Compra de servicios; **[NUEVO en v150]** 12=Venta de crédito fiscal; **[NUEVO en v150]** 13=Muestras médicas (Art. 3 RG 24/2014) |
 | D1 | D012 | dDesTipTra | Descripción del tipo de transacción | D010 | A | **[MODIFICADO]** 5-36 | 0-1 | Obligatorio si existe D011 |
 | D1 | D013 | iTImp | **[MODIFICADO]** Tipo de impuesto afectado | D010 | N | 1 | 1-1 | 1=IVA; **[NUEVO en v150]** 2=ISC; **[NUEVO en v150]** 3=Renta; **[NUEVO en v150]** 4=Ninguno; **[NUEVO en v150]** 5=IVA-Renta |
-| D1 | D014 | dDesTImp | **[MODIFICADO]** Descripción del tipo de impuesto afectado | D010 | A | **[MODIFICADO]** 3-11 | 1-1 | 1="IVA"; **[NUEVO en v150]** 2="ISC"; **[NUEVO en v150]** 3="Renta"; **[NUEVO en v150]** 4="Ninguno"; **[NUEVO en v150]** 5="IVA – Renta" |
+| D1 | D014 | dDesTImp | **[MODIFICADO]** Descripción del tipo de impuesto afectado | D010 | A | **[MODIFICADO]** 3-11 | 1-1 | 1="IVA"; **[NUEVO en v150]** 2="ISC"; **[NUEVO en v150]** 3="Renta"; **[NUEVO en v150]** 4="Ninguno"; **[NUEVO en v150]** 5="IVA - Renta" (literal exacto del XSD: guion simple con espacios) |
 | D1 | D015 | cMoneOpe | Moneda de la operación | D010 | A | 3 | 1-1 | Según ISO 4217. Se requiere la misma moneda para todos los ítems |
 | D1 | D016 | dDesMoneOpe | Descripción de la moneda de la operación | D010 | A | 3-20 | 1-1 | Referente a D015 |
 | D1 | D017 | dCondTiCam | Condición del tipo de cambio | D010 | N | 1 | 0-1 | Obligatorio si D015 ≠ PYG. 1=Global (un solo TC para todo el DE); 2=Por ítem |
@@ -140,9 +140,9 @@
 | D3 | D205 | iTiContRec | Tipo de contribuyente receptor | D200 | N | 1 | 0-1 | Obligatorio si D201=1; No informar si D201=2. 1=Persona Física; 2=Persona Jurídica |
 | D3 | D206 | dRucRec | RUC del receptor | D200 | A | **[MODIFICADO]** 3-8 | 0-1 | Obligatorio si D201=1; No informar si D201=2 |
 | D3 | D207 | dDVRec | Dígito verificador del RUC del receptor | D200 | N | 1 | 0-1 | **[NUEVO en v150]** Obligatorio si existe D206. Según algoritmo módulo 11 |
-| D3 | D208 | iTipIDRec | Tipo de documento de identidad del receptor | D200 | N | 1 | 0-1 | **[NUEVO en v150]** Obligatorio si D201=2 y D202≠4. No informar si D201=1 o D202=4. 1=Cédula paraguaya; 2=Pasaporte; 3=Cédula extranjera; 4=Carnet de residencia; **[NUEVO en v150]** 5=Innominado; **[NUEVO en v150]** 6=Tarjeta Diplomática de exoneración fiscal; 9=Otro |
+| D3 | D208 | iTipIDRec | Tipo de documento de identidad del receptor | D200 | N | 1 | 0-1 | **[NT-023]** Obligatorio si D201=2. No informar si D201=1. 1=Cédula paraguaya; 2=Pasaporte; 3=Cédula extranjera; 4=Carnet de residencia; **[NUEVO en v150]** 5=Innominado; **[NUEVO en v150]** 6=Tarjeta Diplomática de exoneración fiscal; 9=Otro |
 | D3 | D209 | dDTipIDRec | Descripción del tipo de documento de identidad | D200 | A | **[MODIFICADO]** 9-41 | 0-1 | Obligatorio si existe D208. Si D208=9, informar el tipo de documento |
-| D3 | D210 | dNumIDRec | Número de documento de identidad | D200 | A | 1-20 | 0-1 | **[NUEVO en v150]** Obligatorio si D201=2 y D202≠4. No informar si D201=1 o D202=4. En caso de DE innominado, completar con 0 (cero) |
+| D3 | D210 | dNumIDRec | Número de documento de identidad | D200 | A | 1-20 | 0-1 | **[NT-023]** Obligatorio si D201=2. No informar si D201=1. En caso de DE innominado, completar con 0 (cero) |
 | D3 | D211 | dNomRec | Nombre o razón social del receptor del DE | D200 | A | **[MODIFICADO]** 4-255 | 1-1 | En caso de DE innominado, completar con "Sin Nombre" |
 | D3 | D212 | dNomFanRec | Nombre de fantasía | D200 | A | **[MODIFICADO]** 4-255 | 0-1 | |
 | D3 | D213 | dDirRec | Dirección del receptor | D200 | A | **[MODIFICADO]** 1-255 | 0-1 | **[NUEVO en v150]** Campo obligatorio cuando C002=7 o cuando D202=4 |
@@ -349,8 +349,8 @@
 | Grupo | ID | Campo | Descripción | Nodo Padre | Tipo | Long. | Ocurr. | Observaciones |
 |-------|-----|-------|-------------|-----------|------|-------|--------|---------------|
 | E8.2 | E730 | gCamIVA | Campos que describen el IVA de la operación | E700 | G | — | 0-1 | **[MODIFICADO]** Obligatorio si D013=1, 3, 4 o 5 y C002≠4 o 7; No informar si D013=2 y C002=4 o 7 |
-| E8.2 | E731 | iAfecIVA | Forma de afectación tributaria del IVA | E730 | N | 1 | 1-1 | 1=Gravado IVA; 2=Exonerado (Art. 83-Ley 125/91); 3=Exento; 4=Gravado parcial (Grav-Exento) |
-| E8.2 | E732 | dDesAfecIVA | Descripción de la forma de afectación tributaria del IVA | E730 | A | 6-15 | 1-1 | **[MODIFICADO]** Referente a E731 |
+| E8.2 | E731 | iAfecIVA | Forma de afectación tributaria del IVA | E730 | N | 1 | 1-1 | 1=Gravado IVA; 2=Exonerado; 3=Exento; 4=Gravado parcial |
+| E8.2 | E732 | dDesAfecIVA | Descripción de la forma de afectación tributaria del IVA | E730 | A | 6-37 | 1-1 | **[MODIFICADO]** Referente a E731. Literales exactos del XSD de producción (enumeración cerrada): 1=`Gravado IVA`; 2=`Exonerado (Art. 100 - Ley 6380/2019)` (NT-010; el MT original decía "Art. 83- Ley 125/91"); 3=`Exento`; 4=`Gravado parcial (Grav- Exento)` (con espacio tras el guion) |
 | E8.2 | E733 | dPropIVA | Proporción gravada de IVA | E730 | N | **[MODIFICADO]** 1-3p(0-8) | 1-1 | **[MODIFICADO]** Corresponde al porcentaje (%) gravado. Ejemplo: 100, 50, 30, 0 |
 | E8.2 | E734 | dTasaIVA | Tasa del IVA | E730 | N | 1-2 | 1-1 | Porcentaje (%) de la tasa en números enteros: 0 (para E731=2 o 3); 5 (para E731=1 o 4); 10 (para E731=1 o 4) |
 | E8.2 | E735 | dBasGravIVA | Base gravada del IVA por ítem | E730 | N | **[MODIFICADO]** 1-15p(0-8) | 1-1 | Si E731=1 o 4: **[MODIFICADO]** `[EA008*(E733/100)]/1,1` si tasa 10%; `[EA008*(E733/100)]/1,05` si tasa 5%. Si E731=2 o 3: igual a 0 |

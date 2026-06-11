@@ -2,7 +2,7 @@
 
 Base de conocimiento técnica del **SIFEN** (Sistema Integrado de Facturación Electrónica Nacional de Paraguay), estructurada para consumo por modelos de lenguaje (LLMs).
 
-> Versión del Manual Técnico: **v150** | Notas Técnicas: **NT-001 al NT-026** (hasta junio 2025)
+> Versión del Manual Técnico: **v150** | Notas Técnicas: **NT-001 al NT-027** (hasta marzo 2026)
 
 ## Estructura
 
@@ -12,17 +12,19 @@ Base de conocimiento técnica del **SIFEN** (Sistema Integrado de Facturación E
 | [01-conceptos](./01-conceptos/) | Conceptos fundamentales, glosario y flujos |
 | [02-documentos-electronicos](./02-documentos-electronicos/) | Descripción por tipo de documento electrónico |
 | [03-estructura-xml](./03-estructura-xml/) | Anatomía del XML, campos y reglas de validación |
-| [04-schemas-xsd](./04-schemas-xsd/) | Esquemas XSD con documentación explicativa |
+| [04-schemas-xsd](./04-schemas-xsd/) | Esquemas XSD con documentación explicativa y [divergencias MT vs XSD de producción](./04-schemas-xsd/xsd-produccion-vs-manual.md) |
 | [05-api-sifen](./05-api-sifen/) | Web services, endpoints y autenticación |
 | [06-ejemplos](./06-ejemplos/) | Ejemplos XML anotados por caso de uso |
 | [07-codigos-referencia](./07-codigos-referencia/) | Tablas de códigos y enumeraciones oficiales |
 | [08-errores-y-respuestas](./08-errores-y-respuestas/) | Códigos de error y respuestas del sistema |
-| [09-notas-tecnicas](./09-notas-tecnicas/) | Notas Técnicas NT-001 al NT-026 (cambios al MT) |
+| [09-notas-tecnicas](./09-notas-tecnicas/) | Notas Técnicas NT-001 al NT-027 (cambios al MT) |
 | [10-guias](./10-guias/) | Guía de pruebas y mejores prácticas |
 
 ## Fuente oficial
 
 Documentación producida por la **Dirección Nacional de Ingresos Tributarios (DNIT)** de Paraguay.
+
+> **⚠️ Fuente de verdad para literales y enumeraciones:** el Manual Técnico v150 (PDF) está desactualizado en varios puntos respecto a los **XSD publicados en producción** (`https://ekuatia.set.gov.py/sifen/xsd/`), que son los esquemas contra los que SIFEN valida realmente. Las divergencias confirmadas (literales de `dDesAfecIVA`, tipos de documento C002, etc.) están documentadas en [04-schemas-xsd/xsd-produccion-vs-manual.md](./04-schemas-xsd/xsd-produccion-vs-manual.md). Hay copias de los XSD oficiales en [00-fuentes/xsd/](./00-fuentes/xsd/).
 
 ### 🎯 Objetivo
 

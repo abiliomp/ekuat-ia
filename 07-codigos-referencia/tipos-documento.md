@@ -9,16 +9,20 @@ El campo `C003` (`dDesTiDE`) contiene la descripción en texto del tipo de docum
 
 ## Tabla de códigos (iTiDE)
 
-| Código | Descripción | Texto del campo C003 | Estado en v150 |
-|--------|-------------|----------------------|----------------|
-| 1 | Factura Electrónica (FE) | `"Factura electrónica"` | [MODIFICADO] Activo |
-| 2 | Factura Electrónica de Exportación (FEE) | `"Factura electrónica de exportación"` | [MODIFICADO] Futuro |
-| 3 | Factura Electrónica de Importación (FEI) | `"Factura electrónica de importación"` | [MODIFICADO] Futuro |
-| 4 | Autofactura Electrónica (AFE) | `"Autofactura electrónica"` | Activo |
-| 5 | Nota de Crédito Electrónica (NCE) | `"Nota de crédito electrónica"` | Activo |
-| 6 | Nota de Débito Electrónica (NDE) | `"Nota de débito electrónica"` | Activo |
-| 7 | Nota de Remisión Electrónica (NRE) | `"Nota de remisión electrónica"` | [MODIFICADO] Activo |
-| 8 | Comprobante de Retención Electrónico (CRE) | `"Comprobante de retención electrónico"` | [MODIFICADO] Futuro |
+| Código | Descripción | Texto del campo C003 | Estado en v150 | Aceptado por el XSD de producción |
+|--------|-------------|----------------------|----------------|-----------------------------------|
+| 1 | Factura Electrónica (FE) | `"Factura electrónica"` | [MODIFICADO] Activo | ✅ |
+| 2 | Factura Electrónica de Exportación (FEE) | `"Factura electrónica de exportación"` | [MODIFICADO] Futuro | ❌ (enumeración comentada en el XSD) |
+| 3 | Factura Electrónica de Importación (FEI) | `"Factura electrónica de importación"` | [MODIFICADO] Futuro | ❌ (enumeración comentada en el XSD) |
+| 4 | Autofactura Electrónica (AFE) | `"Autofactura electrónica"` | Activo | ✅ |
+| 5 | Nota de Crédito Electrónica (NCE) | `"Nota de crédito electrónica"` | Activo | ✅ |
+| 6 | Nota de Débito Electrónica (NDE) | `"Nota de débito electrónica"` | Activo | ✅ |
+| 7 | Nota de Remisión Electrónica (NRE) | `"Nota de remisión electrónica"` | [MODIFICADO] Activo | ✅ |
+| 8 | Comprobante de Retención Electrónico (CRE) | `"Comprobante de retención electrónico"` | [MODIFICADO] Futuro | ❌ (enumeración comentada en el XSD) |
+| 9 | Boleta de Venta Electrónica | `"Boleta de venta electrónica"` | No figura en el MT v150 | ✅ (presente en el XSD de producción) |
+| 10 | Boleta Resimple Electrónica | `"Boleta resimple electrónica"` | No figura en el MT v150 | ✅ (presente en el XSD de producción) |
+
+> **⚠️ XSD de producción (verificado en `DE_Types_v150.xsd`, junio 2026):** el tipo numérico `tiTiDE` (C002) tiene el patrón `1|[4-7]|9|10`, es decir **solo acepta 1, 4, 5, 6, 7, 9 y 10**. Los códigos 2 (FEE), 3 (FEI) y 8 (CRE) están comentados en el XSD y serían rechazados por validación de esquema. Los códigos 9 y 10 (boletas, asociadas al régimen RESIMPLE / e-kuatia'i) existen en el XSD aunque el MT v150 y sus NT no los documentan.
 
 ## Grupos de campos específicos activados por tipo de documento
 
@@ -66,4 +70,5 @@ El campo `C003` (`dDesTiDE`) contiene la descripción en texto del tipo de docum
 - El grupo E4 (AFE, E300–E399) fue incorporado como campo [NUEVO].
 - El grupo E6 (NRE, E500–E599) fue incorporado como campo [NUEVO].
 - La **Fecha de Fin de Vigencia** del timbrado (C009) fue **eliminada** del encabezado del KuDE.
-- El CRE (código 8) sigue siendo futuro.
+- El CRE (código 8) sigue siendo futuro y **no es aceptado por el XSD de producción**.
+- El XSD de producción acepta además los códigos **9 (Boleta de venta electrónica)** y **10 (Boleta resimple electrónica)**, no documentados en el MT v150. En el XSD de eventos (`Evento_Types_v150.xsd`), el tipo de DTE llega hasta 9 (Boleta de Venta Electrónica).

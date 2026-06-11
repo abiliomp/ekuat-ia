@@ -1,6 +1,8 @@
 # Schemas XSD del Sistema SIFEN
 
 > **Fuente:** Manual Técnico SIFEN v150, sección 7.2 y Notas Técnicas NT-010, NT-011
+>
+> **⚠️ Importante:** este archivo describe la numeración *documental* del MT. Los archivos XSD **realmente publicados en producción** (y sus divergencias con el MT) están documentados en [xsd-produccion-vs-manual.md](./xsd-produccion-vs-manual.md), con copias locales en [`00-fuentes/xsd/`](../00-fuentes/xsd/). Ante cualquier diferencia, **el XSD de producción es la fuente de verdad**.
 
 ## Descripción
 
@@ -20,14 +22,16 @@ Los Schemas XSD definen la estructura y validación del XML de los Documentos El
 | 6 | Schema XML siConsLoteDE | `siConsLoteDE_v150.xsd` | Consulta de estado de un lote (número de lote) |
 | 7 | Schema XML siRecepEvento | `siRecepEvento_v150.xsd` | Recepción de eventos (cancelación, inutilización, etc.) |
 | 8 | Schema XML siConsRUC | `siConsRUC_v150.xsd` | Consulta de contribuyente por RUC |
-| 9 | Schema XML DE Evento Cancelación | `GEC_v150.xsd` | Estructura del evento de cancelación de DE |
-| 10 | Schema XML DE Evento Inutilización | `GEI_v150.xsd` | Estructura del evento de inutilización de numeración |
-| 11 | Schema XML DE Evento Notif. Recepción | `GEN_v150.xsd` | Estructura del evento de notificación de recepción |
-| 12 | Schema XML DE Evento Conformidad | `GCO_v150.xsd` | Estructura del evento de conformidad del receptor |
-| 13 | Schema XML DE Evento Disconformidad | `GDI_v150.xsd` | Estructura del evento de disconformidad del receptor |
-| 14 | Schema XML DE Evento Desconocimiento | `GED_v150.xsd` | Estructura del evento de desconocimiento del receptor |
-| 15 | Schema XML DE Evento Nominación FE | `GENFE_v150.xsd` | Estructura del evento de nominación de Factura Electrónica (NT-014) |
-| 16 | Schema XML DE Evento Act. Transporte | `GET_v150.xsd` | Estructura del evento de actualización de datos de transporte (NT-010) |
+| 9 | Schema XML DE Evento Cancelación | — (en `Evento_v150.xsd`: `trGeVeCan`) | Estructura del evento de cancelación de DE |
+| 10 | Schema XML DE Evento Inutilización | — (en `Evento_v150.xsd`: `trGeVeInu`) | Estructura del evento de inutilización de numeración |
+| 11 | Schema XML DE Evento Notif. Recepción | — (en `Evento_v150.xsd`: `trGeVeNotRec`) | Estructura del evento de notificación de recepción |
+| 12 | Schema XML DE Evento Conformidad | — (en `Evento_v150.xsd`: `trGeVeConf`) | Estructura del evento de conformidad del receptor |
+| 13 | Schema XML DE Evento Disconformidad | — (en `Evento_v150.xsd`: `trGeVeDisconf`) | Estructura del evento de disconformidad del receptor |
+| 14 | Schema XML DE Evento Desconocimiento | — (en `Evento_v150.xsd`: `trGeVeDescon`) | Estructura del evento de desconocimiento del receptor |
+| 15 | Schema XML DE Evento Nominación FE | — (en `Evento_v150.xsd`: `trGEveNom`) | Estructura del evento de nominación de Factura Electrónica (NT-014, NT-027) |
+| 16 | Schema XML DE Evento Act. Transporte | — (en `Evento_v150.xsd`: `trGeVeTr`) | Estructura del evento de actualización de datos de transporte (NT-010) |
+
+> **Nota (verificado junio 2026):** en producción **no existen archivos separados por evento**; todos los eventos están definidos como `complexType` dentro de `Evento_v150.xsd` (incluido vía `siRecepEvento_v150.xsd`). Ver [xsd-produccion-vs-manual.md](./xsd-produccion-vs-manual.md).
 | 17 | Schema XML KuDE | `KuDE_v150.xsd` | Estructura del KuDE (representación gráfica, si aplica XSD) |
 | 18 | Schema XML DE (principal) | `DE_v150.xsd` | Schema principal del Documento Electrónico (referenciado en namespace) |
 | 19 | Schema XML Firma Digital | Basado en `xmldsig-core-schema.xsd` | Firma XML DSig enveloped |
@@ -45,6 +49,24 @@ Los Schemas XSD definen la estructura y validación del XML de los Documentos El
 | **URL base del namespace** | `http://ekuatia.set.gov.py/sifen/xsd` |
 | **Fuente oficial** | `https://www.dnit.gov.py/web/e-kuatia/documentacion-tecnica` |
 | **Versión del formato** | 150 (campo `<dVerFor>AA002</dVerFor>`) |
+
+### URLs directas de los XSD vigentes en producción
+
+| XSD | URL |
+|-----|-----|
+| Recepción DE (wrapper) | `https://ekuatia.set.gov.py/sifen/xsd/siRecepDE_v150.xsd` |
+| Estructura del DE | `https://ekuatia.set.gov.py/sifen/xsd/DE_v150.xsd` |
+| Tipos y enumeraciones del DE | `https://ekuatia.set.gov.py/sifen/xsd/DE_Types_v150.xsd` |
+| Recepción de eventos (wrapper) | `https://ekuatia.set.gov.py/sifen/xsd/siRecepEvento_v150.xsd` |
+| Estructura de eventos | `https://ekuatia.set.gov.py/sifen/xsd/Evento_v150.xsd` |
+| Tipos de eventos | `https://ekuatia.set.gov.py/sifen/xsd/Evento_Types_v150.xsd` |
+| Países | `https://ekuatia.set.gov.py/sifen/xsd/Paises_v100.xsd` |
+| Departamentos | `https://ekuatia.set.gov.py/sifen/xsd/Departamentos_v141.xsd` |
+| Monedas | `https://ekuatia.set.gov.py/sifen/xsd/Monedas_v150.xsd` |
+| Unidades de medida | `https://ekuatia.set.gov.py/sifen/xsd/Unidades_Medida_v141.xsd` |
+| Firma digital (W3C XMLDSig) | `https://ekuatia.set.gov.py/sifen/xsd/xmldsig-core-schema.xsd` |
+
+Copias locales (descargadas el 11/06/2026) en [`00-fuentes/xsd/`](../00-fuentes/xsd/).
 
 ---
 
@@ -154,9 +176,10 @@ Los Web Services del SIFEN usan SOAP 1.2 con style Document/Literal. Los schemas
 
 | NT | Cambio en Schemas |
 |----|-------------------|
-| NT-010 | Nuevos schemas para eventos GET (actualización transporte); elimina campo A005 del DE |
+| NT-010 | Nuevos schemas para eventos GET (actualización transporte); elimina el **valor 2** del campo A005 `dSisFact` (el campo sigue siendo obligatorio, solo acepta 1) |
 | NT-011 | Nuevos schemas XML N° 20, 21, 22 para siConsArchivoRUC |
 | NT-014 | Nuevo schema para evento GENFE (nominación FE) |
 | NT-016 | Cambios en el schema de firma digital: algoritmos adicionales, métodos C14N |
 | NT-018 | Nuevo grupo D1.1 (obligaciones afectadas) en Schema XML N° 1 |
 | NT-023 | Modificaciones en E711 (precisión decimal), E791 (ocurrencias), H018 |
+| NT-027 | Evento GENFE: código de Tarjeta Diplomática pasa de 5 a 6 en GENFE010/GENFE011 |

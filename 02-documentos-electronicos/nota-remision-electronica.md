@@ -39,23 +39,25 @@ La Nota de Remisión Electrónica es el documento que ampara el traslado de merc
 
 ## Motivos de Emisión (E501)
 
-| Código | Descripción |
-|--------|-------------|
-| 1 | Traslado por venta |
-| 2 | Traslado por consignación |
-| 3 | Exportación |
-| 4 | Traslado por compra |
-| 5 | Importación |
-| 6 | Traslado por devolución |
-| 7 | Traslado entre locales de la empresa |
-| 8 | Traslado de bienes por transformación |
-| 9 | Traslado de bienes por reparación |
-| 10 | Traslado por emisor móvil |
-| 11 | Exhibición o demostración |
-| 12 | Participación en ferias |
-| 13 | Traslado de encomienda |
-| 14 | Decomiso |
-| 99 | Otro (describir expresamente) |
+Literales exactos de E502 según la enumeración `tdDMotivTras` del XSD de producción (para 99=Otro, E502 es texto libre de 5–60 caracteres):
+
+| Código | Texto exacto de E502 |
+|--------|----------------------|
+| 1 | `Traslado por ventas` |
+| 2 | `Traslado por consignación` |
+| 3 | `Exportación` |
+| 4 | `Traslado por compra` |
+| 5 | `Importación` |
+| 6 | `Traslado por devolución` |
+| 7 | `Traslado entre locales de la empresa` |
+| 8 | `Traslado de bienes por transformación` |
+| 9 | `Traslado de bienes para reparación` |
+| 10 | `Traslado por emisor móvil` |
+| 11 | `Exhibición o Demostración` |
+| 12 | `Participación en ferias` |
+| 13 | `Traslado de encomienda` |
+| 14 | `Decomiso` |
+| 99 | Otro (describir expresamente; texto libre) |
 
 ## Responsable de Emisión (E503)
 

@@ -123,8 +123,7 @@ Los campos condicionales son aquellos cuya obligatoriedad o ausencia depende del
 
 | Campo | Condición | Regla |
 |-------|-----------|-------|
-| iTipIDRec (D208) | Operaciones ≥ 35.000.000 PYG o equivalente | No puede ser Innominado (D208≠5), salvo D011=13 (NT-021) |
-| iTipIDRec (D208) | Operaciones ≥ 7.000.000 PYG o equivalente | Actualizado en NT-024 a partir del 01/01/2025 |
+| iTipIDRec (D208) | Operaciones ≥ 7.000.000 PYG o equivalente | **Vigente (NT-024, desde 01/01/2025):** no puede ser Innominado (D208≠5). Historial del umbral: 60M (MT original, salvo D011=13) → 35M (NT-021, 2024) → 7M (NT-024) |
 
 ---
 

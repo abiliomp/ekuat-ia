@@ -75,7 +75,7 @@ Obligatorio si D201=1 (contribuyente). No informar si D201=2.
 
 ## Campo D208 – iTipIDRec (Tipo de documento de identidad del receptor)
 
-[NUEVO] Obligatorio si D201=2 y D202≠4. No informar si D201=1 o D202=4.
+[NT-023] **Obligatorio si D201=2 (No contribuyente). No informar si D201=1 (Contribuyente).** La NT-023 (27/08/2024) eliminó la condición anterior "D202≠4": la obligatoriedad ya no depende del tipo de operación, conforme al Art. 6° Numeral 1 del Decreto N° 872/2023 (validaciones D208g y D210b).
 
 El campo `D209a` (`dDesDocIDRec`) [MODIFICADO] contiene la descripción del tipo de documento (9–41 caracteres).
 
@@ -90,8 +90,9 @@ El campo `D209a` (`dDesDocIDRec`) [MODIFICADO] contiene la descripción del tipo
 | 9 | Otro | [NUEVO] Informar descripción en D209a |
 
 **Restricciones del tipo Innominado (D208=5):**
-- [NUEVO] No puede ser innominado cuando D202 ≠ 2 (B2C).
-- [NUEVO] No puede ser innominado cuando F023 ≥ 60.000.000 Gs o F014 ≥ 60.000.000 Gs, salvo que D011=13 (Muestras médicas).
+- [NT-023] No puede ser innominado cuando D202 ≠ 2 (B2C) — validación D208f, código 1333.
+- [NT-024] No puede ser innominado cuando el total general de la operación es **≥ 7.000.000 Gs** (F023 ≥ 7.000.000 si moneda extranjera, o F014 ≥ 7.000.000 si PYG) — validación D208c, código 1321, vigente desde 01/01/2025 (Decreto N° 872/2023). Historial del umbral: 60.000.000 Gs (MT v150 original, con excepción de muestras médicas D011=13) → 35.000.000 Gs (NT-021, desde 01/01/2024) → 7.000.000 Gs (NT-024).
+- [NT-023] No puede ser innominado en NCE, NDE ni NRE (C002=5, 6, 7) — validación D208e, código 1331.
 
 ~~Validación 60 (D209 — descripción obligatoria si existe D208)~~ fue **eliminada** en v150. La validación 64 (D209a — descripción no coincidente) sigue vigente.
 
@@ -99,10 +100,9 @@ El campo `D209a` (`dDesDocIDRec`) [MODIFICADO] contiene la descripción del tipo
 
 ## Campo D210 – dNumIDRec (Número de documento de identidad del receptor)
 
-[NUEVO] Obligatorio si D201=2 y D202≠4. No informar si D201=1 o D202=4.
+[NT-023] **Obligatorio si D201=2. No informar si D201=1** (validación D210b, código 1334). La condición anterior que dependía de D202 fue eliminada por la NT-023.
 
-- En caso de DE innominado, el campo queda en blanco o con valor indicativo.
-- [NUEVO] Validación D210a: Si D201=1 o D202=4, el número de documento **no debe informarse**.
+- [NT-023] En caso de DE innominado, **completar con 0 (cero)**.
 
 ---
 

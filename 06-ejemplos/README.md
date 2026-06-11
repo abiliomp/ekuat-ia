@@ -42,7 +42,7 @@ Los ejemplos usan los siguientes datos del ambiente de prueba provistos por la D
 
 ## Notas Importantes sobre los Ejemplos
 
-1. El campo `<dSisFact>` presente en el XML de ejemplo fue **eliminado por NT-010** (campo A005). Los XML actuales no deben incluirlo.
+1. El campo `<dSisFact>` (A005) es **obligatorio** — el XSD de producción (`DE_v150.xsd`) lo exige entre `dFecFirma` y `gOpeDE` y solo acepta el valor `1`. La NT-010 eliminó únicamente el **valor 2** ("SIFEN solución gratuita"), no el campo. (Corrección de junio 2026: una nota anterior afirmaba erróneamente que el campo había sido eliminado.)
 2. El certificado digital en `<X509Certificate>` está redactado con texto indicativo; en un DE real contiene el certificado X.509 en Base64.
 3. La firma digital (`<SignatureValue>`) y el digest (`<DigestValue>`) son valores reales del ejemplo de prueba.
 4. El QR en `<dCarQR>` apunta al ambiente de prueba (`consultas-test`).

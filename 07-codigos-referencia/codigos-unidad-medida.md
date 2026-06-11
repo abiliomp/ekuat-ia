@@ -14,7 +14,7 @@ La validación 131 verifica que la descripción de la unidad de medida (E710) co
 | Código | Representación | Descripción |
 |--------|---------------|-------------|
 | 77 | UNI | Unidad |
-| 79 | kg/m² | Kilogramos por metro cuadrado |
+| 79 | kg/m2 | Kilogramos por metro cuadrado (literal exacto del XSD: `kg/m2`, sin superíndice) |
 | 83 | kg | Kilogramos |
 | 86 | g | Gramos |
 | 87 | m | Metros |
@@ -47,3 +47,45 @@ La validación 131 verifica que la descripción de la unidad de medida (E710) co
 | 891 | pm | Por Milaje |
 | 2329 | UI | Unidad Internacional |
 | 2366 | CPM | Costo por Mil |
+
+## Unidades agregadas por NT-023 (códigos 111–140)
+
+Incorporadas a `Unidades_Medida_v141.xsd` (vigentes en producción desde 27/09/2024):
+
+| Código | Representación | Descripción |
+|--------|---------------|-------------|
+| 111 | 4A | Bovinas |
+| 112 | Ci | Curie |
+| 113 | DOC | Docena |
+| 114 | GLL | Galones (US) (3,7843 LT) |
+| 115 | GRO | Gruesas |
+| 116 | E4 | Kilogramo Bruto |
+| 117 | KT | Kits |
+| 118 | M5 | Microcurie |
+| 119 | MCU | Milicurie |
+| 120 | MIL | Millar |
+| 121 | PAR | Par |
+| 122 | FOT | Pies |
+| 123 | FTK | Pies Cuadradas |
+| 124 | PCE | Piezas |
+| 125 | KLT | Quilate |
+| 126 | RM | Resmas |
+| 127 | RO | Rollos |
+| 128 | kWh | 1000 Kilowatt Hora |
+| 129 | U(JGO) | Mazos |
+| 130 | DR | Tambores |
+| 131 | BX | Caja |
+| 132 | SET | Juego |
+| 133 | PK | Paquete |
+| 134 | BG | Bolsa |
+| 135 | DPC | Docena Par |
+| 136 | JR | Pote |
+| 137 | BL | Fardos |
+| 138 | AB | Bulto |
+| 139 | BK | Cesta |
+| 140 | BW | Peso Base |
+
+## Notas del XSD de producción
+
+- `tcUniMed` (E709) y `tdDesUniMed` (E710) son **enumeraciones cerradas** en `Unidades_Medida_v141.xsd` (64 códigos y 64 representaciones). La representación E710 debe coincidir **carácter por carácter** con el literal del XSD (sensible a mayúsculas: `kg`, `Hs`, `Mi`, `ración`, `U(JGO)`, etc.).
+- Copia local del XSD: [`00-fuentes/xsd/Unidades_Medida_v141.xsd`](../00-fuentes/xsd/Unidades_Medida_v141.xsd).

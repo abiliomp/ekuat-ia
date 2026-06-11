@@ -42,7 +42,7 @@ SIFEN acepta cualquier código de moneda válido conforme al estándar ISO 4217.
 | CHF | Franco suizo | Suiza |
 | MXN | Peso mexicano | México |
 
-> La lista completa está definida por el estándar ISO 4217. SIFEN valida que el código informado sea válido según dicho estándar.
+> **Precisión (XSD de producción):** SIFEN no valida contra "todo ISO 4217" sino contra la **lista cerrada de 200 códigos** del tipo `cMondT` en `Monedas_v150.xsd` (copia en [`00-fuentes/xsd/Monedas_v150.xsd`](../00-fuentes/xsd/Monedas_v150.xsd)). La lista incluye incluso códigos ISO retirados (ZMK, ZWD, YUM). Un código ISO válido que no esté en esa enumeración será rechazado por el esquema.
 
 ## Campos de moneda en otros grupos del DE
 
