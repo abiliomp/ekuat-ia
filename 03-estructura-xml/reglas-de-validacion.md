@@ -22,7 +22,7 @@ Las reglas de validación son condiciones que el SIFEN verifica antes de aprobar
 | Código | Campo(s) | Regla |
 |--------|----------|-------|
 | B002a | dFecFirma (B002) | La fecha de firma no puede ser futura (mayor a la fecha/hora actual del servidor SIFEN) |
-| B002b | dFecFirma (B002) | La diferencia entre dFecFirma y la hora actual del servidor no puede superar el rango tolerado (±5 minutos según sincronización NTP) |
+| B002b | dFecFirma (B002) | Transmisión extemporánea respecto de la fecha de firma: aprobado con observación (código 1005, A004b). El MT no publica una tolerancia en minutos; la cifra "±5 minutos" que figuraba aquí no tiene fuente: `[PENDIENTE DE VERIFICACIÓN]` |
 | B006a | dInfoFisc (B006) | Si C002=7 (NRE): obligatorio. Debe contener el mensaje del Art. 3 Inc. 7 de la RG N° 41/2014 |
 
 ---
@@ -230,8 +230,8 @@ Las reglas de validación son condiciones que el SIFEN verifica antes de aprobar
 | TRANS-001 | Protocolo: TLS 1.2 con autenticación mutua |
 | TRANS-002 | Certificado de transmisión (persona jurídica o física habilitada por la SET) requerido |
 | TRANS-003 | Para lotes: máximo 50 DE por lote, mismo tipo de documento (C002) |
-| TRANS-004 | Los lotes se comprimen en ZIP y se codifican en Base64 antes de enviar |
-| TRANS-005 | Sincronización horaria: diferencia máxima de ±5 minutos con servidores NTP aravo1.set.gov.py y aravo2.set.gov.py |
+| TRANS-004 | Los lotes se envían como un único XML `rLoteDE` (con los `rDE` firmados) comprimido en ZIP y codificado en Base64 en el campo `xDE` de `rEnvioLote` (ver [05-api-sifen/envio-lote.md](../05-api-sifen/envio-lote.md)) |
+| TRANS-005 | Sincronización horaria con los servidores NTP `aravo1.set.gov.py` y `aravo2.set.gov.py` (MT §7.11). Una firma con fecha posterior a la hora del SIFEN se rechaza (1004); el MT no publica una tolerancia en minutos (`[PENDIENTE DE VERIFICACIÓN]`) |
 
 ---
 
