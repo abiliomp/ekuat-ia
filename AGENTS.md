@@ -56,7 +56,7 @@ done
 ## 5. Prohibiciones
 
 - **No llamar a los web services del SIFEN** (`sifen.set.gov.py`, `sifen-test.set.gov.py`) desde una sesión de documentación: requieren certificado, y el ambiente de pruebas bloquea temporalmente por saturación. Solo se descargan los XSD estáticos de `ekuatia.set.gov.py/sifen/xsd/`.
-- No "corregir" un XSD de `00-fuentes/xsd/` (p. ej. el `dEntCont ` con espacio de `DE_v150.xsd:327`): son copias fieles. Las copias modificadas para validación local van fuera de esa carpeta.
+- No "corregir" un XSD de `00-fuentes/xsd/` (p. ej. el `dEntCont ` con espacio de `DE_v150.xsd:327`): son copias fieles y son las que se citan por línea. Las copias modificadas para validación local están en [`04-schemas-xsd/validacion-local/`](./04-schemas-xsd/validacion-local/) y se regeneran con `python 04-schemas-xsd/validacion-local/generar.py` cada vez que cambie `00-fuentes/xsd/`; para validar un documento: `php 04-schemas-xsd/validacion-local/validar.php documento.xml`.
 - No eliminar información no verificada: se marca `[PENDIENTE DE VERIFICACIÓN]`; eliminar solo lo que se demostró inexistente, dejando la nota correspondiente.
 
 ## 6. Pendientes conocidos (03/10/2026)

@@ -152,7 +152,7 @@ Estos campos de descripción aceptan los literales enumerados **o** texto libre 
 ### 14. E022 `dEntCont ` — nombre de elemento con espacio final (error del XSD oficial)
 
 - `DE_v150.xsd:327`: `<xs:element name="dEntCont " type="tdEntCont" />` dentro de `tgCompPub` (`:321-334`, grupo E020 de compras públicas). Un nombre con espacio es imposible en un documento XML; libxml2 compila el esquema igual, pero rechaza el `dEntCont` correcto: *"Element 'dEntCont': This element is not expected. Expected is ( dEntCont  )"*.
-- Consecuencia: las FE B2G con `gCompPub` **no se pueden validar localmente** contra el XSD tal cual. Para validar, usar una copia del XSD con el nombre corregido **fuera** de `00-fuentes/xsd/` (las copias de esta carpeta son fieles al original). Qué hace el validador del SIFEN con ese grupo: `[PENDIENTE DE VERIFICACIÓN]`.
+- Consecuencia: las FE B2G con `gCompPub` **no se pueden validar localmente** contra el XSD tal cual. Para validar se creó (decisión del propietario, 03/10/2026) la carpeta [`validacion-local/`](./validacion-local/): copias generadas por `generar.py` con `schemaLocation` relativos y el único fix `dEntCont ` → `dEntCont`, registradas en `CAMBIOS.md5`. Verificado el 03/10/2026 con PHP 8.3/libxml2: una FE B2G con `gCompPub` generada por PKuatia es **inválida** contra las copias fieles (*Expected is ( dEntCont  )*) y **válida** contra `validacion-local/`; una FE básica es válida en ambas. Las copias de `00-fuentes/xsd/` siguen siendo fieles al original. Qué hace el validador del SIFEN con ese grupo: `[PENDIENTE DE VERIFICACIÓN]`.
 
 ### 15. `Unidades_Medida_v141.xsd` — códigos 111-140 (NT-023) documentados como "Descripción - ABREV"
 
@@ -253,7 +253,7 @@ Casos en que dos fuentes oficiales se contradicen entre sí (no contra el XSD). 
 
 ## Recomendación práctica
 
-1. **Validar localmente** el XML contra los XSD de `00-fuentes/xsd/` antes de enviar a SIFEN (por ejemplo con `xmllint --schema siRecepDE_v150.xsd`).
+1. **Validar localmente** el XML antes de enviar a SIFEN con [`validacion-local/validar.php`](./validacion-local/validar.php) (mismos XSD, sin red, con el fix de `dEntCont`), o con `xmllint --schema validacion-local/siRecepDE_v150.xsd`. Las copias fieles de `00-fuentes/xsd/` requieren red para resolver los `xs:include` y rechazan el grupo `gCompPub`.
 2. Para cualquier campo `dDes*` que acompañe a un código, copiar el literal **desde el XSD**, nunca desde el PDF del MT.
 3. Re-descargar los XSD periódicamente: la SET/DNIT incorpora cambios al XSD que no siempre se reflejan en una reedición del MT (caso `dDesAfecIVA`, actualizado por NT-010 pero nunca en el PDF base) e incluso elementos sin NT alguna (caso boletas, códigos 9 y 10 de C002).
 

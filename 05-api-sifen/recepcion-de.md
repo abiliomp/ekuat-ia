@@ -171,7 +171,7 @@ Número de transacción de 10 dígitos (PP051) que el SIFEN asigna al aprobar un
 
 ## Buenas prácticas
 
-1. **Validar localmente** el `rDE` contra `00-fuentes/xsd/siRecepDE_v150.xsd` antes de enviar (es exactamente lo que valida el SIFEN; un literal distinto produce 0160).
+1. **Validar localmente** el `rDE` antes de enviar con `php 04-schemas-xsd/validacion-local/validar.php documento.xml` (mismos XSD de producción, sin red; ver [validacion-local/](../04-schemas-xsd/validacion-local/)): es exactamente lo que valida el SIFEN y un literal distinto produce 0160.
 2. **Verificar la firma** con una biblioteca local antes de enviar.
 3. **Sincronizar el reloj** con `aravo1.set.gov.py` / `aravo2.set.gov.py` (MT §7.11): la fecha de firma posterior a la hora del SIFEN produce 1004.
 4. **Guardar la respuesta completa** (`rProtDe`) para auditoría.

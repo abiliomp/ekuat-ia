@@ -3,6 +3,8 @@
 > **Fuente:** Manual Técnico SIFEN v150, sección 7.2 y Notas Técnicas NT-010, NT-011
 >
 > **⚠️ Importante:** este archivo describe la numeración *documental* del MT. Los archivos XSD **realmente publicados en producción** (y sus divergencias con el MT) están documentados en [xsd-produccion-vs-manual.md](./xsd-produccion-vs-manual.md), con copias locales en [`00-fuentes/xsd/`](../00-fuentes/xsd/). Ante cualquier diferencia, **el XSD de producción es la fuente de verdad**.
+>
+> **Validación local sin red:** usar las copias de [`validacion-local/`](./validacion-local/) (`php validacion-local/validar.php documento.xml`): son los mismos XSD con `schemaLocation` relativos y el único fix de `dEntCont ` → `dEntCont` (ver [xsd-produccion-vs-manual.md](./xsd-produccion-vs-manual.md) §14). Para citar líneas o literales, usar siempre las copias fieles de `00-fuentes/xsd/`.
 
 ## Descripción
 

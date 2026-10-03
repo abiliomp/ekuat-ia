@@ -1,0 +1,12 @@
+# Generado por generar.py. Columnas: archivo | md5 origen (00-fuentes/xsd) | md5 local | cambios
+siRecepDE_v150.xsd | c17bfed0e3433537cc0c1dcfd344cdb3 | c350986745fe9839984cd2768cd68952 | 1 schemaLocation absolutos -> relativos
+DE_v150.xsd | a68fc7005b7d5731d356238eb30b8973 | 1b376e05ac7143026285798b8dc0c2aa | 5 schemaLocation absolutos -> relativos; dEntCont con espacio final -> dEntCont
+DE_Types_v150.xsd | 2ffff7946f88e931e9dffffa1f7fa3b2 | 2ffff7946f88e931e9dffffa1f7fa3b2 | sin cambios (copia idéntica)
+siRecepEvento_v150.xsd | 8bf18c1a344e8ce00482f6579bc4b436 | a2e3742381e2b58399e477295b31ed0e | 1 schemaLocation absolutos -> relativos
+Evento_v150.xsd | 571f62b692caa82e61a2ffb38a5490eb | 7c1c103f4281fe4a9eb79e49feeea442 | 4 schemaLocation absolutos -> relativos
+Evento_Types_v150.xsd | a7f86be032aa8fb52d7190853d7deeca | a7f86be032aa8fb52d7190853d7deeca | sin cambios (copia idéntica)
+Paises_v100.xsd | 437301d0afdb7b93a9b382e6709b65c1 | 437301d0afdb7b93a9b382e6709b65c1 | sin cambios (copia idéntica)
+Departamentos_v141.xsd | 7b1ae7fe4f3b11e712780e0bd26f8694 | 7b1ae7fe4f3b11e712780e0bd26f8694 | sin cambios (copia idéntica)
+Monedas_v150.xsd | b7ce517aa17450ceaa4a8f9d8dd02a16 | b7ce517aa17450ceaa4a8f9d8dd02a16 | sin cambios (copia idéntica)
+Unidades_Medida_v141.xsd | 381ec7c42ea1e422d79b9c16ff88ee53 | 381ec7c42ea1e422d79b9c16ff88ee53 | sin cambios (copia idéntica)
+xmldsig-core-schema.xsd | 3b5aa1a966d9e841b92b07b9ee23875d | 3b5aa1a966d9e841b92b07b9ee23875d | sin cambios (copia idéntica)
