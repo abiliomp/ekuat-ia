@@ -47,7 +47,7 @@ El SIFEN realiza validaciones en múltiples niveles: desde la conexión TLS hast
 | BI01 | 0360 | BI20 | 0379 | Área de datos del WS siResultLoteDE | Vigente |
 | BJ01 | 0380 | BJ20 | 0399 | Mensaje de entrada del WS siConsDE | Vigente |
 | BK01 | 0400 | BK20 | 0419 | Información de control de la llamada al WS siConsDE | Vigente |
-| BL01 | 0420 | BL20 | 0439 | Área de datos del WS siConsDE | Vigente |
+| BL01 | 0420 | BL20 | 0439 | Área de datos del WS siConsDE (0420 inexistente, 0421 RUC sin permiso, **0422 CDC encontrado**; la tabla 12.3.4.3 del MT escribe 0421 para "CDC encontrado" por error: ver [respuestas-ws.md](./respuestas-ws.md)) | Vigente |
 | BM01 | 0460 | BM20 | 0479 | Mensaje de entrada del WS siConsRUC | Vigente |
 | BN01 | 0480 | BN20 | 0499 | Información de control de la llamada al WS siConsRUC | Vigente |
 | BO01 | 0500 | BO20 | 0559 | Área de datos del WS siConsRUC | Vigente |

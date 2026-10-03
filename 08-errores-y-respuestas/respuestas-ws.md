@@ -1,5 +1,6 @@
-> **Fuente:** Manual Técnico SIFEN v150, secciones 12.2 y 12.3
+> **Fuente:** Manual Técnico SIFEN v150, secciones 12.2 y 12.3 (PDF pp. 150-159); para el WS siConsDE también §9.4.2 Tabla G (PDF p. 52), la [Guía de Mejores Prácticas](../10-guias/mejores-practicas-envio-de.md) §8 (respuesta real, octubre 2024) y la homologación de PKuatia.
 > **Nota:** Contenido tachado (~~así~~) indica especificaciones eliminadas en v150. [MODIFICADO] indica cambios. [NUEVO] indica adiciones en v150.
+> **Resolución 0421/0422 (03/10/2026):** ver la nota de la sección 12.3.4.3.
 
 # Códigos de Respuesta de los Servicios Web
 
@@ -185,10 +186,22 @@ Sin validaciones específicas. Códigos reservados: 0400 a 0419 (BK00 a BK19).
 
 **12.3.4.3 – Área de datos del WS**
 
-| ID | Resultado de Validación | Código | E |
+Tabla tal como aparece en el MT (PDF p. 158, sin marcas de color):
+
+| ID | Resultado de Validación | Código (MT 12.3.4.3) | E |
 |----|------------------------|--------|---|
 | BL01 | CDC inexistente | 0420 | R |
-| BL02 | CDC encontrado | 0421 | A |
+| BL02 | CDC Encontrado | 0421 (sic) | A |
+
+> **⚠️ Divergencia interna del MT, resuelta el 03/10/2026.** La Tabla G del §9.4.2 del **mismo MT** (PDF p. 52) define tres resultados: **0420 = CDC inexistente**, **0421 = RUC Certificado sin permiso** (el RUC del certificado de la conexión no puede consultar ese DE) y **0422 = CDC encontrado**; el Schema XML 10 (DRSch05) dice que `xContenDE` "existe solamente si dCodRes = 0422". La guía de la DNIT de octubre de 2024 publica una respuesta real con `dCodRes` **0422** / "CDC encontrado", y PKuatia consulta DE en producción desde 2023 con 0422. **Códigos vigentes:**
+
+| Código | Resultado | E | Fuente |
+|--------|-----------|---|--------|
+| 0420 | CDC inexistente ("El DE no existe o no está aprobado") | R | MT Tabla G; MT 12.3.4.3; guía §8 |
+| 0421 | RUC del certificado sin permiso para consultar el DE | R | MT Tabla G |
+| **0422** | **CDC encontrado** (DTE aprobado; `xContenDE` presente) | A | MT Tabla G; guía §8 (respuesta real); homologación |
+
+El `0421 = CDC Encontrado` de la tabla 12.3.4.3 se trata como error de edición del MT. Aplica a [05-api-sifen/consulta-estado.md](../05-api-sifen/consulta-estado.md) y [estructura-codigos.md](./estructura-codigos.md).
 
 ---
 

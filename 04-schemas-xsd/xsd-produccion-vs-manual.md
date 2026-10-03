@@ -140,6 +140,23 @@ Estos campos de descripción aceptan los literales enumerados **o** texto libre 
 
 ---
 
+## Divergencias entre documentos oficiales (MT, guías de la DNIT, NT)
+
+Casos en que dos fuentes oficiales se contradicen entre sí (no contra el XSD). Se registra la resolución adoptada y la fuente de cada versión.
+
+### D1. Código de "CDC encontrado" en siConsDE: 0421 vs 0422 (resuelto el 03/10/2026)
+
+| Fuente | Dice | Observación |
+|--------|------|-------------|
+| MT v150 §12.3.4.3 (PDF p. 158) | BL02 "CDC Encontrado" = **0421** | Sin marcas de color; no lista el caso "sin permiso" |
+| MT v150 §9.4.2 Tabla G (PDF p. 52) | 0420 CDC inexistente; **0421 RUC Certificado sin permiso**; **0422 CDC encontrado** | Schema XML 10: `xContenDE` existe solo si `dCodRes` = 0422 |
+| Guía de Mejores Prácticas (DNIT, 10/2024) §8 | **0422** "Existe como DTE, está aprobado"; respuesta real con `<dCodRes>0422</dCodRes>` | Documento posterior y con evidencia real |
+| PKuatia (producción desde 2023; homologación 06/2026) | 0422 = encontrado, 0421 = sin permiso | Código operativo |
+
+**Resolución:** 0422 = CDC encontrado; 0421 = RUC del certificado sin permiso; 0420 = inexistente/no aprobado. El 0421 de la tabla 12.3.4.3 se considera error de edición. Aplicado en [respuestas-ws.md](../08-errores-y-respuestas/respuestas-ws.md), [estructura-codigos.md](../08-errores-y-respuestas/estructura-codigos.md) y [05-api-sifen/consulta-estado.md](../05-api-sifen/consulta-estado.md).
+
+---
+
 ## Recomendación práctica
 
 1. **Validar localmente** el XML contra los XSD de `00-fuentes/xsd/` antes de enviar a SIFEN (por ejemplo con `xmllint --schema siRecepDE_v150.xsd`).
