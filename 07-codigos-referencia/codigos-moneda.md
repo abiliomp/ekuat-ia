@@ -1,4 +1,4 @@
-> **Fuente:** Manual Técnico SIFEN v150, sección 10.4 — Campo D015 (cMoneOpe)
+> **Fuente:** Manual Técnico SIFEN v150, sección 10.4 — Campo D015 (cMoneOpe); `00-fuentes/xsd/Monedas_v150.xsd` (`cMondT`, 200 códigos) y `DE_Types_v150.xsd:884-895` (`tdDMoneTiPag`), verificado el 03/10/2026
 > **Nota:** Contenido tachado (~~así~~) indica especificaciones eliminadas en v150. [MODIFICADO] indica cambios. [NUEVO] indica adiciones en v150.
 
 # Códigos de Moneda (D015 – cMoneOpe)
@@ -7,7 +7,9 @@ El campo `cMoneOpe` (D015) contiene el código de la moneda de la operación. Si
 
 **Regla:** Se requiere la misma moneda para todos los ítems del DE.
 
-El campo `D016` (`dDesMoneOpe`) contiene la descripción de la moneda; su valor debe corresponder exactamente al código informado en D015.
+El campo `D016` (`dDesMoneOpe`) contiene la descripción de la moneda; su valor debe corresponder al código informado en D015 (validación 1206).
+
+> **⚠️ Longitud de la descripción (verificado 03/10/2026).** D016 `dDesMoneOpe` (`DE_v150.xsd:209`), E651 `dDMoneCuo` (`:311`) y E609 `dDMoneTiPag` (`:1276`) son de tipo `tdDMoneTiPag` (`DE_Types_v150.xsd:884-895`): **texto libre de 3 a 20 caracteres**, no una enumeración. El `CodeName` de `Monedas_v150.xsd` es solo documentación y en **15 monedas supera los 20 caracteres**: ANG (29), BMD (46), FKP (22), KYD (21), MXV (27), SBD (22), TMT (22), TTD (26), UYI (38), XCD (21), XBA (48), XBB (50), XBC (57), XTS (48), XXX (65). Para ellas la descripción debe truncarse o adaptarse a ≤ 20 caracteres; qué literal acepta la validación 1206 en esos casos está `[PENDIENTE DE VERIFICACIÓN]`. Ver [xsd-produccion-vs-manual.md](../04-schemas-xsd/xsd-produccion-vs-manual.md) §16.
 
 ## Reglas de tipo de cambio
 

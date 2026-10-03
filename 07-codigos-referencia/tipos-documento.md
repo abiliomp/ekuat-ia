@@ -1,4 +1,4 @@
-> **Fuente:** Manual Técnico SIFEN v150, sección 10.4 — Campo C002 (iTiDE)
+> **Fuente:** Manual Técnico SIFEN v150, sección 10.4 — Campo C002 (iTiDE); `00-fuentes/xsd/DE_Types_v150.xsd` (`tiTiDE`, `tiTipDocAso` `:1819-1828`, `tdDesTipDocAso` `:1831-1842`), verificado el 03/10/2026
 > **Nota:** Contenido tachado (~~así~~) indica especificaciones eliminadas en v150. [MODIFICADO] indica cambios respecto a versión anterior. [NUEVO] indica adiciones en v150.
 
 # Tipos de Documento Electrónico (C002 – iTiDE)
@@ -63,6 +63,18 @@ El campo `C003` (`dDesTiDE`) contiene la descripción en texto del tipo de docum
 | 5 | KuDE de Nota de Crédito Electrónica |
 | 6 | KuDE de Nota de Débito Electrónica |
 | 7 | KuDE de Nota de Remisión Electrónica |
+
+## Tipos de documento asociado (H002 `iTipDocAso` / H003 `dDesTipDocAso`)
+
+Grupo H (`gCamDEAsoc`). El literal de H003 es una enumeración cerrada del XSD y se compara byte a byte:
+
+| H002 | Literal exacto de H003 (`DE_Types_v150.xsd:1838-1840`) | Observación |
+|------|-------------------------------------------------------------|-------------|
+| 1 | `Electrónico` | DTE asociado por CDC |
+| 2 | `Impreso` | Documento preimpreso (timbrado, establecimiento, punto, número) |
+| 3 | `Constancia Electrónica` | **E mayúscula.** El MT lo escribe "Constancia electrónica"; con minúscula el XSD lo rechaza (0160). Obligatorio en toda Autofactura (validación 2416: si C002 = 4, H002 = 3) |
+
+Ver [xsd-produccion-vs-manual.md](../04-schemas-xsd/xsd-produccion-vs-manual.md) §12.
 
 ## Cambios relevantes en v150
 

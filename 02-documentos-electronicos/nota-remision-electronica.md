@@ -1,6 +1,6 @@
 # Nota de Remisión Electrónica (NRE)
 
-> **Fuente:** Manual Técnico SIFEN v150, sección 10.4, grupo E6 y E10
+> **Fuente:** Manual Técnico SIFEN v150, sección 10.4, grupos E6 y E10 (transportista E980-E997, PDF p. ~101); NT-010 §1.5; `00-fuentes/xsd/DE_v150.xsd:951-995` (`tgCamTrans`), verificado el 03/10/2026
 
 ## Identificación
 
@@ -124,17 +124,27 @@ Según NT-010, el grupo `gCamTrans` (E980) es:
 - No informar si C002=4, 5, 6
 - Opcional cuando E903=1 y E967=1
 
-| ID | Campo | Descripción | Observaciones |
-|----|-------|-------------|---------------|
-| E980 | gCamTrans | Grupo transportista | |
-| E981 | iNatTrans | Naturaleza del transportista | 1=Contribuyente, 2=No contribuyente |
-| E982 | dRucTrans | RUC del transportista | Si E981=1 |
-| E989 | dNomTrans | Nombre del transportista | |
-| E990 | dNumHabTrans | Número habilitación MOPC | |
-| E991 | dNomChofer | Nombre del chofer | |
-| E992 | dDomFisc | Domicilio fiscal transportista | Obligatorio por RG N° 41/2014 (NT-010) |
-| E993 | dDirChof | Dirección del chofer | Obligatorio por RG N° 41/2014 (NT-010) |
-| E994 | dCiudChofer | Ciudad del chofer | |
+Secuencia y obligatoriedad según el XSD de producción (`DE_v150.xsd:951-995`, `tgCamTrans`); IDs del MT según su tabla E980-E993 (corregido el 03/10/2026: la tabla anterior usaba nombres inexistentes `dNumHabTrans`, `dNomChofer`, `dCiudChofer`):
+
+| ID MT | Campo (XSD) | Tipo XSD | Ocu. (XSD) | Descripción | Observaciones |
+|-------|-------------|----------|------------|-------------|---------------|
+| E980 | `gCamTrans` | `tgCamTrans` | 0-1 en `gCamNRE`; obligatorio si C002=7 (NT-010) | Grupo transportista | |
+| E981 | `iNatTrans` | `tiNatRec` | **1-1** | Naturaleza del transportista | 1=Contribuyente, 2=No contribuyente |
+| E982 | `dNomTrans` | `dNomRazSocial` | **1-1** | Nombre o razón social del transportista | |
+| E983 | `dRucTrans` | `tRuc` | 0-1 | RUC del transportista | Si E981=1 |
+| E984 | `dDVTrans` | `tDVer` | 0-1 | DV del RUC | Si E981=1 |
+| E985 | `iTipIDTrans` | `tiTipDoc` (`[1-4]`) | 0-1 | Tipo de documento de identidad | Si E981=2 |
+| E986 | `dDTipIDTrans` | `tdDtipDoc` | 0-1 | Descripción del tipo de documento | Si E985 |
+| E987 | `dNumIDTrans` | `tdNumDocId` | 0-1 | Número de documento | Si E985 |
+| E988 | `cNacTrans` | `paisType` | 0-1 | Nacionalidad del transportista | |
+| E989 | `dDesNacTrans` | `tDesPais` | 0-1 | Descripción de la nacionalidad | |
+| E990 | `dNumIDChof` | `tdNumDocId` | **1-1** | Número de documento del chofer | |
+| E991 | `dNomChof` | `dNomRazSocial` | **1-1** | Nombre del chofer | |
+| E992 | `dDomFisc` | texto 1-150 | **1-1** (`DE_v150.xsd:973`, `minOccurs="1"`) | Domicilio fiscal del transportista | Obligatorio por RG N° 41/2014 (NT-010); **siempre**, no condicional |
+| E993 | `dDirChof` | `tdDirec` | **1-1** (`DE_v150.xsd:986`, `minOccurs="1"`) | Dirección del chofer | Obligatorio por RG N° 41/2014 (NT-010); **siempre**, no condicional |
+| — | `dNombAg`, `dRucAg`, `dDVAg`, `dDirAge` | varios | 0-1 | Agente de transporte (nombre, RUC, DV, dirección) | IDs del MT E994-E997 `[PENDIENTE DE VERIFICACIÓN]` |
+
+> Omitir `dDomFisc` o `dDirChof` produce rechazo de esquema (*"Element 'gCamTrans': Missing child element(s). Expected is ( dDomFisc )"*). El evento de actualización de transporte usa para la matrícula el tipo `tdNroMatVeh` de longitud exacta 6, mientras que E965 `dNroMatVeh` en el DE admite hasta 7 (`DE_v150.xsd:1174-1184`). Ver [xsd-produccion-vs-manual.md](../04-schemas-xsd/xsd-produccion-vs-manual.md) §13 y §21.
 
 ## Ítems en NRE
 

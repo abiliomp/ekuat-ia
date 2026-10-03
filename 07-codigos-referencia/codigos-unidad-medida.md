@@ -1,4 +1,4 @@
-> **Fuente:** Manual Técnico SIFEN v150, sección 15 — TABLA 5 (Codificación de Unidades de Medida)
+> **Fuente:** Manual Técnico SIFEN v150, sección 15 — TABLA 5 (Codificación de Unidades de Medida); `00-fuentes/xsd/Unidades_Medida_v141.xsd` (`tcUniMed` para E709, `tdDesUniMed` para E710), verificado el 03/10/2026
 > **Nota:** Contenido tachado (~~así~~) indica especificaciones eliminadas en v150. [MODIFICADO] indica cambios. [NUEVO] indica adiciones en v150.
 
 # Códigos de Unidad de Medida (E709 – cUniMed)
@@ -51,6 +51,8 @@ La validación 131 verifica que la descripción de la unidad de medida (E710) co
 ## Unidades agregadas por NT-023 (códigos 111–140)
 
 Incorporadas a `Unidades_Medida_v141.xsd` (vigentes en producción desde 27/09/2024):
+
+> **⚠️ Forma del XSD (verificado 03/10/2026).** En `tcUniMed` la documentación de estos 30 códigos tiene la forma `Descripción - ABREV` (`Bovinas - 4A` en `:186`, `Curie - Ci` en `:191`, … `Peso Base - BW` en `:331`), a diferencia de los códigos 1-110. El literal que debe ir en **E710 `dDesUniMed` es la abreviatura** de la columna "Representación" (`4A`, `Ci`, `DOC`, `GLL`, …): son los valores de la enumeración `tdDesUniMed` (`:517-662`), con la descripción larga solo como `xs:documentation`. Copias antiguas del XSD no traían el sufijo " - ABREV"; un parser que corte la documentación en el último " - " produce `vinas`, `rrie`, `llar` y rechazo seguro. Ver [xsd-produccion-vs-manual.md](../04-schemas-xsd/xsd-produccion-vs-manual.md) §15.
 
 | Código | Representación | Descripción |
 |--------|---------------|-------------|

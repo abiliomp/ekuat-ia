@@ -124,9 +124,10 @@ Estos campos de descripción aceptan los literales enumerados **o** texto libre 
 
 `Evento_v150.xsd` / `Evento_Types_v150.xsd` incluyen, además de los eventos documentados (cancelación, inutilización, notificación, conformidad, disconformidad, desconocimiento, nominación, transporte):
 
-- **Eventos del emisor** adicionales: retención aceptada/anulada (`trGeVeRetAce`, `trGeVeRetAnu`), CCFF (`trGeVeCCFF`), anticipo/remisión (`rGeVeAnt`, `rGeVeRem`), **endoso** (`trGeVeEnd`, tipos 1=En Venta, 2=En Administración).
+- **Endoso** (`rGeVeEnd` / `trGeVeEnd`, `Evento_v150.xsd:231-262`; `tdTipEnd` 1=En Venta, 2=En Administración): es el único de estos eventos adicionales que está en `tgGroupEvt` y por lo tanto es **enviable**; el MT v150 lo lista como "futuro" (ver §17 y [05-api-sifen/eventos.md](../05-api-sifen/eventos.md)).
+- **Eventos automáticos del emisor** (`tgGroupEvtEmi`, tipo huérfano): retención aceptada/anulada (`trGeVeRetAce`, `trGeVeRetAnu`), CCFF (`trGeVeCCFF`, `trGeDevCCFF`), anticipo/remisión (`rGeVeAnt`, `rGeVeRem`). No enviables; el SIFEN los devuelve al consultar un DTE.
 - **Eventos de la SET/DNIT** (`tgGroupEvtSet`): bloqueo por omisión/inconsistencias (`trGeVeOA`), procesos de control (`trGeVePC`), **impugnación** (`trGeVeImp`) y detención/multas (`trGeVeDet`), cada uno con su enumeración de motivos.
-- `tdTiGDE` (tipo de evento): 1=Cancelación, 2=Inutilización, 3=Endoso, 10=Acuse del DE, 11=Conformidad, 12=Disconformidad, 13=Desconocimiento.
+- `tdTiGDE` (tipo de evento, `Evento_Types_v150.xsd:134-157`): 1=Cancelación, 2=Inutilización, 3=Endoso, 10=Acuse del DE, 11=Conformidad, 12=Disconformidad, 13=Desconocimiento. **Tipo huérfano**: ningún elemento lo usa (el campo GDE006 `dTiGDE` del MT no existe en `trEve`); el evento se identifica por el hijo elegido en `gGroupTiEvt` (ver §17).
 - `tiTiOpeEv` (tipo de operación en nominación): patrón `[1-2]|[4]` (B2B, B2C, B2F — el B2G no aplica).
 - `tiTiDEEv` (tipo de DTE en eventos): 1–9, donde 9=Boleta de Venta Electrónica.
 - **NT-027:** el campo `iTipIDRec` del evento de nominación usa el tipo compartido `tiTipDocRec` (`[1-6]|9`), coherente con el cambio de código 5→6 para la Tarjeta Diplomática.
@@ -137,6 +138,89 @@ Estos campos de descripción aceptan los literales enumerados **o** texto libre 
 - **Países** (`Paises_v100.xsd`): 250 códigos ISO 3166-1 alpha-3 (incluye el código especial `NN`).
 - **Unidades de medida** (`Unidades_Medida_v141.xsd`): incluye las 30 unidades nuevas de NT-023 (códigos 111–140).
 - **Departamentos** (`Departamentos_v141.xsd`): 20 códigos/descripciones (incluye `CHACO` y `NUEVA ASUNCION`).
+
+### 12. H003 `dDesTipDocAso` — `Constancia Electrónica` con E mayúscula
+
+- `DE_Types_v150.xsd:1831-1842` (`tdDesTipDocAso`): literales exactos `Electrónico`, `Impreso`, **`Constancia Electrónica`**. El comentario del código 3 de `tiTipDocAso` (`:1825`) lo escribe igual.
+- El MT (H003) y la mayoría de las implementaciones lo escriben "Constancia electrónica" (e minúscula) → rechazo 0160 (*"El valor del elemento: dDesTipDocAso es invalido"*). Afecta a **toda Autofactura** (H002 = 3 es obligatorio en AFE, validación 2416) y a toda FE que referencie una constancia. Propagado a [tipos-documento.md](../07-codigos-referencia/tipos-documento.md).
+
+### 13. E992 `dDomFisc` y E993 `dDirChof` — obligatorios en `gCamTrans` (NRE)
+
+- `DE_v150.xsd:973` (`dDomFisc`, `minOccurs="1"`, `noEmptyString` 1-150) y `:986` (`dDirChof`, `tdDirec`, `minOccurs="1"`) dentro de `tgCamTrans` (`:951-995`). La NT-010 ya los marcó `[MODIFICADO]` 1-1 "obligatorio por RG N° 41/2014"; el MT base los mostraba condicionales y varias implementaciones los tratan como opcionales.
+- En `tgCamTrans` también son obligatorios (sin `minOccurs="0"`) `iNatTrans` (`:959`), `dNomTrans` (`:960`), `dNumIDChof` (`:971`) y `dNomChof` (`:972`). Omitir `dDomFisc` produce *"Element 'gCamTrans': Missing child element(s). Expected is ( dDomFisc )"* y luego lo mismo con `dDirChof`. Propagado a [nota-remision-electronica.md](../02-documentos-electronicos/nota-remision-electronica.md).
+
+### 14. E022 `dEntCont ` — nombre de elemento con espacio final (error del XSD oficial)
+
+- `DE_v150.xsd:327`: `<xs:element name="dEntCont " type="tdEntCont" />` dentro de `tgCompPub` (`:321-334`, grupo E020 de compras públicas). Un nombre con espacio es imposible en un documento XML; libxml2 compila el esquema igual, pero rechaza el `dEntCont` correcto: *"Element 'dEntCont': This element is not expected. Expected is ( dEntCont  )"*.
+- Consecuencia: las FE B2G con `gCompPub` **no se pueden validar localmente** contra el XSD tal cual. Para validar, usar una copia del XSD con el nombre corregido **fuera** de `00-fuentes/xsd/` (las copias de esta carpeta son fieles al original). Qué hace el validador del SIFEN con ese grupo: `[PENDIENTE DE VERIFICACIÓN]`.
+
+### 15. `Unidades_Medida_v141.xsd` — códigos 111-140 (NT-023) documentados como "Descripción - ABREV"
+
+- En `tcUniMed` (E709, `:12-341`) los códigos 111-140 llevan la documentación con sufijo de abreviatura: `Bovinas - 4A` (`:186`), `Curie - Ci` (`:191`), `Docena - DOC`, `Galones (US) (3,7843 LT) - GLL`, … `Peso Base - BW` (`:331`); los códigos 1-110 llevan solo la descripción.
+- La enumeración de E710 `tdDesUniMed` (`:343-666`) contiene las **abreviaturas** como valores (`4A` `:517`, `Ci` `:522`, …, `BW` `:662`) con la descripción larga en `xs:documentation`: el literal que debe ir en `dDesUniMed` es la abreviatura (`4A`, `Ci`, `DOC`, `GLL`, …).
+- Versiones anteriores del XSD (p. ej. la empaquetada en PKuatia hasta v0.1.5, md5 `25a38e63…`) no llevaban el sufijo; un parser que corte la cadena de documentación en el último " - " produce descripciones inválidas (`vinas`, `rrie`, `llar`). Comparar siempre contra la copia actual (md5 `381ec7c4…`, `CHECKSUMS.md5`). Propagado a [codigos-unidad-medida.md](../07-codigos-referencia/codigos-unidad-medida.md).
+
+### 16. `Monedas_v150.xsd` — 15 `CodeName` de más de 20 caracteres frente a `tdDMoneTiPag` (3-20)
+
+`tdDMoneTiPag` (`DE_Types_v150.xsd:884-895`: `noEmptyString`, 3-20 caracteres) es el tipo de D016 `dDesMoneOpe` (`DE_v150.xsd:209`), E651 `dDMoneCuo` (`:311`) y E609 `dDMoneTiPag` (`:1276`). El `CodeName` de `Monedas_v150.xsd` es `xs:documentation`, no enumeración, así que la descripción es texto libre de 3-20; estas 15 monedas no caben:
+
+| Código (línea) | `CodeName` del XSD | Long. |
+|----------------|--------------------|-------|
+| ANG (`:48`) | Netherlands Antillian Guilder | 29 |
+| BMD (`:139`) | Bermudian Dollar (customarily: Bermuda Dollar) | 46 |
+| FKP (`:391`) | Falkland Islands Pound | 22 |
+| KYD (`:608`) | Cayman Islands Dollar | 21 |
+| MXV (`:797`) | Mexican Unidad de Inversion | 27 |
+| SBD (`:965`) | Solomon Islands Dollar | 22 |
+| TMT (`:1126`) | Turkmenistan New Manat | 22 |
+| TTD (`:1147`) | Trinidad and Tobago Dollar | 26 |
+| UYI (`:1203`) | Uruguay Peso en Unidades Indexadas(UI) | 38 |
+| XCD (`:1287`) | East Carribean Dollar | 21 |
+| XBA (`:1336`) | Bond Markets Unit European Composite Unit(EURCO) | 48 |
+| XBB (`:1343`) | Bond Markets Unit European Monetary Unit(E.M.U.-6) | 50 |
+| XBC (`:1350`) | Bond Markets Unit European Unit of Account 17 (E.U.A.-17) | 57 |
+| XTS (`:1357`) | Codes specifically reserved for testing purposes | 48 |
+| XXX (`:1364`) | The codes assigned for transactions where no currency is involved | 65 |
+
+La descripción debe truncarse o adaptarse a ≤ 20 caracteres; qué literal acepta la validación 1206 ("Descripción de la moneda no corresponde al código") para estas monedas: `[PENDIENTE DE VERIFICACIÓN]`. Propagado a [codigos-moneda.md](../07-codigos-referencia/codigos-moneda.md).
+
+### 17. `Evento_v150.xsd` — solo `tgGroupEvt` es alcanzable: 9 eventos enviables
+
+- Cadena de inclusión desde la raíz: `gGroupGesEve` (`siRecepEvento_v150.xsd:9`) → `tgGroupGesEve` (`Evento_v150.xsd:561-565`, `rGesEve` 1-15) → `trGesEve` (`:546-557`: `rEve` + `ds:Signature`) → `trEve` (`:480-488`: `dFecFirma`, `dVerFor`, `gGroupTiEvt`, atributo `Id`) → **`tgGroupEvt`** (`:363-380`, `xs:choice`): `rGeVeCan`, `rGeVeInu`, `rGeVeNotRec`, `rGeVeConf`, `rGeVeDisconf`, `rGeVeDescon`, `rGeVeEnd`, `rGeVeTr`, `rGEveNom`.
+- **Tipos huérfanos** (definidos pero no referenciados desde ningún elemento global): `tgGroupEvtRecep` (`:432-444`), `tgGroupEvtEmi` (`:446-462`), `tgGroupEvtSet` (`:464-476`), `trEveRecep`/`trEveEmi`/`trEveSet` (`:492-518`) y `trGesEveRecep`/`trGesEveEmi`/`trGesEveSet` (`:522-542`); presumiblemente son los contenedores de los eventos que el SIFEN devuelve en `xContEv` al consultar un DTE (`[PENDIENTE DE VERIFICACIÓN]`). También huérfanos: `trGeDeVTr` (`:192-229`, duplicado del evento de transporte con tipos incoherentes: fechas donde van textos) y `tdTiGDE` (`Evento_Types_v150.xsd:134-157`).
+- `rGEveNom` figura tanto en `tgGroupEvt` como en `tgGroupEvtEmi`. Detalle en [05-api-sifen/eventos.md](../05-api-sifen/eventos.md).
+
+### 18. `trGeVeRetAce` / `trGeVeRetAnu` exigen `dRuc` y `dMonRet`
+
+- `Evento_v150.xsd:112-129` (`trGeVeRetAce`) y `:131-149` (`trGeVeRetAnu`): `dRuc` (`:120` / `:139`, `tRuc`) y `dMonRet` (`:127` / `:147`, `tMontoBase`) sin `minOccurs="0"`. Las tablas del MT (GER001-008 y GERA001-009 en [eventos-respuesta.md](../08-errores-y-respuestas/eventos-respuesta.md)) no los listan. Solo relevante para deserializar eventos devueltos por el SIFEN.
+
+### 19. Fechas de los eventos: `fecHhmmss` (fecha y hora), salvo los eventos de la DNIT
+
+- `rGeVeConf.dFecRecep` es `fecHhmmss` (`Evento_v150.xsd:76`; `DE_Types_v150.xsd:345-354`: `xs:dateTime`, `AAAA-MM-DDThh:mm:ss`). El MT la llama "fecha estimada de recepción" (GCO004, F 19): enviar solo la fecha produce rechazo de esquema.
+- Todas las fechas de los eventos automáticos GEA también son `fecHhmmss`: `dFeEmiRet` (`:126`, `:145`), `dFecAnRet` (`:146`), `dFeAceTraCCFF` (`:160`), `dFeEmiSol`/`dFeEmiInf`/`dFeEmiRes` (`:186-188`).
+- Los eventos de la DNIT usan `formatFecha` (`Evento_Types_v150.xsd:535-543`, `xs:date` `AAAA-MM-DD`): `dFechaOA` (`:311`), `dFechaPC` (`:326`), `dFechaImp` (`:341`), `dFechaDet` (`:356`).
+
+### 20. `dTipIDRec`: `tiTipDoc` (`[1-4]`) en desconocimiento y endoso, `tiTipDocRec` (`[1-6]|9`) en notificación y nominación
+
+| Evento | Campo | Tipo | Patrón | Línea |
+|--------|-------|------|--------|-------|
+| `rGeVeNotRec` | `dTipIDRec` | `tiTipDocRec` | `[1-6]\|9` | `Evento_v150.xsd:61` |
+| `rGEveNom` | `iTipIDRec` | `tiTipDocRec` | `[1-6]\|9` | `:398` |
+| `rGeVeDescon` | `dTipIDRec` | **`tiTipDoc`** | **`[1-4]`** | `:106` |
+| `rGeVeEnd` | `dTipIDRec` | **`tiTipDoc`** | **`[1-4]`** | `:243` |
+
+`tiTipDoc` (`DE_Types_v150.xsd:645-655`, "tipo de documento de identidad del vendedor") y `tiTipDocRec` (`:658-668`). El MT (GED009) describe para el desconocimiento la misma lista que para la notificación; por el XSD, el desconocimiento **no admite** 5 (innominado), 6 (Tarjeta Diplomática) ni 9 (otro).
+
+### 21. `tdNroMatVeh` — longitud exacta 6 en el evento de transporte frente a máximo 7 en el DE
+
+- `Evento_Types_v150.xsd:524-533` (`tdNroMatVeh`): `xs:length value="6"` (su `xs:documentation` dice por error "Marca del vehículo"); lo usa `rGeVeTr.dNroMatVeh` (`Evento_v150.xsd:299`; MT GET030 "A 6").
+- En el DE, E965 `dNroMatVeh` (`DE_v150.xsd:1174-1184`) es `noEmptyString` con `maxLength 7`. Una matrícula de 7 caracteres aceptada en la NRE no puede informarse en el evento de actualización de transporte.
+
+### 22. Confirmaciones (ya documentadas en secciones anteriores, verificadas el 03/10/2026)
+
+- `tiTiOpeEv` `[1-2]|[4]` (`Evento_Types_v150.xsd:57-66`): §10; B2G (3) no es válido en la nominación.
+- `tdDMotivTras` (`DE_Types_v150.xsd:1933-1965`): código 9 = `Traslado de bienes para reparación` (`:1953`), código 11 = `Exhibición o Demostración` (`:1955`): §5.
+- `tdDtipDocRec` (`DE_Types_v150.xsd:699-725`): unión de la enumeración (6 literales, incluida `Tarjeta Diplomática de exoneración fiscal`) con texto libre de 9-41 caracteres: §8.
 
 ---
 
