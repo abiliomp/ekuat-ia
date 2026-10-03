@@ -55,7 +55,7 @@
 | RRSch02 | `dCodRes` | RRSch01 | N | 4 | 1-1 | 0500, 0501 o 0502 |
 | RRSch03 | `dMsgRes` | RRSch01 | A | 1-255 | 1-1 | Mensaje |
 | RRSch04 | `xContRUC` | RRSch01 | XML | — | 0-1 | Contenedor del RUC. **Existe solamente si `dCodRes` = 0502** |
-| ContRUC01 | `rContRUC` | RRSch01 | — | — | Raíz del contenedor según el MT. **En la respuesta real los campos ContRUC02-06 son hijos directos de `xContRUC`, sin envoltorio `rContRUC`** (homologado en producción, PKuatia) |
+| ContRUC01 | `rContRUC` | RRSch01 | — | — | — | Raíz del contenedor según el MT. **En la respuesta real los campos ContRUC02-06 son hijos directos de `xContRUC`, sin envoltorio `rContRUC`** (homologado en producción, PKuatia) |
 | ContRUC02 | `dRUCCons` | ContRUC01 | A | 5-8 | 1-1 | RUC consultado |
 | ContRUC03 | `dRazCons` | ContRUC01 | A | [MODIFICADO] 1-250 | 1-1 | Razón social o nombre |
 | ContRUC04 | `dCodEstCons` | ContRUC01 | A | 3 | 1-1 | Código de estado del RUC: `ACT` Activo, `SUS` Suspensión temporal, `SAD` Suspensión administrativa, `BLQ` Bloqueado, `CAN` Cancelado, `CDE` Cancelado definitivo |
