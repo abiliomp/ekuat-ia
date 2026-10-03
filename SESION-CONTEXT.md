@@ -93,7 +93,7 @@ Con los archivos capturados: actualizar `05-api-sifen/recepcion-de.md`, `eventos
 
 - [ ] **Documentar las boletas (C002=9 y 10)** — "Boleta de venta electrónica" y "Boleta resimple electrónica" existen en el XSD de producción pero no hay NT ni sección del MT que las describa; buscar documentación oficial del régimen RESIMPLE / e-kuatia'i
 - [ ] **Documentar los eventos no cubiertos por el MT** que aparecen en `Evento_v150.xsd`: endoso, retención aceptada/anulada, CCFF, eventos de la SET (bloqueo, impugnación, detención) — ver sección 10 de `xsd-produccion-vs-manual.md`
-- [ ] **Agregar más ejemplos** en `06-ejemplos/` — autofactura, nota de crédito, nota de remisión
+- [ ] **Reemplazar `06-ejemplos/factura-simple/ejemplo.xml`** (ejemplo del MT, no valida contra el XSD: RUC con ceros a la izquierda, certificado de relleno) por una FE real aprobada en `sifen-test`, anonimizada, y **agregar más ejemplos** — autofactura, nota de crédito, nota de remisión, todos validados con `validacion-local/validar.php`
 - [ ] **Agregar KuDE** — documentar la estructura gráfica del KuDE en una carpeta `11-kude/`
 - [ ] **Verificar NT-025** — su fecha de publicación (23/04/2024) y fechas de ambiente (28/04/2025) parecen inconsistentes
 - [ ] **Re-descargar los XSD periódicamente** (`md5sum -c 00-fuentes/xsd/CHECKSUMS.md5`, procedimiento en `AGENTS.md` §4) y refrescar `xsd-produccion-vs-manual.md` — la DNIT cambia los XSD sin reeditar el MT. Última verificación: 03/10/2026, sin cambios

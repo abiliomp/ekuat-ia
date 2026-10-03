@@ -26,7 +26,9 @@ Cada subdirectorio contiene:
 
 ## Datos de Prueba Comunes
 
-Los ejemplos usan los siguientes datos del ambiente de prueba provistos por la DNIT:
+> **⚠️ Verificado el 03/10/2026:** `factura-simple/ejemplo.xml` proviene del ejemplo del MT v150 y **no valida contra el XSD de producción** (`php 04-schemas-xsd/validacion-local/validar.php 06-ejemplos/factura-simple/ejemplo.xml`): los RUC `00000001` y `00000002` violan el patrón `tRuc` (`[1-9][0-9]*[0-9A-D]?`, sin ceros a la izquierda; ver [xsd-produccion-vs-manual.md](../04-schemas-xsd/xsd-produccion-vs-manual.md) §1.d) y el certificado está reemplazado por texto. Sirve para entender la estructura campo a campo, **no** como plantilla para enviar. Además, estos datos **no** son "provistos por la DNIT": la [Guía de Pruebas](../10-guias/guia-de-pruebas.md) exige el RUC y la razón social **reales** del contribuyente también en pruebas; lo único genérico son el CSC `0001`/`0002` y el literal del nombre del emisor (validación 1263). Reemplazar este ejemplo por una FE real aprobada en `sifen-test` (anonimizada) es un pendiente de la Fase A.
+
+Datos que usa el ejemplo (tomados del MT):
 
 | Campo | Valor |
 |-------|-------|
@@ -36,7 +38,7 @@ Los ejemplos usan los siguientes datos del ambiente de prueba provistos por la D
 | Establecimiento | `001` |
 | Punto de Expedición | `001` |
 | Tipo de Documento | `1` (FE) |
-| Ambiente | Pruebas (`https://ekuatia-test.set.gov.py`) |
+| Ambiente | Pruebas (QR hacia `https://ekuatia.set.gov.py/consultas-test/qr?`, MT cap. QR) |
 
 ---
 
