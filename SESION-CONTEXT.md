@@ -8,7 +8,7 @@ Este archivo resume el estado del repositorio y las tareas pendientes para retom
 
 - **Base:** Manual Técnico SIFEN v150 + NT-001 a **NT-027** (hasta marzo 2026)
 - **Archivos Markdown** generados desde fuentes oficiales (PDFs, XSD, XML, XLSX)
-- **XSD de producción descargados** (11/06/2026) en `00-fuentes/xsd/`: `siRecepDE_v150.xsd`, `DE_v150.xsd`, `DE_Types_v150.xsd`, `siRecepEvento_v150.xsd`, `Evento_v150.xsd`, `Evento_Types_v150.xsd`, `Paises_v100.xsd`, `Departamentos_v141.xsd`, `Monedas_v150.xsd`, `Unidades_Medida_v141.xsd`
+- **XSD de producción descargados** (11/06/2026; **re-verificados sin cambios el 03/10/2026**, md5 en `00-fuentes/xsd/CHECKSUMS.md5`) en `00-fuentes/xsd/`: `siRecepDE_v150.xsd`, `DE_v150.xsd`, `DE_Types_v150.xsd`, `siRecepEvento_v150.xsd`, `Evento_v150.xsd`, `Evento_Types_v150.xsd`, `Paises_v100.xsd`, `Departamentos_v141.xsd`, `Monedas_v150.xsd`, `Unidades_Medida_v141.xsd`
 - **Divergencias MT vs XSD documentadas** en `04-schemas-xsd/xsd-produccion-vs-manual.md` — es el documento de referencia cuando un literal del MT no coincide con producción (caso típico: `dDesAfecIVA` código 2 = "Exonerado (Art. 100 - Ley 6380/2019)")
 - **Detección de color correcta:** los PDFs usan resaltado rojo/amarillo/verde para indicar eliminaciones, modificaciones y adiciones. El repositorio refleja esto con `~~tachado~~`, `[MODIFICADO]` y `[NUEVO]`.
 - **Herramienta usada para extracción:** PyMuPDF (`fitz`) — NO usar `pdfplumber` que no detecta colores. Las marcas de color pueden ser rectángulos diminutos (en NT-027 cubrían un solo dígito): conviene listar los rects de color con `page.get_drawings()` y extraer el texto bajo cada rect con `page.get_text(clip=rect)`.

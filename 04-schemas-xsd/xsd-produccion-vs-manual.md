@@ -1,6 +1,8 @@
 # XSD de Producción vs Manual Técnico v150 — Divergencias Confirmadas
 
-> **Fuente de verdad:** XSD publicados en `https://ekuatia.set.gov.py/sifen/xsd/` (descargados y verificados el **11/06/2026**, copias en [`00-fuentes/xsd/`](../00-fuentes/xsd/)).
+> **Fuente de verdad:** XSD publicados en `https://ekuatia.set.gov.py/sifen/xsd/` (descargados el **11/06/2026**, copias en [`00-fuentes/xsd/`](../00-fuentes/xsd/)).
+>
+> **Última re-verificación: 03/10/2026.** Los 11 archivos se volvieron a descargar y resultaron **byte a byte idénticos** a las copias locales (md5 en [`00-fuentes/xsd/CHECKSUMS.md5`](../00-fuentes/xsd/CHECKSUMS.md5)); los 11 están bien formados y las dos cadenas de `xs:include` (`siRecepDE_v150.xsd` y `siRecepEvento_v150.xsd`) compilan con libxml2. Ver el [historial de verificaciones](#historial-de-verificaciones) al final.
 >
 > **Regla de oro:** cuando el Manual Técnico (MT v150 + NTs) y el XSD de producción difieren, **gana el XSD**: es el esquema contra el que SIFEN valida efectivamente cada documento recibido. Las enumeraciones de cadenas son **exactas, carácter por carácter** — un espacio o una tilde de diferencia produce el rechazo *"El valor X del elemento: Y es invalido"*.
 
@@ -143,3 +145,26 @@ Estos campos de descripción aceptan los literales enumerados **o** texto libre 
 1. **Validar localmente** el XML contra los XSD de `00-fuentes/xsd/` antes de enviar a SIFEN (por ejemplo con `xmllint --schema siRecepDE_v150.xsd`).
 2. Para cualquier campo `dDes*` que acompañe a un código, copiar el literal **desde el XSD**, nunca desde el PDF del MT.
 3. Re-descargar los XSD periódicamente: la SET/DNIT incorpora cambios al XSD que no siempre se reflejan en una reedición del MT (caso `dDesAfecIVA`, actualizado por NT-010 pero nunca en el PDF base) e incluso elementos sin NT alguna (caso boletas, códigos 9 y 10 de C002).
+
+---
+
+## Historial de verificaciones
+
+| Fecha | Resultado | Método |
+|-------|-----------|--------|
+| 11/06/2026 | Descarga inicial de los 11 XSD; divergencias con el MT documentadas en este archivo | Descarga directa desde `ekuatia.set.gov.py/sifen/xsd/` |
+| 03/10/2026 | **Sin cambios**: md5 idéntico en los 11 archivos; bien formados; `schemaValidate` de libxml2 resuelve la cadena completa de `xs:include` | `curl` + `md5sum -c CHECKSUMS.md5` + PHP `DOMDocument::load`/`schemaValidate` |
+
+### Cómo repetir la verificación
+
+```bash
+cd 00-fuentes/xsd
+for f in siRecepDE_v150.xsd DE_v150.xsd DE_Types_v150.xsd siRecepEvento_v150.xsd Evento_v150.xsd Evento_Types_v150.xsd Paises_v100.xsd Departamentos_v141.xsd Monedas_v150.xsd Unidades_Medida_v141.xsd xmldsig-core-schema.xsd; do
+  curl -sS -L -o "/tmp/$f" "https://ekuatia.set.gov.py/sifen/xsd/$f"
+done
+(cd /tmp && md5sum -c "$OLDPWD/CHECKSUMS.md5")
+```
+
+Si algún archivo difiere: reemplazar la copia local, regenerar `CHECKSUMS.md5`, hacer `diff` contra la versión anterior (git) y registrar cada cambio en este archivo con la fecha, propagando a `07-codigos-referencia/` lo que corresponda. Los `schemaLocation` de los `xs:include` apuntan a URLs absolutas de producción; para validar sin red hay que reescribirlos a rutas locales (`sed 's#https://ekuatia.set.gov.py/sifen/xsd/##g'`).
+
+> **Prohibido** desde una sesión de documentación: llamar a los web services (`sifen.set.gov.py`, `sifen-test.set.gov.py`). Solo se descargan los XSD estáticos.
