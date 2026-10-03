@@ -60,7 +60,7 @@ Fuentes de las estructuras de los WS: MT cap. 9 (texto extraído con PyMuPDF a `
 
 Marcados `[PENDIENTE DE VERIFICACIÓN]` en los archivos; requieren una respuesta real del SIFEN o una aclaración de la DNIT:
 
-- [ ] **Forma real de `xContEv` con eventos** en la respuesta de siConsDE (si trae `rContEv` > `xEvento` > `rGesEve` y `rResEnviEventoDe` > `rRetEnviEventoDe`; cuántos `rContEv`; namespaces de los hijos de `xContenDE`). Hoy solo se conoce `xContEv` vacío.
+- [ ] **Forma real de `xContEv` con eventos** en la respuesta de siConsDE (si trae `rContEv` > `xEvento` > `rGesEve` y `rResEnviEventoDe` > `rRetEnviEventoDe`; cuántos `rContEv`; namespaces de los hijos de `xContenDE`). Hoy solo se conoce `xContEv` vacío. **Decisión 03/10/2026:** se captura en la prueba de inicio de la Fase A (ver abajo).
 - [ ] **Formato exacto de `dFecProc`** en `rProtDe` y en `rRetEnviEventoDe` (el MT dice `AAAA-MM-DDThh:mm:ss` y, para eventos, `AAAA-MM-DD-hh:mm:ss-ss:ss`; las respuestas reales del lote y la consulta traen zona horaria `-03:00`/`-04:00`).
 - [ ] **Orden real de los hijos de `gResProcEVe`** y literal de `dMsgRes` para 0600.
 - [ ] **`dEntCont ` con espacio** (`DE_v150.xsd:327`): qué hace el validador del SIFEN con una FE B2G que lleva `gCompPub`.
@@ -73,6 +73,19 @@ Marcados `[PENDIENTE DE VERIFICACIÓN]` en los archivos; requieren una respuesta
 - [ ] **Organismo rector de la firma digital** tras la Ley 6822/2021 (el MT dice MIC; "DINETIC" no tiene fuente).
 - [ ] **Tolerancia de reloj**: el MT no publica minutos (solo 1004/1005).
 - [ ] **Semántica de `rEve@Id`** con varios eventos por sobre (homologado solo con Id = 1).
+
+### Prueba a ejecutar al inicio de la Fase A de PKuatia (decisión 03/10/2026)
+
+Antes de tocar las clases de respuesta de PKuatia, una sesión **con red y certificado** ejecuta contra `sifen-test` el flujo FE → cancelación → consulta y archiva las respuestas SOAP **crudas** (`SoapClient::__getLastResponse()`, sin parsear) anonimizadas en `06-ejemplos/respuestas-ws/` de este repo. Capturar exactamente:
+
+| Llamada | Qué guardar | Pendientes que cierra |
+|---------|-------------|-----------------------|
+| `EnviarDE` (FE aprobada) | `rRetEnviDe` completo | Formato real de `dFecProc` en `rProtDe`; orden de `id`/`dFecProc`/`dDigVal`/`dEstRes`/`dProtAut`/`gResProc`; literal de `dMsgRes` para 0260 |
+| `CancelarDE` del mismo CDC | `rRetEnviEventoDe` completo | Formato real de `dFecProc` de eventos; orden de los hijos de `gResProcEVe`; literal de `dMsgRes` para 0600 |
+| `ConsultarDE` del CDC cancelado | `rEnviConsDeResponse` completo, con `xContenDE` **byte a byte** | Forma de `xContEv` con eventos (`rContEv` > `xEvento`/`rResEnviEventoDe`?, cuántos `rContEv`), namespaces de los hijos de `xContenDE`, si `dProtAut` sigue presente tras la cancelación |
+| (opcional) `ConsultarDE` de un CDC rechazado y de uno inexistente | Respuestas 0420 | Literal de `dMsgRes` para 0420 |
+
+Con los archivos capturados: actualizar `05-api-sifen/recepcion-de.md`, `eventos.md` y `consulta-estado.md` quitando las marcas `[PENDIENTE DE VERIFICACIÓN]` correspondientes y citando el fixture.
 
 ### Pendientes anteriores
 
