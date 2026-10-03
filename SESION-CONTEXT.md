@@ -64,7 +64,7 @@ Marcados `[PENDIENTE DE VERIFICACIÓN]` en los archivos; requieren una respuesta
 - [ ] **Formato exacto de `dFecProc`** en `rProtDe` y en `rRetEnviEventoDe` (el MT dice `AAAA-MM-DDThh:mm:ss` y, para eventos, `AAAA-MM-DD-hh:mm:ss-ss:ss`; las respuestas reales del lote y la consulta traen zona horaria `-03:00`/`-04:00`).
 - [ ] **Orden real de los hijos de `gResProcEVe`** y literal de `dMsgRes` para 0600.
 - [ ] **`dEntCont ` con espacio** (`DE_v150.xsd:327`): qué hace el validador del SIFEN con una FE B2G que lleva `gCompPub`.
-- [ ] **Literal de ambiente de prueba**: guía (02/2026) vs validación 1263; y si el primer ítem debe llevar el literal.
+- [ ] **Literal de ambiente de prueba**: guía (02/2026) vs validación 1263; y si el primer ítem debe llevar el literal. **Decisión 03/10/2026:** la regla es el literal del MT en `dNomEmi`; probar el de la guía en `sifen-test` durante la Fase A.
 - [ ] **Unidad de `dTpoProces`** (segundos según BRSch06, milisegundos según §8.2.2).
 - [ ] **Nombre del archivo dentro del ZIP del lote** (solo se probó `rLoteDE.xml`) y tamaño máximo del lote (10.000 KB en el MT vs 1000 KB en la guía).
 - [ ] **Código 0143** observado en `sifen-test` para un evento de receptor firmado por el emisor (no está en el MT).

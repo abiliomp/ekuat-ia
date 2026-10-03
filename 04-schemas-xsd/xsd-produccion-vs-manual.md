@@ -247,7 +247,7 @@ Casos en que dos fuentes oficiales se contradicen entre sí (no contra el XSD). 
 | Guía de Pruebas (DNIT, 02/2026), §2 "Set de datos" (PDF p. 4) | `DOCUMENTO ELECTRÓNICO SIN VALOR COMERCIAL NI FISCAL - GENERADO EN AMBIENTE DE PRUEBA` | En el nombre/razón social del emisor **y** en la descripción del primer ítem |
 | Homologación PKuatia (`sifen-test`, 06/2026) | El literal del MT en `dNomEmi` fue **aprobado**; el ítem no llevaba ningún literal | — |
 
-**Resolución provisional:** usar el literal de la validación 1263 del MT en `dNomEmi` (es el que el validador acepta hoy). El literal de la guía y la exigencia sobre el primer ítem quedan `[PENDIENTE DE VERIFICACIÓN]` hasta que la DNIT aclare o se pruebe en `sifen-test`. Anotado en [guia-de-pruebas.md](../10-guias/guia-de-pruebas.md) y [errores-validacion.md](../08-errores-y-respuestas/errores-validacion.md).
+**Resolución (decisión del propietario del repo, 03/10/2026):** la regla es el literal de la validación 1263 del MT en `dNomEmi` (es el que el validador acepta hoy); no se agrega ningún literal al primer ítem. El literal de la guía y la exigencia sobre el primer ítem quedan `[PENDIENTE DE VERIFICACIÓN]` hasta que la DNIT aclare o se pruebe en `sifen-test` (previsto para la Fase A de PKuatia). Si el validador cambia, el síntoma será un rechazo 1263 en pruebas. Anotado en [guia-de-pruebas.md](../10-guias/guia-de-pruebas.md) y [errores-validacion.md](../08-errores-y-respuestas/errores-validacion.md).
 
 ---
 
