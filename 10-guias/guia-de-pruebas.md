@@ -1,6 +1,8 @@
 # Guía de Pruebas para el Sistema e-kuatia (SIFEN)
 
-> **Fuente:** Guía de Pruebas para el Sistema e-kuatia — DNIT, Febrero/2026
+> **Fuente:** Guía de Pruebas para el Sistema e-kuatia — DNIT, Febrero/2026 (PDF en `00-fuentes/pdfs/Guia de Pruebas para e-kuatia.pdf`, p. 4 para el set de datos; sin marcas de color)
+>
+> **⚠️ Divergencia con el MT (anotada el 03/10/2026):** el literal de ambiente de prueba que esta guía exige para el nombre del emisor y el primer ítem ("DOCUMENTO ELECTRÓNICO SIN VALOR COMERCIAL NI FISCAL - GENERADO EN AMBIENTE DE PRUEBA") **no coincide** con el que exige la validación 1263 (D105) del MT v150: `DE generado en ambiente de prueba - sin valor comercial ni fiscal`. Este último fue **aprobado por `sifen-test` en junio de 2026** (PKuatia). Hasta que la DNIT aclare, usar el literal de la validación 1263 en `dNomEmi`. Ver [errores-validacion.md](../08-errores-y-respuestas/errores-validacion.md) (validación 1263) y [xsd-produccion-vs-manual.md](../04-schemas-xsd/xsd-produccion-vs-manual.md) (D2).
 
 ## Información general
 
@@ -52,7 +54,7 @@ Para la habilitación como Facturador Electrónico consultar la Guía disponible
 |---|---|
 | RUC | Datos reales del contribuyente según registro en SISTEMA MARANGATU |
 | DV | Dígito verificador real |
-| Nombre/Razón social | El campo debe tener la descripción: "DOCUMENTO ELECTRÓNICO SIN VALOR COMERCIAL NI FISCAL - GENERADO EN AMBIENTE DE PRUEBA" |
+| Nombre/Razón social | El campo debe tener la descripción: "DOCUMENTO ELECTRÓNICO SIN VALOR COMERCIAL NI FISCAL - GENERADO EN AMBIENTE DE PRUEBA" (**literal de la guía**; el MT, validación 1263, exige `DE generado en ambiente de prueba - sin valor comercial ni fiscal`, que es el aprobado en `sifen-test` en 06/2026. Recomendado: el del MT) |
 
 > Los datos del emisor deben corresponder a la información real de cada contribuyente como se encuentra registrado ante la DNIT.
 
@@ -61,7 +63,7 @@ Para la habilitación como Facturador Electrónico consultar la Guía disponible
 | Campo | Valor |
 |---|---|
 | RUC | Datos reales para informaciones de clientes (RUC, Dirección, etc.) |
-| Ítem de mercadería | El primer ítem debe tener la descripción: "DOCUMENTO ELECTRÓNICO SIN VALOR COMERCIAL NI FISCAL - GENERADO EN AMBIENTE DE PRUEBA" |
+| Ítem de mercadería | El primer ítem debe tener la descripción: "DOCUMENTO ELECTRÓNICO SIN VALOR COMERCIAL NI FISCAL - GENERADO EN AMBIENTE DE PRUEBA" (solo la guía lo exige; el MT no tiene una validación sobre la descripción del ítem en pruebas. En 06/2026 `sifen-test` aprobó FE sin este literal en el ítem: `[PENDIENTE DE VERIFICACIÓN]` si llegará a exigirse) |
 
 ### Código de Seguridad del Contribuyente (CSC)
 

@@ -83,7 +83,7 @@ La tabla sigue el formato: `| N° | ID | Mensaje | Código | Tipo | Observación
 | 35 | D101b | El RUC del emisor se encuentra inactivo | 1252 | R | El RUC debe tener estado distinto a CANCELADO, CANCELADO DEFINITIVO o SUSPENSIÓN TEMPORAL al momento de emisión |
 | 36 | [NUEVO] D101c | RUC del emisor no está habilitado para utilizar este tipo de servicio | [NUEVO] 1264 | R | [NUEVO] RUC no habilitado para el servicio síncrono |
 | 37 | D102 | Dígito Verificador del RUC del emisor incorrecto | 1253 | R | DV no corresponde al módulo 11 del RUC |
-| 38 | [NUEVO] D105 | Nombre o razón social del emisor del DE inválido | [NUEVO] 1263 | R | [NUEVO] Ambiente de pruebas: debe usarse `"DE generado en ambiente de prueba - sin valor comercial ni fiscal"`. No usar ese texto en producción. |
+| 38 | [NUEVO] D105 | Nombre o razón social del emisor del DE inválido | [NUEVO] 1263 | R | [NUEVO] Ambiente de pruebas: debe usarse `"DE generado en ambiente de prueba - sin valor comercial ni fiscal"` (MT, PDF pp. 69 y 165; **aprobado por `sifen-test` en 06/2026**). No usar ese texto en producción. ⚠️ La [Guía de Pruebas](../10-guias/guia-de-pruebas.md) (DNIT, 02/2026) pide en cambio "DOCUMENTO ELECTRÓNICO SIN VALOR COMERCIAL NI FISCAL - GENERADO EN AMBIENTE DE PRUEBA"; prevalece este literal del MT hasta que la DNIT aclare (ver [xsd-produccion-vs-manual.md](../04-schemas-xsd/xsd-produccion-vs-manual.md), D2) |
 | 39 | [MODIFICADO] D111 | El Departamento, el Distrito y la Ciudad de emisión no están relacionados | 1255 | R | [MODIFICADO] |
 | 40 | D112 | Descripción del departamento de emisión no corresponde al código | 1254 | R | |
 | ~~44~~ | ~~D114~~ | ~~Es obligatorio indicar la descripción del código de distrito de emisión~~ | ~~1256~~ | ~~R~~ | ~~Eliminada en v150~~ |

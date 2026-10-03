@@ -239,6 +239,16 @@ Casos en que dos fuentes oficiales se contradicen entre sí (no contra el XSD). 
 
 **Resolución:** 0422 = CDC encontrado; 0421 = RUC del certificado sin permiso; 0420 = inexistente/no aprobado. El 0421 de la tabla 12.3.4.3 se considera error de edición. Aplicado en [respuestas-ws.md](../08-errores-y-respuestas/respuestas-ws.md), [estructura-codigos.md](../08-errores-y-respuestas/estructura-codigos.md) y [05-api-sifen/consulta-estado.md](../05-api-sifen/consulta-estado.md).
 
+### D2. Literal del nombre del emisor en el ambiente de pruebas (anotado el 03/10/2026)
+
+| Fuente | Literal exigido | Dónde |
+|--------|-----------------|-------|
+| MT v150, campo D105 `dNomEmi` (PDF p. 69) y validación **1263** (PDF p. 165) | `DE generado en ambiente de prueba - sin valor comercial ni fiscal` | Solo en `dNomEmi`; prohibido en producción |
+| Guía de Pruebas (DNIT, 02/2026), §2 "Set de datos" (PDF p. 4) | `DOCUMENTO ELECTRÓNICO SIN VALOR COMERCIAL NI FISCAL - GENERADO EN AMBIENTE DE PRUEBA` | En el nombre/razón social del emisor **y** en la descripción del primer ítem |
+| Homologación PKuatia (`sifen-test`, 06/2026) | El literal del MT en `dNomEmi` fue **aprobado**; el ítem no llevaba ningún literal | — |
+
+**Resolución provisional:** usar el literal de la validación 1263 del MT en `dNomEmi` (es el que el validador acepta hoy). El literal de la guía y la exigencia sobre el primer ítem quedan `[PENDIENTE DE VERIFICACIÓN]` hasta que la DNIT aclare o se pruebe en `sifen-test`. Anotado en [guia-de-pruebas.md](../10-guias/guia-de-pruebas.md) y [errores-validacion.md](../08-errores-y-respuestas/errores-validacion.md).
+
 ---
 
 ## Recomendación práctica
