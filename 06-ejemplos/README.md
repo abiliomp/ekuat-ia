@@ -13,6 +13,7 @@ Este directorio contiene ejemplos de Documentos Electrónicos en formato XML, ju
 | Directorio | Tipo | Descripción |
 |------------|------|-------------|
 | `factura-simple/` | FE (C002=1) | Factura Electrónica con 2 ítems, IVA 10%, condición crédito (plazo 28 días) |
+| `respuestas-ws/` | Respuestas SOAP reales | Capturas crudas de `sifen-test`, anonimizadas. 09/10/2026, flujo completo: FE aprobada (0260), CDC inexistente (0420), cancelación rechazada (4009 por desfase de reloj, 0100 transitorio) y aceptada (0600), consulta por CDC antes y después de cancelar (0422 con `xContenDE` y `xContEv`). 06/10/2026: rechazos 0160 en ambiente degradado. Ver su `README.md` |
 
 ---
 
