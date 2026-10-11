@@ -10,6 +10,7 @@ Este archivo resume el estado del repositorio y las tareas pendientes para retom
 - **Archivos Markdown** generados desde fuentes oficiales (PDFs, XSD, XML, XLSX)
 - **XSD de producción descargados** (11/06/2026; **re-verificados sin cambios el 03/10/2026**, md5 en `00-fuentes/xsd/CHECKSUMS.md5`) en `00-fuentes/xsd/`: `siRecepDE_v150.xsd`, `DE_v150.xsd`, `DE_Types_v150.xsd`, `siRecepEvento_v150.xsd`, `Evento_v150.xsd`, `Evento_Types_v150.xsd`, `Paises_v100.xsd`, `Departamentos_v141.xsd`, `Monedas_v150.xsd`, `Unidades_Medida_v141.xsd`
 - **`AGENTS.md`** en la raíz: orden de autoridad, archivos autoritativos por tema, reglas de cita (`archivo:línea` del XSD o sección/página del MT), marca `[PENDIENTE DE VERIFICACIÓN]`, procedimiento de re-descarga de XSD y prohibición de llamar a los WS. Leerlo primero.
+- **Respuestas SOAP reales de `sifen-test`** en `06-ejemplos/respuestas-ws/` (README con índice y observaciones): 06/10 (0160 genérico), 09/10 (flujo FE → cancelación → consulta, cierra la tabla de la Fase A) y 11/10 (Fase B: cuotas, NR, AF, ANG, grupos sectoriales, vehículo, lote, cinco eventos del receptor en un sobre). Son la fuente "homologado 10/2026" para la forma real de los mensajes.
 - **Validación local sin red:** `04-schemas-xsd/validacion-local/` (`generar.py`, `validar.php`, `CAMBIOS.md5`): copias de los XSD con `schemaLocation` relativos y el fix `dEntCont ` → `dEntCont`. Regenerar cuando cambie `00-fuentes/xsd/`.
 - **Divergencias MT vs XSD documentadas** en `04-schemas-xsd/xsd-produccion-vs-manual.md` — es el documento de referencia cuando un literal del MT no coincide con producción (caso típico: `dDesAfecIVA` código 2 = "Exonerado (Art. 100 - Ley 6380/2019)")
 - **Detección de color correcta:** los PDFs usan resaltado rojo/amarillo/verde para indicar eliminaciones, modificaciones y adiciones. El repositorio refleja esto con `~~tachado~~`, `[MODIFICADO]` y `[NUEVO]`.
@@ -54,6 +55,9 @@ Fuentes de las estructuras de los WS: MT cap. 9 (texto extraído con PyMuPDF a `
 | `f980569` | Fase 0 T2 — reescritura de `05-api-sifen/` |
 | `db04b63` | Fase 0 T3 — resolución 0421/0422 |
 | (ver `git log`) | Fase 0 T4, T5 y T6 |
+| `16070af` | Capturas SOAP reales del 06/10 y 09/10 |
+| `cf55702` | Capturas SOAP del 11/10 (Fase B) |
+| (ver `git log`) | Índice de capturas del 11/10 en el README de `respuestas-ws` y en este archivo |
 
 ## Tareas pendientes para próximas sesiones
 
@@ -61,19 +65,20 @@ Fuentes de las estructuras de los WS: MT cap. 9 (texto extraído con PyMuPDF a `
 
 Marcados `[PENDIENTE DE VERIFICACIÓN]` en los archivos; requieren una respuesta real del SIFEN o una aclaración de la DNIT:
 
-- [ ] **Forma real de `xContEv` con eventos** en la respuesta de siConsDE (si trae `rContEv` > `xEvento` > `rGesEve` y `rResEnviEventoDe` > `rRetEnviEventoDe`; cuántos `rContEv`; namespaces de los hijos de `xContenDE`). Hoy solo se conoce `xContEv` vacío. **Decisión 03/10/2026:** se captura en la prueba de inicio de la Fase A (ver abajo).
-- [ ] **Formato exacto de `dFecProc`** en `rProtDe` y en `rRetEnviEventoDe` (el MT dice `AAAA-MM-DDThh:mm:ss` y, para eventos, `AAAA-MM-DD-hh:mm:ss-ss:ss`; las respuestas reales del lote y la consulta traen zona horaria `-03:00`/`-04:00`).
-- [ ] **Orden real de los hijos de `gResProcEVe`** y literal de `dMsgRes` para 0600.
+- [x] **Forma real de `xContEv` con eventos**: capturada el 09/10/2026 (`06-ejemplos/respuestas-ws/2026-10-09/09-*`), un `rContEv` > `xEvento` + `rResEnviEventoDe`; falta propagar a `05-api-sifen/consulta-estado.md`. Sigue abierto cómo se ve con **más de un** `rContEv` (el 11/10 los cinco eventos fueron rechazados y no quedaron registrados).
+- [x] **Formato exacto de `dFecProc`**: `AAAA-MM-DDThh:mm:ss-03:00` en `rProtDe`, `rRetEnviEventoDe`, `rResEnviLoteDe` y `rResEnviConsLoteDe` (capturas 09/10 y 11/10); **sin zona** dentro de `xContEv`. Falta propagar a `05-api-sifen/`.
+- [x] **Orden real de los hijos de `gResProcEVe`**: `dEstRes`, `dProtAut` (solo aprobado), `id`, `gResProc`; 0600 = "Evento registrado correctamente" (capturas 09/10). Falta propagar a `05-api-sifen/eventos.md`.
 - [ ] **`dEntCont ` con espacio** (`DE_v150.xsd:327`): qué hace el validador del SIFEN con una FE B2G que lleva `gCompPub`. **Decisión 03/10/2026:** mientras tanto se valida con `04-schemas-xsd/validacion-local/` (copias con el fix y `schemaLocation` relativos, generadas por `generar.py`).
 - [ ] **Literal de ambiente de prueba**: guía (02/2026) vs validación 1263; y si el primer ítem debe llevar el literal. **Decisión 03/10/2026:** la regla es el literal del MT en `dNomEmi`; probar el de la guía en `sifen-test` durante la Fase A.
 - [ ] **Unidad de `dTpoProces`** (segundos según BRSch06, milisegundos según §8.2.2).
 - [ ] **Nombre del archivo dentro del ZIP del lote** (solo se probó `rLoteDE.xml`) y tamaño máximo del lote (10.000 KB en el MT vs 1000 KB en la guía).
-- [ ] **Código 0143** observado en `sifen-test` para un evento de receptor firmado por el emisor (no está en el MT).
+- [ ] **Código 0143** observado en `sifen-test` para un evento de receptor firmado por el emisor (no está en el MT). Texto homologado 11/10/2026: "La firma digital del evento debe corresponder al receptor del DE/DTE" (`respuestas-ws/2026-10-11/15-*`); falta propagar a `05-api-sifen/eventos.md` y a `08-errores-y-respuestas/`.
 - [ ] **Endoso (`rGeVeEnd`)**: enviable según el XSD, "futuro" según el MT; sin validaciones publicadas.
-- [ ] **Descripción de las 15 monedas con `CodeName` > 20 caracteres** (`tdDMoneTiPag` admite 3-20): qué literal acepta la validación 1206.
+- [ ] **Descripción de las 15 monedas con `CodeName` > 20 caracteres** (`tdDMoneTiPag` admite 3-20): qué literal acepta la validación 1206. **11/10/2026:** ANG con la descripción truncada a 20 ("Netherlands Antillia") fue rechazada con 1206 (`respuestas-ws/2026-10-11/09-*`); sigue abierto.
 - [ ] **Organismo rector de la firma digital** tras la Ley 6822/2021 (el MT dice MIC; "DINETIC" no tiene fuente).
 - [ ] **Tolerancia de reloj**: el MT no publica minutos (solo 1004/1005).
-- [ ] **Semántica de `rEve@Id`** con varios eventos por sobre (homologado solo con Id = 1).
+- [x] **Semántica de `rEve@Id`** con varios eventos por sobre: homologado 11/10/2026 con cinco `rEve` `Id` 1 a 5 en un `rGesEve`; la respuesta trae cinco `gResProcEVe` en el mismo orden y el `id` de cada uno repite el `Id` enviado (`respuestas-ws/2026-10-11/15-*`). Falta propagar a `05-api-sifen/eventos.md`.
+- [ ] **Desfase de reloj en `sifen-test`**: el `dFecProc` de recepción de DE va unos 2,5 minutos adelantado respecto de la hora real y del servicio de eventos (09/10, causa del 4009 inmediato; se repitió el 11/10 en los rechazos 2562 y 1206). Verificar si ocurre en producción.
 
 ### Prueba a ejecutar al inicio de la Fase A de PKuatia (decisión 03/10/2026)
 
@@ -87,6 +92,8 @@ Antes de tocar las clases de respuesta de PKuatia, una sesión **con red y certi
 | (opcional) `ConsultarDE` de un CDC rechazado y de uno inexistente | Respuestas 0420 | Literal de `dMsgRes` para 0420 |
 
 Con los archivos capturados: actualizar `05-api-sifen/recepcion-de.md`, `eventos.md` y `consulta-estado.md` quitando las marcas `[PENDIENTE DE VERIFICACIÓN]` correspondientes y citando el fixture.
+
+**Estado 11/10/2026:** la tabla quedó **cerrada** con las capturas del 09/10 (ver `06-ejemplos/respuestas-ws/README.md`, "Pendientes que cierra"); el 11/10 se sumaron lote, eventos del receptor y los demás tipos de DE. **La propagación a `05-api-sifen/` y `08-errores-y-respuestas/` sigue pendiente**: en particular `Id` con mayúscula en `rProtDe` (hoy `05-api-sifen/recepcion-de.md` dice `id`), la forma real de `xContenDE`/`xContEv`, el texto del 0143, `gResProcLote` con `id` en minúscula y `dMsgRes` "Aprobado" en la consulta del lote, y `dMsgRes` con el prefijo "TEST - " en el ambiente de pruebas.
 
 ### Pendientes anteriores
 
