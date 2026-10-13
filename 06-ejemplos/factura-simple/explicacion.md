@@ -271,8 +271,8 @@ El ejemplo tiene 2 ítems:
 | Campo | ID | Valor | Descripción |
 |-------|----|-------|-------------|
 | dCodInt | E701 | `CAC/CTAC` | Código interno del producto/servicio |
-| dDesProSer | E702 | `CUENTAS ACTIVAS` | Descripción del producto o servicio |
-| cUniMed | E708 | `77` | Unidad de medida: 77=UNI (unidad) |
+| dDesProSer | E708 | `CUENTAS ACTIVAS` | Descripción del producto o servicio (1-2000 caracteres, `DE_v150.xsd:878-885`) |
+| cUniMed | E709 | `77` | Unidad de medida: 77=UNI (unidad) |
 | dCantProSer | E711 | `1` | Cantidad: 1 unidad |
 | dPUniProSer | E721 | `1.100.000` | Precio unitario en PYG |
 | dTotBruOpeItem | EA008 | `1.100.000` | Total bruto = precio × cantidad |
@@ -305,13 +305,15 @@ Mismo estructura que el Ítem 1. Precio: 1.100.000 PYG, IVA 10%.
 
 | Campo | ID | Valor | Descripción |
 |-------|----|-------|-------------|
-| dSub10 | F003 | `2.200.000` | Subtotal de ítems gravados al 10% (incluye IVA) |
-| dTotOpe | F014 | `2.200.000` | Total de la operación (suma de todos los ítems) |
-| dTotGralOpe | F018 | `2.200.000` | Total general (mismo que F014 en PYG) |
-| dIVA10 | F033 | `200.000` | IVA al 10% = 2.000.000 × 10/100 |
-| dTotIVA | F036 | `200.000` | Total de IVA de todos los ítems |
-| dBaseGrav10 | F023 | `2.000.000` | Base gravada al 10% = 2.200.000 × 100/110 |
-| dTBasGraIVA | F037 | `2.000.000` | Total base gravada IVA |
+| dSub10 | F005 | `2.200.000` | Subtotal de ítems gravados al 10% (incluye IVA) |
+| dTotOpe | F008 | `2.200.000` | Total bruto de la operación (suma de todos los ítems) |
+| dTotGralOpe | F014 | `2.200.000` | Total neto de la operación (aquí igual a F008: no hay descuentos ni anticipos) |
+| dIVA10 | F016 | `200.000` | IVA al 10% = 2.000.000 × 10/100 |
+| dTotIVA | F017 | `200.000` | Total de IVA de todos los ítems |
+| dBaseGrav10 | F019 | `2.000.000` | Base gravada al 10% = 2.200.000 × 100/110 |
+| dTBasGraIVA | F020 | `2.000.000` | Total base gravada IVA |
+
+> **Nota de corrección (13/10/2026):** los IDs de esta tabla estaban desplazados (decían F003, F014, F018, F033, F036, F023 y F037) y en la tabla del ítem 1 `dDesProSer` figuraba como E702 y `cUniMed` como E708. Se corrigieron según la tabla de formato del MT v150 en `03-estructura-xml/campos-obligatorios.md` (grupos E8 y F). No reintroducir los IDs anteriores.
 
 **Verificación de cálculos:**
 - 2 ítems × 1.100.000 = 2.200.000 (total con IVA)

@@ -94,11 +94,13 @@ Las reglas de validación son condiciones que el SIFEN verifica antes de aprobar
 
 | Código | Campo(s) | Regla |
 |--------|----------|-------|
-| E701a | dDesProSer (E701) | NT-009: Longitud 1-1000 (ampliada). No puede estar vacío |
-| E708a | dInfoItem (E708) | NT-009: Longitud 1-2000 (ampliada) |
-| E711a | dUniMed (E711) | NT-023: Precisión decimal actualizada |
+| E701a | dCodInt (E701) | NT-009: Longitud 1-50 (el MT original decía 1-20). XSD: `tdCodInt`, `DE_Types_v150.xsd:1156-1166`. No puede estar vacío ni ser solo espacios (`noEmptyString`) |
+| E708a | dDesProSer (E708) | NT-009: Longitud 1-2000 (el MT original decía 1-120; Dictamen DPTT N° 127/2021). XSD: `DE_v150.xsd:878-885`. No puede estar vacío ni ser solo espacios (`noEmptyString`); el XSD cuenta caracteres, no bytes |
+| E711a | dCantProSer (E711) | NT-023 §1.2: longitud/precisión ampliada a 1-10p(0-8) (el MT original decía 1-10p(0-4)) |
 | EA004a | dDescItem (EA004) | NT-001: Monto del descuento por ítem. Fórmula: dDescItem = EA008 * E732 / 100 (si descuento es porcentaje) |
 | EA008a | dTotBruOpeItem (EA008) | NT-001: Total bruto del ítem = E721 * E711 (precio * cantidad) |
+
+> **Nota de corrección (13/10/2026):** las filas E701a y E708a tenían los campos cruzados y longitudes erróneas: decían `dDesProSer (E701)` con longitud 1-1000 y `dInfoItem (E708)` con longitud 1-2000. Lo correcto según la NT-009 y el XSD de producción es E701 = `dCodInt` 1-50 y E708 = `dDesProSer` 1-2000. `dInfItem` (sin "o") es E714, su longitud es 1-500 (`DE_v150.xsd:892-899`) y no fue modificado por la NT-009. La fila E711a nombraba `dUniMed`, campo que no existe: E711 es `dCantProSer` (NT-023 §1.2; `tdCantProSer`). No reintroducir la versión anterior.
 
 ---
 

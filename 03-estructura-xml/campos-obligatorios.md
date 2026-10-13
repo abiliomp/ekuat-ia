@@ -302,17 +302,17 @@
 | Grupo | ID | Campo | Descripción | Nodo Padre | Tipo | Long. | Ocurr. | Observaciones |
 |-------|-----|-------|-------------|-----------|------|-------|--------|---------------|
 | E8 | E700 | gCamItem | Campos que describen los ítems de la operación | E001 | G | — | 1-999 | |
-| E8 | E701 | dCodInt | Código interno | E700 | A | 1-20 | 1-1 | Código interno de identificación de la mercadería o servicio. No se pueden tener ítems distintos con el mismo código interno en el catálogo. Puede repetirse en el DE si el producto/servicio es el mismo. |
+| E8 | E701 | dCodInt | Código interno | E700 | A | **[MODIFICADO]** 1-50 | 1-1 | Código interno de identificación de la mercadería o servicio. No se pueden tener ítems distintos con el mismo código interno en el catálogo. Puede repetirse en el DE si el producto/servicio es el mismo. **[MODIFICADO]** Longitud 1-50 según NT-009 y el XSD de producción (`tdCodInt`, `DE_Types_v150.xsd:1156-1166`, `maxLength 50`); el MT original decía 1-20 (valor eliminado de esta tabla el 13/10/2026) |
 | E8 | E702 | dParAranc | Partida arancelaria | E700 | N | 4 | 0-1 | |
 | E8 | E703 | dNCM | Nomenclatura común del Mercosur (NCM) | E700 | N | 6-8 | 0-1 | |
 | E8 | E704 | dDncpG | Código DNCP – Nivel General | E700 | A | 8 | 0-1 | Obligatorio si D202=3. Completar con 0 (cero) a la izquierda para espacios vacíos |
 | E8 | E705 | dDncpE | Código DNCP – Nivel Específico | E700 | A | 3-4 | 0-1 | Obligatorio si existe E704 |
 | E8 | E706 | dGtin | Código GTIN por producto | E700 | N | 8,12,13,14 | 0-1 | Informar si la mercadería tiene GTIN |
 | E8 | E707 | dGtinPq | Código GTIN por paquete | E700 | N | 8,12,13,14 | 0-1 | Informar si el paquete tiene GTIN |
-| E8 | E708 | dDesProSer | Descripción del producto y/o servicio | E700 | A | 1-120 | 1-1 | Equivalente a nombre del producto establecido en la RG 24/2019 |
+| E8 | E708 | dDesProSer | Descripción del producto y/o servicio | E700 | A | **[MODIFICADO]** 1-2000 | 1-1 | Equivalente a nombre del producto establecido en la RG 24/2019. **[MODIFICADO]** Longitud 1-2000 según NT-009 (Dictamen DPTT N° 127/2021) y el XSD de producción (`DE_v150.xsd:878-885`, `maxLength 2000`); el MT original decía 1-120 (valor eliminado de esta tabla el 13/10/2026). Base `noEmptyString` (`DE_Types_v150.xsd:1724-1735`): no puede estar vacío ni ser solo espacios; el XSD cuenta caracteres, no bytes |
 | E8 | E709 | cUniMed | Unidad de medida | E700 | N | 1-5 | 1-1 | Según Tabla 5 – Unidad de Medida. Si D202=3, utilizar datos del WS de la DNCP (atributo "ID") |
 | E8 | E710 | dDesUniMed | Descripción de la unidad de medida | E700 | A | 1-10 | 1-1 | Referente a E709. Utilizar el atributo "Código". Ejemplo: UNI |
-| E8 | E711 | dCantProSer | Cantidad del producto y/o servicio | E700 | N | **[MODIFICADO]** 1-10p(0-4) | 1-1 | |
+| E8 | E711 | dCantProSer | Cantidad del producto y/o servicio | E700 | N | **[MODIFICADO]** 1-10p(0-8) | 1-1 | **[MODIFICADO]** Hasta 8 decimales según NT-023 §1.2 y el XSD de producción (`tdCantProSer`, `DE_Types_v150.xsd:1229-1241`: `totalDigits 18`, `fractionDigits 8`, máximo 9999999999.99999999); esta tabla decía 1-10p(0-4) hasta el 13/10/2026 |
 | E8 | E712 | cPaisOrig | Código del país de origen del producto | E700 | A | 3 | 0-1 | Según XSD de Codificación de Países |
 | E8 | E713 | dDesPaisOrig | Descripción del país de origen del producto | E700 | A | 4-30 | 0-1 | Obligatorio si existe E712 |
 | E8 | E714 | dInfItem | Información de interés del emisor con respecto al ítem | E700 | A | 1-500 | 0-1 | |

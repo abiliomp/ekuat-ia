@@ -58,6 +58,8 @@ Fuentes de las estructuras de los WS: MT cap. 9 (texto extraído con PyMuPDF a `
 | `16070af` | Capturas SOAP reales del 06/10 y 09/10 |
 | `cf55702` | Capturas SOAP del 11/10 (Fase B) |
 | (ver `git log`) | Índice de capturas del 11/10 en el README de `respuestas-ws` y en este archivo |
+| `1c89709` | Capturas SOAP del 13/10 (Fase C: homologación del validador de PKuatia) |
+| (ver `git log`) | 13/10: longitudes de E701 (1-50), E708 (1-2000) y E711 (0-8 decimales) alineadas con NT-009/NT-023 y el XSD en `campos-obligatorios.md` y `reglas-de-validacion.md` (filas E701a/E708a estaban cruzadas); IDs E8 y F corregidos en `factura-simple/explicacion.md` |
 
 ## Tareas pendientes para próximas sesiones
 
